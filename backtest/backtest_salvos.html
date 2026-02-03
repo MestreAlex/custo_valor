@@ -791,7 +791,24 @@
             }
             
             salvamentoAtual = chaveSelecionada;
-            const dados = JSON.parse(localStorage.getItem(chaveSelecionada));
+            const dadosString = localStorage.getItem(chaveSelecionada);
+            
+            if (!dadosString) {
+                console.error('🔴 Dados não encontrados no localStorage para:', chaveSelecionada);
+                alert('⚠️ Dados não encontrados. Por favor, carregue um arquivo válido.');
+                document.getElementById('emptyState').style.display = 'block';
+                document.getElementById('tabelaResultados').style.display = 'none';
+                return;
+            }
+            
+            const dados = JSON.parse(dadosString);
+            
+            if (!Array.isArray(dados) || dados.length === 0) {
+                console.error('🔴 Dados inválidos ou vazios');
+                alert('⚠️ Nenhuma entrada para exibir.');
+                return;
+            }
+            
             dadosAtual = dados;
             
             console.log(`🔵 Dados carregados: ${dados.length} entradas`);
@@ -800,6 +817,7 @@
             document.getElementById('emptyState').style.display = 'none';
             document.getElementById('tabelaResultados').style.display = 'table';
             document.getElementById('btnExcluir').style.display = 'block';
+            document.getElementById('ligasLucroContainer').style.display = 'block';
             
             // Preenchimento filtros
             preencherFiltros(dados);
@@ -810,11 +828,16 @@
         }
 
         function preencherFiltros(dados) {
-            const ligas = [...new Set(dados.map(d => d.liga))].sort();
-            const temporadas = [...new Set(dados.map(d => d.temporada || '2024-25'))].sort().reverse();  // NOVO: adicionar temporadas
+            if (!Array.isArray(dados) || dados.length === 0) {
+                console.error('❌ Dados inválidos em preencherFiltros():', dados);
+                return;
+            }
+            
+            const ligas = [...new Set(dados.map(d => d.liga).filter(l => l))].sort();
+            const temporadas = [...new Set(dados.map(d => d.temporada || '2024-25'))].sort().reverse();
             
             const filtroLiga = document.getElementById('filtroLiga');
-            const filtroTemporada = document.getElementById('seletorTemporadaAnalise');  // NOVO: seletor de temporada
+            const filtroTemporada = document.getElementById('seletorTemporadaAnalise');
             
             // Limpar opções antigas de liga (exceto a primeira)
             while (filtroLiga.children.length > 1) {
@@ -848,18 +871,23 @@
             const tbody = document.getElementById('tbody');
             tbody.innerHTML = '';
             
+            if (!Array.isArray(dados) || dados.length === 0) {
+                console.error('❌ Nenhum dado para preencher tabela');
+                return;
+            }
+            
             dados.forEach(jogo => {
                 const tr = document.createElement('tr');
-                tr.setAttribute('data-liga', jogo.liga);
-                tr.setAttribute('data-entrada', jogo.entrada);
-                tr.setAttribute('data-dxg', jogo.dxg);
+                tr.setAttribute('data-liga', jogo.liga || '');
+                tr.setAttribute('data-entrada', jogo.entrada || '');
+                tr.setAttribute('data-dxg', jogo.dxg || 'EQ');
                 tr.setAttribute('data-temporada', jogo.temporada || '2024-25');
                 
                 const dxgCor = obterCorDxG(jogo.dxg);
                 const entradaCor = jogo.entrada === 'HOME' ? '#28a745' : '#007bff';
                 const entradaText = jogo.entrada === 'HOME' ? 'HOME' : 'AWAY';
                 
-                const lp = parseFloat(jogo.lp);
+                const lp = parseFloat(jogo.lp) || 0;
                 const lpCor = lp > 0 ? '#28a745' : (lp < 0 ? '#dc3545' : '#6c757d');
                 const lpText = lp > 0 ? '+' + lp.toFixed(2) : lp.toFixed(2);
                 
@@ -892,6 +920,8 @@
                 
                 tbody.appendChild(tr);
             });
+            
+            console.log(`✅ Tabela preenchida com ${dados.length} linhas`);
         }
 
         function obterCorDxG(dxg) {
