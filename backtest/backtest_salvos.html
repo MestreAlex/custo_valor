@@ -861,15 +861,15 @@
                 const lpText = lp > 0 ? '+' + lp.toFixed(2) : lp.toFixed(2);
                 
                 // Mapeamento correto dos nomes de campos
-                const data = jogo.date || 'N/A';
-                const casa = jogo.home || 'N/A';
-                const visitante = jogo.away || 'N/A';
-                const gc = jogo.fthg || 0;
-                const gv = jogo.ftag || 0;
-                const oddCasa = parseFloat(jogo.b365h || jogo.odd_home_calc || 0).toFixed(2);
-                const oddVisitante = parseFloat(jogo.b365a || jogo.odd_away_calc || 0).toFixed(2);
-                const xgCasa = parseFloat(jogo.xgh || 0).toFixed(2);
-                const xgVisitante = parseFloat(jogo.xga || 0).toFixed(2);
+                const data = jogo.data || 'N/A';
+                const casa = jogo.casa || 'N/A';
+                const visitante = jogo.visitante || 'N/A';
+                const gc = jogo.gc || 0;
+                const gv = jogo.gv || 0;
+                const oddCasa = parseFloat(jogo.odd_casa || 0).toFixed(2);
+                const oddVisitante = parseFloat(jogo.odd_visitante || 0).toFixed(2);
+                const xgCasa = parseFloat(jogo.xg_casa || 0).toFixed(2);
+                const xgVisitante = parseFloat(jogo.xg_visitante || 0).toFixed(2);
                 
                 tr.innerHTML = `
                     <td>${data}</td>
