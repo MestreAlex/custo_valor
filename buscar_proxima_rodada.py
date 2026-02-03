@@ -51,8 +51,8 @@ def carregar_entradas_qualificadas():
             if dados['entradas'] > 0:
                 dados['roi'] = (dados['lucro'] / dados['entradas']) * 100
             
-            # Filtrar: entradas >= 30, ROI >= 5%, lucro >= 5
-            if dados['entradas'] >= 30 and dados['roi'] >= 5.0 and dados['lucro'] >= 5.0:
+            # Filtrar: entradas >= 75, ROI >= 5%, lucro >= 20
+            if dados['entradas'] >= 75 and dados['roi'] >= 5.0 and dados['lucro'] >= 20.0:
                 entradas_qualificadas.add(chave)
         
         print(f"[OK] Carregadas {len(entradas_qualificadas)} entradas qualificadas para validação\n")
@@ -190,13 +190,16 @@ if todos_jogos:
             print(f"[AVISO] Erro ao filtrar por data: {str(e)}")
         
         
-        # Filtrar apenas ligas que temos histórico
+        # Filtrar apenas ligas que temos histórico E que têm entradas validadas
+        # Ligas SEM combinações validadas (critério: >= 75 entradas, >= 5% ROI, >= 20 lucro)
+        ligas_sem_validadas = {'ARG', 'AUT', 'B1', 'D1', 'D2', 'DNK', 'G1', 'I1'}
+        
         ligas_disponiveis = [
-            'E0', 'E1', 'D1', 'D2', 'I1', 'I2', 'F1', 'F2', 
-            'SP1', 'SP2', 'P1', 'G1', 'T1', 'N1', 'B1',
-            'ARG', 'AUT', 'BRA', 'CHN', 'DNK', 'FIN', 'IRL', 'JPN', 
+            'E0', 'E1', 'I2', 'F1', 'F2', 
+            'SP1', 'SP2', 'P1', 'T1', 'N1',
+            'BRA', 'CHN', 'FIN', 'IRL', 'JPN', 
             'MEX', 'NOR', 'POL', 'ROU', 'RUS', 'SWE', 'SWZ', 'USA',
-            'Serie A'  # Alias para BRA
+            'Series A'  # Alias para BRA
         ]
         
         total_antes = len(df_filtrado)
