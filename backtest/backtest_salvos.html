@@ -733,7 +733,6 @@
 
         async function carregarDoArquivo() {
             console.log('📂 Carregando dados do arquivo JSON...');
-            const CHAVE_UNICA = 'backtest_acumulado';
             try {
                 const response = await fetch('http://localhost:5001/api/backtest_acumulado');
                 const data = await response.json();
@@ -748,25 +747,29 @@
                     return;
                 }
 
-                // Salvar no localStorage para usar a UI atual
-                localStorage.setItem(CHAVE_UNICA, JSON.stringify(entradas));
-                localStorage.setItem(CHAVE_UNICA + '_nome', 'Backtest Acumulado (Arquivo)');
-                localStorage.setItem(CHAVE_UNICA + '_data', Date.now().toString());
+                // Armazenar dados em uma variável global em vez de localStorage (evita exceder quota)
+                dadosAtual = entradas;
+                salvamentoAtual = 'arquivo_carregado';
+                
+                console.log(`📂 ${entradas.length} entradas carregadas da API`);
 
-                // Recarregar seletor e abrir automaticamente
-                const seletor = document.getElementById('seletorSalvamento');
-                while (seletor.firstChild) {
-                    seletor.removeChild(seletor.firstChild);
-                }
-
-                carregarSalvagens();
-                seletor.value = CHAVE_UNICA;
-                carregarSalvamento();
+                // Atualizar UI
+                document.getElementById('emptyState').style.display = 'none';
+                document.getElementById('tabelaResultados').style.display = 'table';
+                document.getElementById('btnExcluir').style.display = 'none'; // Não pode excluir arquivo
+                
+                // Preenchimento filtros
+                preencherFiltros(entradas);
+                
+                // Carregar dados na tabela
+                preencherTabela(entradas);
+                aplicarFiltros();
 
                 alert(`✅ Dados carregados do arquivo!\n\nTotal de entradas: ${entradas.length}`);
+                console.log('✅ Dados carregados com sucesso!');
             } catch (error) {
                 console.error('❌ Erro ao carregar arquivo JSON:', error);
-                alert(`❌ Erro ao carregar arquivo JSON:\n\n${error.message}\n\nVerifique se o servidor na porta 5000 está rodando.`);
+                alert(`❌ Erro ao carregar arquivo JSON:\n\n${error.message}\n\nVerifique se o servidor na porta 5001 está rodando.`);
             }
         }
 
