@@ -943,6 +943,63 @@
     </div>
     
     <script>
+        let validaCombinacoes = {};
+
+        // Carregar as combinações validadas ao iniciar a página
+        fetch('/fixtures/entradas_validadas.json')
+            .then(response => response.json())
+            .then(data => {
+                // Criar lookup de combinações validadas
+                data.combinacoes_validadas.forEach(combo => {
+                    const chave = `${combo.liga}|${combo.tipo}|${combo.entrada}`;
+                    validaCombinacoes[chave] = true;
+                });
+                
+                // Aplicar validação a todas as linhas
+                aplicarValidacao();
+                
+                console.log(`✓ Carregadas ${data.combinacoes_validadas.length} combinações validadas`);
+                console.log(`Total de entradas: ${data.estatisticas.total_entradas}`);
+                console.log(`ROI médio: ${data.estatisticas.roi_medio.toFixed(2)}%`);
+            })
+            .catch(error => console.error('Erro ao carregar entradas validadas:', error));
+
+        function aplicarValidacao() {
+            const tbody = document.querySelector('table tbody');
+            const linhas = tbody.getElementsByTagName('tr');
+            
+            for (let i = 0; i < linhas.length; i++) {
+                const td = linhas[i].getElementsByTagName('td');
+                
+                // Extrair informações da linha
+                const ligaBadge = td[1].querySelector('.liga-badge');
+                const liga = ligaBadge ? ligaBadge.textContent.trim() : '-';
+                const dxgCell = td[9];
+                const dxg = dxgCell ? dxgCell.textContent.trim() : '-';
+                
+                // Determinar entrada (HOME = primeiro time, AWAY = segundo time)
+                // A entrada é baseada na posição: 1ª vez procura LH/FH/EQ/LA/FA (HOME), 2ª vez AWAY
+                const tipoEntry = dxg !== '-' ? dxg : '-';
+                
+                // Validar AMBAS entradas (HOME e AWAY)
+                const homeChave = `${liga}|${tipoEntry}|HOME`;
+                const awayChave = `${liga}|${tipoEntry}|AWAY`;
+                
+                const homeValido = validaCombinacoes[homeChave] || false;
+                const awayValido = validaCombinacoes[awayChave] || false;
+                
+                // Atualizar célula VALIDADA (coluna 14)
+                const validadaCell = td[14];
+                if (validadaCell) {
+                    validadaCell.innerHTML = 
+                        `<div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;">` +
+                        `<span style="background-color: ${homeValido ? '#00ff88' : '#ff4444'}; color: ${homeValido ? '#000' : 'white'}; padding: 4px 8px; border-radius: 4px;">${homeValido ? 'SIM' : 'NÃO'}</span>` +
+                        `<span style="background-color: ${awayValido ? '#00ff88' : '#ff4444'}; color: ${awayValido ? '#000' : 'white'}; padding: 4px 8px; border-radius: 4px;">${awayValido ? 'SIM' : 'NÃO'}</span>` +
+                        `</div>`;
+                }
+            }
+        }
+
         function filterTable() {
             const input = document.getElementById('searchInput');
             const filter = input.value.toUpperCase();
