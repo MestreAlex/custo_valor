@@ -4,6 +4,7 @@ from pathlib import Path
 from datetime import datetime
 import json
 from collections import defaultdict
+from validador_combinacoes import carregar_combinacoes_validadas
 
 # URLs dos fixtures
 urls = [
@@ -19,52 +20,9 @@ print(f"{'='*80}")
 print(f"DOWNLOAD DOS JOGOS DA PRÓXIMA RODADA - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 print(f"{'='*80}\n")
 
-# Carregar entradas qualificadas para validação
-def carregar_entradas_qualificadas():
-    """Carrega as entradas que foram validadas nos critérios"""
-    entradas_qualificadas = set()
-    
-    try:
-        # Opção 1: Carregar do arquivo de dados bruto
-        with open('fixtures/backtest_acumulado.json', 'r', encoding='utf-8') as f:
-            entradas = json.load(f)
-        
-        resumo = defaultdict(lambda: {'entradas': 0, 'lucro': 0.0, 'acertos': 0})
-        
-        for entrada in entradas:
-            liga = entrada.get('liga', 'Desconhecida')
-            lp = float(entrada.get('lp', 0))
-            lp_com_desconto = lp * 0.955
-            tipo_entrada = entrada.get('entrada', 'HOME')
-            dxg_tipo = entrada.get('dxg', 'EQ')
-            
-            chave = f'{liga}|{tipo_entrada}|{dxg_tipo}'
-            
-            dados = resumo[chave]
-            dados['entradas'] += 1
-            dados['lucro'] += lp_com_desconto
-            if lp_com_desconto > 0:
-                dados['acertos'] += 1
-        
-        # Calcular ROI e adicionar à lista de qualificadas
-        for chave, dados in resumo.items():
-            if dados['entradas'] > 0:
-                dados['roi'] = (dados['lucro'] / dados['entradas']) * 100
-            
-            # Filtrar: entradas >= 75, ROI >= 5%, lucro >= 20
-            if dados['entradas'] >= 75 and dados['roi'] >= 5.0 and dados['lucro'] >= 20.0:
-                entradas_qualificadas.add(chave)
-        
-        print(f"[OK] Carregadas {len(entradas_qualificadas)} entradas qualificadas para validação\n")
-        
-    except Exception as e:
-        print(f"[AVISO] Erro ao carregar entradas qualificadas: {str(e)}\n")
-    
-    return entradas_qualificadas
-
-entradas_validas = carregar_entradas_qualificadas()
-
-todos_jogos = []
+# Carregar combinações validadas (73 combinações com critério rigoroso)
+combinacoes_validadas = carregar_combinacoes_validadas()
+print(f"[OK] Carregadas {len(combinacoes_validadas)} combinações validadas para análise\n")
 
 # Baixar e processar cada arquivo
 for idx, url in enumerate(urls, 1):

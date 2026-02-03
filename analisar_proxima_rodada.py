@@ -4,6 +4,7 @@ from pathlib import Path
 import glob
 import warnings
 from scipy.stats import poisson
+from validador_combinacoes import carregar_combinacoes_validadas, validar_jogo
 
 # Suprimir warnings do pandas
 warnings.filterwarnings('ignore')
@@ -11,6 +12,10 @@ warnings.filterwarnings('ignore')
 print(f"{'='*80}")
 print(f"ANÁLISE DA PRÓXIMA RODADA - MÉDIAS HISTÓRICAS")
 print(f"{'='*80}\n")
+
+# Carregar combinações validadas
+combinacoes_validadas = carregar_combinacoes_validadas()
+print(f"[OK] Carregadas {len(combinacoes_validadas)} combinações validadas\n")
 
 # Mapeamento de códigos de liga para arquivos
 mapeamento_ligas = {
@@ -277,6 +282,9 @@ df_fixtures['PROB_A'] = np.nan
 df_fixtures['ODD_H_CALC'] = np.nan
 df_fixtures['ODD_D_CALC'] = np.nan
 df_fixtures['ODD_A_CALC'] = np.nan
+# Colunas de validação de combinações
+df_fixtures['VALIDADA_HOME'] = 'NÃO'
+df_fixtures['VALIDADA_AWAY'] = 'NÃO'
 
 print("Calculando médias históricas...\n")
 
@@ -414,6 +422,34 @@ for idx, row in df_fixtures.iterrows():
     # Calcular probabilidades usando Poisson se temos xGH e xGA
     xgh = df_fixtures.at[idx, 'xGH']
     xga = df_fixtures.at[idx, 'xGA']
+    
+    # Calcular DxG e validar combinações
+    dxg_tipo = ''
+    if pd.notna(xgh) and pd.notna(xga):
+        try:
+            diff = float(xgh) - float(xga)
+            if diff < -1.0:
+                dxg_tipo = 'FA'
+            elif -1.0 <= diff < -0.3:
+                dxg_tipo = 'LA'
+            elif -0.3 <= diff <= 0.3:
+                dxg_tipo = 'EQ'
+            elif 0.3 < diff <= 1.0:
+                dxg_tipo = 'LH'
+            else:
+                dxg_tipo = 'FH'
+        except:
+            pass
+    
+    # Validar combinações
+    if dxg_tipo and liga:
+        # Verificar HOME
+        if validar_jogo(liga, 'HOME', dxg_tipo, combinacoes_validadas):
+            df_fixtures.at[idx, 'VALIDADA_HOME'] = 'SIM'
+        
+        # Verificar AWAY
+        if validar_jogo(liga, 'AWAY', dxg_tipo, combinacoes_validadas):
+            df_fixtures.at[idx, 'VALIDADA_AWAY'] = 'SIM'
     
     if pd.notna(xgh) and pd.notna(xga) and xgh > 0 and xga > 0:
         try:
