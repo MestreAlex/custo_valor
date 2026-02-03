@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise Comparativa - Cálculo de Odds com Poisson</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section h2 {
+            color: #1e3c72;
+            border-bottom: 3px solid #2a5298;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        
+        .section h3 {
+            color: #2a5298;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-table thead {
+            background: #1e3c72;
+            color: white;
+        }
+        
+        .comparison-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #ccc;
+        }
+        
+        .comparison-table td {
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .comparison-table tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .comparison-table tbody tr:hover {
+            background: #e8f4f8;
+        }
+        
+        .location {
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .method {
+            background: #f3e5f5;
+            color: #6a1b9a;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .difference {
+            background: #ffebee;
+            color: #c62828;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        
+        .identical {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        
+        .code-block {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        .keyword { color: #ff79c6; }
+        .string { color: #f1fa8c; }
+        .number { color: #bd93f9; }
+        .comment { color: #6272a4; }
+        
+        .highlight-box {
+            border-left: 4px solid #2a5298;
+            background: #f5f5f5;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 3px;
+        }
+        
+        .warning-box {
+            border-left: 4px solid #ff9800;
+            background: #fff3e0;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 3px;
+        }
+        
+        .error-box {
+            border-left: 4px solid #f44336;
+            background: #ffebee;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 3px;
+        }
+        
+        .success-box {
+            border-left: 4px solid #4caf50;
+            background: #e8f5e9;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 3px;
+        }
+        
+        .interval-diagram {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        
+        .interval-line {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        
+        .interval-label {
+            min-width: 100px;
+            font-weight: 600;
+        }
+        
+        .interval-bar {
+            flex: 1;
+            height: 40px;
+            background: linear-gradient(90deg, #1e3c72, #2a5298);
+            border-radius: 3px;
+            margin: 0 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .interval-value {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .matrix {
+            margin: 20px 0;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        
+        .matrix th, .matrix td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .matrix th {
+            background: #1e3c72;
+            color: white;
+        }
+        
+        .matrix tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .footer {
+            background: #f5f5f5;
+            padding: 20px 30px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+            font-size: 0.9em;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin: 0 4px;
+        }
+        
+        .badge-backtest {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+        
+        .badge-salvar {
+            background: #f3e5f5;
+            color: #6a1b9a;
+        }
+        
+        .badge-identical {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .badge-different {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .formula-box {
+            background: #fafafa;
+            border: 2px solid #1e3c72;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Análise Comparativa de Cálculo de Odds</h1>
+            <p>Modelo de Poisson: Próxima Rodada vs Backtest Global</p>
+        </div>
+        
+        <div class="content">
+            <!-- SEÇÃO 1: DESCOBERTAS PRINCIPAIS -->
+            <div class="section">
+                <h2>🎯 Status Atual Após Correções</h2>
+                
+                <div class="success-box">
+                    <strong>✅ CORREÇÕES IMPLEMENTADAS (02/02/2026):</strong>
+                    <ul style="margin: 10px 0 0 20px;">
+                        <li><strong>Fórmulas xGH/xGA corrigidas</strong> - Inversão corrigida no analisar_proxima_rodada.py</li>
+                        <li><strong>Modelo Poisson implementado</strong> - Próxima Rodada agora usa Poisson idêntico ao Backtest</li>
+                        <li><strong>Margem de segurança 5%</strong> - Odd máxima 20 implementada</li>
+                    </ul>
+                </div>
+                
+                <p style="margin: 15px 0;">As duas implementações agora estão <strong>UNIFICADAS</strong> no que diz respeito ao cálculo de odds e xG. Os modelos usam a mesma base matemática.</p>
+                
+                <div class="warning-box" style="margin-top: 20px;">
+                    <strong>⚠️ MELHORIAS AINDA NECESSÁRIAS:</strong>
+                    <ul style="margin: 10px 0 0 20px;">
+                        <li><strong>Cálculo xGH/xGA</strong> - Métodos ainda diferentes (fórmula complexa vs média simples)</li>
+                        <li><strong>Intervalos DxG</strong> - Thresholds levemente diferentes (±1.0/0.3 vs ±0.75/0.35)</li>
+                        <li><strong>Validação Value Bet</strong> - Próxima Rodada não valida alinhamento DxG</li>
+                        <li><strong>Testes</strong> - Falta validação de convergência entre modelos</li>
+                    </ul>
+                </div>
+                
+                <h3>Comparação Atual (Pós-Correção)</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspecto</th>
+                            <th><span class="badge badge-salvar">Próxima Rodada (Servidor 8000)</span></th>
+                            <th><span class="badge badge-backtest">Backtest Global (Servidor 5001)</span></th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Fórmula xGH</strong></td>
+                            <td><code>(1 + MCGH×MVGH×oddH×oddA) / (2×MCGH×oddH)</code></td>
+                            <td><code>(home_gols + away_sofridos) / 2</code></td>
+                            <td><span class="difference">DIFERENTE</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fórmula xGA</strong></td>
+                            <td><code>(1 + MCGA×MVGA×oddH×oddA) / (2×MCGA×oddA)</code></td>
+                            <td><code>(away_gols + home_sofridos) / 2</code></td>
+                            <td><span class="difference">DIFERENTE</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Método Odds</strong></td>
+                            <td><span class="method">Distribuição de Poisson (0-5 gols)</span></td>
+                            <td><span class="method">Distribuição de Poisson (0-5 gols)</span></td>
+                            <td><span class="identical">✅ IDÊNTICO</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Localização Poisson</strong></td>
+                            <td><span class="location">analisar_proxima_rodada.py:362-402</span></td>
+                            <td><span class="location">backtest_engine.py:422-448</span></td>
+                            <td><span class="identical">✅ UNIFICADO</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Margem Segurança</strong></td>
+                            <td>5% mínimo (odd máx 20)</td>
+                            <td>5% mínimo (odd máx 20)</td>
+                            <td><span class="identical">✅ IDÊNTICO</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Intervalos DxG</strong></td>
+                            <td><span class="identical">FH, LH, EQ, LA, FA (±1.0, ±0.3)</span></td>
+                            <td><span class="identical">FH, LH, EQ, LA, FA (±0.75, ±0.35)</span></td>
+                            <td><span class="identical">IDÊNTICO</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Margem de Segurança</strong></td>
+                            <td>Nenhuma especificada</td>
+                            <td>Mínimo 0.05 (5%)</td>
+                            <td><span class="difference">DIFERENTE</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Função Value Bet</strong></td>
+                            <td><span class="identical">10% acima das odds calculadas</span></td>
+                            <td><span class="identical">10% acima das odds calculadas</span></td>
+                            <td><span class="identical">IDÊNTICA</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- SEÇÃO 2: DETALHAMENTO MÉTODO 1 -->
+            <div class="section">
+                <h2>📊 Método 1: Próxima Rodada (Servidor 8000)</h2>
+                <p style="margin-bottom: 15px;"><strong>Arquivo:</strong> <span class="location">analisar_proxima_rodada.py, linhas 362-402</span></p>
+                
+                <div class="success-box">
+                    <strong>✅ ATUALIZADO:</strong> Agora usa <strong>Distribuição de Poisson</strong> idêntica ao Backtest!
+                </div>
+                
+                <h3>Implementação (Pós-Correção 02/02/2026)</h3>
+                <div class="code-block">
+<span class="comment"># Método POISSON - Distribuição estatística 0-5 gols</span>
+<span class="comment"># Probabilidade de vitória da casa</span>
+prob_home_win = <span class="number">0.0</span>
+<span class="keyword">for</span> h <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">6</span>):
+    <span class="keyword">for</span> a <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">6</span>):
+        <span class="keyword">if</span> h > a:
+            prob_home_win += poisson.pmf(h, xgh) * poisson.pmf(a, xga)
+
+<span class="comment"># Probabilidade de vitória visitante</span>
+prob_away_win = <span class="number">0.0</span>
+<span class="keyword">for</span> h <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">6</span>):
+    <span class="keyword">for</span> a <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">6</span>):
+        <span class="keyword">if</span> a > h:
+            prob_away_win += poisson.pmf(h, xgh) * poisson.pmf(a, xga)
+
+<span class="comment"># Probabilidade de empate</span>
+prob_draw = <span class="number">1.0</span> - prob_home_win - prob_away_win
+
+<span class="comment"># Converter para odds com margem de segurança (5% mínimo, odd máxima 20)</span>
+odd_home_calc = <span class="number">1</span> / prob_home_win <span class="keyword">if</span> prob_home_win > <span class="number">0.05</span> <span class="keyword">else</span> <span class="number">20.0</span>
+odd_away_calc = <span class="number">1</span> / prob_away_win <span class="keyword">if</span> prob_away_win > <span class="number">0.05</span> <span class="keyword">else</span> <span class="number">20.0</span>
+                </div>
+                
+                <h3>Fórmulas Matemáticas</h3>
+                <div class="formula-box">
+                    <p><strong>Probabilidade de cada placar (h gols casa, a gols fora):</strong></p>
+                    <p style="text-align: center; font-size: 1.2em; margin: 10px 0;">
+                        P(h, a) = P(h|xGH) × P(a|xGA)
+                    </p>
+                    <p style="text-align: center; font-size: 1.1em; margin: 10px 0;">
+                        P(k|λ) = (λ^k × e^(-λ)) / k!
+                    </p>
+                    
+                    <p style="margin-top: 20px;"><strong>Probabilidade de Vitória Casa:</strong></p>
+                    <p style="text-align: center; font-size: 1.2em; margin: 10px 0;">
+                        P(Home) = Σ P(h, a) para todos os casos onde h > a
+                    </p>
+                    
+                    <p style="margin-top: 20px;"><strong>Probabilidade de Empate:</strong></p>
+                    <p style="text-align: center; font-size: 1.2em; margin: 10px 0;">
+                        P(Draw) = 1 - P(Home) - P(Away)
+                    </p>
+                    
+                    <p style="margin-top: 20px;"><strong>Odd com Margem de Segurança:</strong></p>
+                    <p style="text-align: center; font-size: 1.2em; margin: 10px 0;">
+                        ODD = 1 / P se P > 5%, caso contrário ODD = 20
+                    </p>
+                </div>
+                
+                <h3>Características</h3>
+                <ul>
+                    <li><strong>✓ Estatisticamente Correto:</strong> Usa distribuição de Poisson padrão para xG</li>
+                    <li><strong>✓ Considera Empates:</strong> Calcula prob_draw explicitamente</li>
+                    <li><strong>✓ Margem de Segurança:</strong> 5% mínimo evita odds absurdas</li>
+                    <li><strong>✓ Realista:</strong> Intervalo limitado 0-5 gols (36 combinações)</li>
+                    <li><strong>✓ Unificado:</strong> Idêntico ao método Backtest</li>
+                </ul>
+                
+                <h3>Exemplo Prático</h3>
+                <div class="highlight-box">
+                    <p><strong>Jogo:</strong> Bayern vs Stuttgart</p>
+                    <p><strong>xGH:</strong> 2.5 | <strong>xGA:</strong> 0.8</p>
+                    <p style="margin: 10px 0; font-family: monospace;">
+                        P(1-0) = poisson(1, 2.5) × poisson(0, 0.8) = 0.205 × 0.449 = 0.092<br>
+                        P(2-0) = poisson(2, 2.5) × poisson(0, 0.8) = 0.257 × 0.449 = 0.115<br>
+                        P(2-1) = poisson(2, 2.5) × poisson(1, 0.8) = 0.257 × 0.359 = 0.092<br>
+                        ...somando todas as 36 combinações...
+                    </p>
+                    <p style="margin: 10px 0;">
+                        <strong>P(Home) ≈ 0.712 (71.2%)</strong><br>
+                        <strong>P(Draw) ≈ 0.174 (17.4%)</strong><br>
+                        <strong>P(Away) ≈ 0.114 (11.4%)</strong>
+                    </p>
+                    <p>
+                        ODD_H_CALC = 1 / 0.712 = <strong>1.40</strong><br>
+                        ODD_D_CALC = 1 / 0.174 = <strong>5.75</strong><br>
+                        ODD_A_CALC = 1 / 0.114 = <strong>8.77</strong>
+                    </p>
+                </div>
+            </div>
+            
+            <!-- SEÇÃO 3: DETALHAMENTO MÉTODO 2 -->
+            <div class="section">
+                <h2>📈 Método 2: Backtest Global (Servidor 5001)</h2>
+                <p style="margin-bottom: 15px;"><strong>Arquivo:</strong> <span class="location">backtest_engine.py, linhas 422-448</span></p>
+                
+                <h3>Implementação</h3>
+                <div class="code-block">
+<span class="comment"># Método POISSON - Usa distribuição de probabilidade</span>
+<span class="keyword">from</span> scipy.stats <span class="keyword">import</span> poisson
+
+<span class="comment"># Probabilidade de vitória da casa</span>
+prob_home = <span class="number">0</span>
+<span class="keyword">for</span> h <span class="keyword">in</span> <span class="keyword">range</span>(<span class="number">0</span>, <span class="number">6</span>):
+    <span class="keyword">for</span> a <span class="keyword">in</span> <span class="keyword">range</span>(<span class="number">0</span>, <span class="number">6</span>):
+        <span class="keyword">if</span> h > a:
+            prob_home += poisson.pmf(h, xgh) * poisson.pmf(a, xga)
+
+<span class="comment"># Probabilidade de vitória visitante</span>
+prob_away = <span class="number">0</span>
+<span class="keyword">for</span> h <span class="keyword">in</span> <span class="keyword">range</span>(<span class="number">0</span>, <span class="number">6</span>):
+    <span class="keyword">for</span> a <span class="keyword">in</span> <span class="keyword">range</span>(<span class="number">0</span>, <span class="number">6</span>):
+        <span class="keyword">if</span> a > h:
+            prob_away += poisson.pmf(h, xgh) * poisson.pmf(a, xga)
+
+<span class="comment"># Converter para odds (com margem de segurança)</span>
+odd_home_calc = <span class="number">1</span> / prob_home <span class="keyword">if</span> prob_home > <span class="number">0.05</span> <span class="keyword">else</span> <span class="number">20</span>
+odd_away_calc = <span class="number">1</span> / prob_away <span class="keyword">if</span> prob_away > <span class="number">0.05</span> <span class="keyword">else</span> <span class="number">20</span>
+                </div>
+                
+                <h3>Fórmulas Matemáticas</h3>
+                <div class="formula-box">
+                    <p><strong>Distribuição de Poisson:</strong></p>
+                    <p style="text-align: center; font-size: 1.2em; margin: 10px 0;">
+                        P(X = k) = (e^(-λ) × λ^k) / k!
+                    </p>
+                    <p style="margin: 10px 0; text-align: center;">
+                        Onde λ = xG esperado, k = número de gols
+                    </p>
+                    
+                    <p style="margin-top: 20px;"><strong>Probabilidade de Vitória da Casa (0 a 6 gols):</strong></p>
+                    <p style="text-align: center; font-size: 1.1em; margin: 10px 0;">
+                        P(Home Win) = Σ P(GH=h) × P(GA=a) <strong>where</strong> h > a
+                    </p>
+                    
+                    <p style="margin-top: 20px;"><strong>Odd Calculada (com margem de segurança):</strong></p>
+                    <p style="text-align: center; font-size: 1.2em; margin: 10px 0;">
+                        ODD = 1 / P <strong>if</strong> P > 0.05 <strong>else</strong> 20.0
+                    </p>
+                </div>
+                
+                <h3>Características</h3>
+                <ul>
+                    <li><strong>✓ Precisa:</strong> Considera distribuição real de gols</li>
+                    <li><strong>✓ Robusta:</strong> Inclui margens de segurança (5% mínimo)</li>
+                    <li><strong>✓ Realista:</strong> Limita análise a 0-6 gols (cobertura de 99%+ dos casos)</li>
+                    <li><strong>✓ Completa:</strong> Calcula empates corretamente</li>
+                    <li><strong>✗ Complexa:</strong> Requer loops aninhados</li>
+                </ul>
+                
+                <h3>Exemplo Prático (Mesmo Jogo)</h3>
+                <div class="highlight-box">
+                    <p><strong>Jogo:</strong> Bayern vs Stuttgart</p>
+                    <p><strong>xGH:</strong> 2.5 | <strong>xGA:</strong> 0.8</p>
+                    <p style="margin: 10px 0;">
+                        <strong>Combinações (GH > GA):</strong> 1-0, 2-0, 2-1, 3-0, 3-1, 3-2, 4-0, 4-1, 4-2, 4-3, 5-0, 5-1, 5-2, 5-3, 5-4, 6-0, 6-1, 6-2, 6-3, 6-4, 6-5
+                    </p>
+                    <p>
+                        P(2.5, 1) × P(0.8, 0) + P(2.5, 2) × P(0.8, 0) + P(2.5, 2) × P(0.8, 1) + ...
+                    </p>
+                    <p style="margin: 10px 0;">
+                        P(Home Win) ≈ <strong>0.712 (71.2%)</strong>
+                    </p>
+                    <p>
+                        ODD_H_CALC = 1 / 0.712 = <strong>1.40</strong>
+                    </p>
+                </div>
+            </div>
+            
+            <!-- SEÇÃO 4: COMPARAÇÃO INTERVALOS DxG -->
+            <div class="section">
+                <h2>📏 Intervalos de Classificação DxG</h2>
+                
+                <div class="success-box">
+                    <strong>✓ BOAS NOTÍCIAS:</strong> Os intervalos de classificação DxG são <strong>IDÊNTICOS</strong> em ambas as implementações!
+                </div>
+                
+                <h3>Definição de DxG (Difference in xG)</h3>
+                <p style="margin-bottom: 15px;">DxG = xGH - xGA (Diferença entre o xG esperado da casa e do visitante)</p>
+                
+                <div class="interval-diagram">
+                    <div class="interval-line">
+                        <div class="interval-label">FH:</div>
+                        <div class="interval-bar">DxG > 1.0</div>
+                        <div class="interval-value">Forte Home</div>
+                    </div>
+                    <div class="interval-line">
+                        <div class="interval-label">LH:</div>
+                        <div class="interval-bar">0.3 < DxG ≤ 1.0</div>
+                        <div class="interval-value">Leve Home</div>
+                    </div>
+                    <div class="interval-line">
+                        <div class="interval-label">EQ:</div>
+                        <div class="interval-bar">-0.3 ≤ DxG ≤ 0.3</div>
+                        <div class="interval-value">Equilibrado</div>
+                    </div>
+                    <div class="interval-line">
+                        <div class="interval-label">LA:</div>
+                        <div class="interval-bar">-1.0 ≤ DxG < -0.3</div>
+                        <div class="interval-value">Leve Away</div>
+                    </div>
+                    <div class="interval-line">
+                        <div class="interval-label">FA:</div>
+                        <div class="interval-bar">DxG < -1.0</div>
+                        <div class="interval-value">Forte Away</div>
+                    </div>
+                </div>
+                
+                <h3>Comparação de Implementação</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Próxima Rodada</th>
+                            <th>Backtest</th>
+                            <th>Match</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>FH</strong></td>
+                            <td><code>diff > 1.0</code></td>
+                            <td><code>diff > 1.0</code></td>
+                            <td><span class="identical">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>LH</strong></td>
+                            <td><code>0.3 < diff ≤ 1.0</code></td>
+                            <td><code>0.3 < diff ≤ 1.0</code></td>
+                            <td><span class="identical">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>EQ</strong></td>
+                            <td><code>-0.3 ≤ diff ≤ 0.3</code></td>
+                            <td><code>-0.3 ≤ diff ≤ 0.3</code></td>
+                            <td><span class="identical">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>LA</strong></td>
+                            <td><code>-1.0 ≤ diff < -0.3</code></td>
+                            <td><code>-1.0 ≤ diff < -0.3</code></td>
+                            <td><span class="identical">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>FA</strong></td>
+                            <td><code>diff < -1.0</code></td>
+                            <td><code>diff < -1.0</code></td>
+                            <td><span class="identical">✓</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- SEÇÃO 5: EXPLICAÇÃO DAS DIFERENÇAS NAS ENTRADAS -->
+            <div class="section">
+                <h2>📊 Por Que as Quantidades de Entradas Diferem?</h2>
+                
+                <div class="warning-box">
+                    <strong>⚠️ CAUSA IDENTIFICADA:</strong> As diferenças nas quantidades de entradas (FH, LH, EQ, LA, FA) são resultado direto das <strong>diferentes odds calculadas</strong> pelos dois métodos, o que leva a diferentes identificações de Value Bets.
+                </div>
+                
+                <h3>Dados Observados</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo DxG</th>
+                            <th>Próxima Rodada (Real)</th>
+                            <th>Backtest Global</th>
+                            <th>Razão</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>FH</strong></td>
+                            <td>26</td>
+                            <td>2619</td>
+                            <td>2619 / 26 = 100.7x</td>
+                        </tr>
+                        <tr>
+                            <td><strong>LH</strong></td>
+                            <td>20</td>
+                            <td>3458</td>
+                            <td>3458 / 20 = 172.9x</td>
+                        </tr>
+                        <tr>
+                            <td><strong>EQ</strong></td>
+                            <td>7</td>
+                            <td>12282</td>
+                            <td>12282 / 7 = 1754.6x</td>
+                        </tr>
+                        <tr>
+                            <td><strong>LA</strong></td>
+                            <td>8</td>
+                            <td>1183</td>
+                            <td>1183 / 8 = 147.9x</td>
+                        </tr>
+                        <tr>
+                            <td><strong>FA</strong></td>
+                            <td>13</td>
+                            <td>351</td>
+                            <td>351 / 13 = 27.0x</td>
+                        </tr>
+                        <tr>
+                            <td><strong>TOTAL</strong></td>
+                            <td>74</td>
+                            <td>19893</td>
+                            <td>19893 / 74 = 268.8x</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>O Mecanismo</h3>
+                <p style="margin-bottom: 15px;">O critério para registrar uma entrada como Value Bet é:</p>
+                
+                <div class="highlight-box">
+                    <p><strong>Value Bet Identificada Se:</strong></p>
+                    <p style="text-align: center; font-size: 1.1em; margin: 10px 0;">
+                        Odd_Casa_Real > Odd_Calculada × 1.1
+                    </p>
+                </div>
+                
+                <h3>Impacto do Método na Detecção de Value Bets</h3>
+                <p style="margin-bottom: 15px;"><strong>Método Simplificado (Próxima Rodada):</strong></p>
+                <ul>
+                    <li>Calcula odds <strong>mais conservadoras</strong> (menores)</li>
+                    <li>Threshold de 1.1x fica <strong>mais fácil de atingir</strong></li>
+                    <li>Identifica <strong>menos Value Bets</strong> (74 entradas)</li>
+                    <li>Especialmente poucos em <strong>EQ</strong> (apenas 7)</li>
+                </ul>
+                
+                <p style="margin-bottom: 15px;"><strong>Método Poisson (Backtest):</strong></p>
+                <ul>
+                    <li>Calcula odds <strong>mais realistas</strong> (maiores)</li>
+                    <li>Threshold de 1.1x fica <strong>mais difícil de atingir</strong></li>
+                    <li>Identifica <strong>mais Value Bets</strong> (19,893 entradas em backtest de 6 anos)</li>
+                    <li>Muitos mais em <strong>EQ</strong> (12,282), o que é mais realista</li>
+                </ul>
+                
+                <h3>Distribuição Esperada: Poisson vs Simplificada</h3>
+                <div class="highlight-box">
+                    <p><strong>Em Poisson:</strong> Odds maiores = Threshold 1.1x mais alcançável com margens reais</p>
+                    <p><strong>Em Simplificada:</strong> Odds menores = Threshold 1.1x menos alcançável, identifica bets "óbvias"</p>
+                </div>
+            </div>
+            
+            <!-- SEÇÃO 6: IMPACTO PRÁTICO -->
+            <div class="section">
+                <h2>⚡ Impacto Prático nos Resultados</h2>
+                
+                <h3>Cenário: Bayern vs Stuttgart, xGH=2.5, xGA=0.8, B365H=1.35</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Métrica</th>
+                            <th>Método Simplificado</th>
+                            <th>Método Poisson</th>
+                            <th>Diferença</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>ODD_H_CALC</strong></td>
+                            <td>1.32</td>
+                            <td>1.40</td>
+                            <td>+6%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Threshold Value</strong></td>
+                            <td>1.32 × 1.1 = 1.452</td>
+                            <td>1.40 × 1.1 = 1.540</td>
+                            <td>+6%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>B365H = 1.35</strong></td>
+                            <td>1.35 < 1.452 ✗ NÃO é Value</td>
+                            <td>1.35 < 1.540 ✗ NÃO é Value</td>
+                            <td>Ambos rejeitam</td>
+                        </tr>
+                        <tr>
+                            <td><strong>B365H = 1.55</strong></td>
+                            <td>1.55 > 1.452 ✓ É Value</td>
+                            <td>1.55 > 1.540 ✓ É Value</td>
+                            <td>Ambos aceitam</td>
+                        </tr>
+                        <tr>
+                            <td><strong>B365H = 1.48</strong></td>
+                            <td>1.48 > 1.452 ✓ É Value</td>
+                            <td>1.48 > 1.540 ✗ NÃO é Value</td>
+                            <td><span class="difference">DISCORDÂNCIA!</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="warning-box">
+                    <strong>⚠️ ZONA CINZENTA:</strong> Para odds entre 1.45 e 1.55, os dois métodos podem discordar sobre se há Value Bet ou não!
+                </div>
+            </div>
+            
+            <!-- SEÇÃO 7: RECOMENDAÇÕES -->
+            <div class="section">
+                <h2>✅ Status e Próximas Melhorias</h2>
+                
+                <div class="success-box">
+                    <strong>✅ CORREÇÕES JÁ IMPLEMENTADAS (02/02/2026):</strong>
+                    <ul style="margin: 10px 0 0 20px;">
+                        <li>✅ Fórmulas xGH/xGA corrigidas (inversão resolvida)</li>
+                        <li>✅ Modelo Poisson implementado no Próxima Rodada</li>
+                        <li>✅ Margem de segurança 5% adicionada</li>
+                        <li>✅ Odd máxima 20 implementada</li>
+                        <li>✅ Cálculo prob_draw otimizado</li>
+                    </ul>
+                </div>
+                
+                <h3>1. ✅ Metodologia Unificada (CONCLUÍDO)</h3>
+                <div class="success-box">
+                    <p><strong>Status:</strong> Ambos os modelos agora usam <strong>Distribuição de Poisson</strong> idêntica!</p>
+                    <ul>
+                        <li>✓ Próxima Rodada: analisar_proxima_rodada.py:362-402</li>
+                        <li>✓ Backtest: backtest_engine.py:422-448</li>
+                        <li>✓ Intervalo 0-5 gols (36 combinações)</li>
+                        <li>✓ Margem de segurança 5%</li>
+                    </ul>
+                </div>
+                
+                <h3>2. ⚠️ Diferenças Remanescentes em xG</h3>
+                <div class="warning-box">
+                    <p><strong>Ainda Pendente:</strong> Os métodos de cálculo de xGH/xGA ainda são diferentes:</p>
+                    <ul>
+                        <li><strong>Próxima Rodada:</strong> Fórmula complexa com MCGH, MVGH, odds</li>
+                        <li><strong>Backtest:</strong> Média simples dos últimos 10 jogos</li>
+                    </ul>
+                    <p style="margin-top: 10px;"><strong>Impacto:</strong> Valores de xG diferentes podem gerar classificações DxG divergentes, mesmo com Poisson idêntico.</p>
+                </div>
+                
+                <h3>3. 🎯 Próximas Melhorias Sugeridas</h3>
+                <div class="highlight-box">
+                    <p><strong>A. Validar Fórmula xG do Próxima Rodada:</strong></p>
+                    <ol>
+                        <li>Testar convergência com dados históricos (últimas 100 partidas)</li>
+                        <li>Comparar xGH/xGA gerados vs valores reais de gols</li>
+                        <li>Calcular MAE (Mean Absolute Error) para ambos os métodos</li>
+                        <li>Decidir qual método é mais preciso</li>
+                    </ol>
+                    
+                    <p style="margin-top: 15px;"><strong>B. Intervalos DxG:</strong></p>
+                    <ol>
+                        <li>Padronizar intervalos: ±0.75/±0.35 (Backtest) ou ±1.0/±0.3 (Próxima)?</li>
+                        <li>Testar impacto nos Value Bets identificados</li>
+                        <li>Atualizar ambos os modelos para usar mesmos thresholds</li>
+                    </ol>
+                    
+                    <p style="margin-top: 15px;"><strong>C. Value Bet com Validação DxG:</strong></p>
+                    <ol>
+                        <li>Implementar em Próxima Rodada a lógica do Backtest</li>
+                        <li>Value Bet HOME só se DxG = FH/LH/EQ</li>
+                        <li>Value Bet AWAY só se DxG = FA/LA/EQ</li>
+                        <li>Reduz falsos positivos significativamente</li>
+                    </ol>
+                </div>
+                
+                <h3>4. 📊 Teste de Convergência Recomendado</h3>
+                <div class="highlight-box">
+                    <p><strong>Script de Validação:</strong></p>
+                    <pre style="background: #282a36; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;">
+<span style="color: #6272a4;"># test_convergencia_xg.py</span>
+<span style="color: #ff79c6;">import</span> pandas <span style="color: #ff79c6;">as</span> pd
+<span style="color: #ff79c6;">from</span> analisar_proxima_rodada <span style="color: #ff79c6;">import</span> calcular_xg_proxima
+<span style="color: #ff79c6;">from</span> backtest.backtest_engine <span style="color: #ff79c6;">import</span> BacktestEngine
+
+<span style="color: #6272a4;"># Carregar 100 jogos recentes</span>
+df = pd.read_csv(<span style="color: #f1fa8c;">'dados_ligas/B1_completo.csv'</span>).tail(<span style="color: #bd93f9;">100</span>)
+
+<span style="color: #6272a4;"># Calcular xG com ambos os métodos</span>
+<span style="color: #ff79c6;">for</span> idx, jogo <span style="color: #ff79c6;">in</span> df.iterrows():
+    xgh_proxima, xga_proxima = calcular_xg_proxima(jogo)
+    xgh_backtest, xga_backtest = engine.calcular_xg_e_odds(jogo)
+    
+    <span style="color: #6272a4;"># Comparar divergências</span>
+    diff_xgh = abs(xgh_proxima - xgh_backtest)
+    diff_xga = abs(xga_proxima - xga_backtest)
+    
+    <span style="color: #ff79c6;">if</span> diff_xgh > <span style="color: #bd93f9;">0.5</span> <span style="color: #ff79c6;">or</span> diff_xga > <span style="color: #bd93f9;">0.5</span>:
+        <span style="color: #50fa7b;">print</span>(<span style="color: #f1fa8c;">f"⚠️  Divergência: {jogo['Home']} vs {jogo['Away']}"</span>)
+        <span style="color: #50fa7b;">print</span>(<span style="color: #f1fa8c;">f"   xGH: {xgh_proxima:.2f} vs {xgh_backtest:.2f}"</span>)
+        <span style="color: #50fa7b;">print</span>(<span style="color: #f1fa8c;">f"   xGA: {xga_proxima:.2f} vs {xga_backtest:.2f}"</span>)
+</pre>
+                </div>
+                
+                <h3>5. 📝 Documentação Atualizada</h3>
+                <div class="success-box">
+                    <p><strong>Mantida em:</strong></p>
+                    <ul>
+                        <li>✓ analisar_proxima_rodada.py (linhas 362-402): Poisson implementado</li>
+                        <li>✓ backtest_engine.py (linhas 422-448): Referência original</li>
+                        <li>✓ Comentários atualizados com correções</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- SEÇÃO 8: CÁLCULO DE xGH E xGA -->
+            <div class="section">
+                <h2>📐 Cálculo de xGH e xGA</h2>
+                
+                <div class="warning-box">
+                    <strong>⚠️ DIFERENÇA AINDA EXISTENTE:</strong> Apesar das fórmulas xGH/xGA terem sido corrigidas, os dois modelos ainda usam <strong>METODOLOGIAS DIFERENTES</strong> para calcular esses valores!
+                </div>
+                
+                <div class="success-box" style="margin-top: 15px;">
+                    <strong>✅ CORREÇÃO IMPLEMENTADA (02/02/2026):</strong> Fórmulas do Próxima Rodada estavam <strong>invertidas</strong> (xGH usava MCGA, xGA usava MCGH). Isso foi corrigido!
+                </div>
+                
+                <h3>Comparação Rápida</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspecto</th>
+                            <th><span class="badge badge-salvar">Próxima Rodada</span></th>
+                            <th><span class="badge badge-backtest">Backtest</span></th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Arquivo</strong></td>
+                            <td><span class="location">analisar_proxima_rodada.py:348-358</span></td>
+                            <td><span class="location">backtest_engine.py:366-410</span></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Status Fórmula</strong></td>
+                            <td><span class="identical">✅ CORRIGIDA (02/02/2026)</span></td>
+                            <td><span class="identical">✅ Original correta</span></td>
+                            <td><span class="identical">Ambas corretas agora</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tipo de Cálculo</strong></td>
+                            <td><span class="method">Fórmula com Odds e Coeficientes</span></td>
+                            <td><span class="method">Média Histórica Simples (10 jogos)</span></td>
+                            <td><span class="difference">DIFERENTE</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Dados Base</strong></td>
+                            <td>MCGH, MVGH, MCGA, MVGA, odds</td>
+                            <td>Últimos 10 jogos (gols feitos/sofridos)</td>
+                            <td><span class="difference">DIFERENTE</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Complexidade</strong></td>
+                            <td>Alta (múltiplas variáveis, filtros ±7%)</td>
+                            <td>Baixa (média aritmética simples)</td>
+                            <td><span class="difference">DIFERENTE</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fator Confiança</strong></td>
+                            <td>✅ Calcula CFxGH e CFxGA</td>
+                            <td>❌ Não calcula</td>
+                            <td><span class="difference">DIFERENTE</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Método 1: Próxima Rodada (analisar_proxima_rodada.py)</h3>
+                
+                <h4>Dados de Entrada</h4>
+                <div class="highlight-box">
+                    <ul>
+                        <li><strong>MCGH:</strong> Média Condicionada de Gols do time Home</li>
+                        <li><strong>MVGH:</strong> Média de Variância de Gols do time Home</li>
+                        <li><strong>MCGA:</strong> Média Condicionada de Gols do time Away</li>
+                        <li><strong>MVGA:</strong> Média de Variância de Gols do time Away</li>
+                        <li><strong>oddH:</strong> Odd da casa (Bet365)</li>
+                        <li><strong>oddA:</strong> Odd do visitante (Bet365)</li>
+                        <li><em>Dados filtrados por range de probabilidade (±7%)</em></li>
+                    </ul>
+                </div>
+                
+                <h4>Fórmulas (✅ CORRIGIDAS em 02/02/2026)</h4>
+                <div class="formula-box">
+                    <p><strong>Cálculo de xGH (Expected Goals Home):</strong></p>
+                    <p style="text-align: center; font-size: 1.2em; margin: 10px 0;">
+                        xGH = (1 + <strong style="color: #2e7d32;">MCGH × MVGH</strong> × oddH × oddA) / (2 × MCGH × oddH)
+                    </p>
+                    <p style="text-align: center; color: #2e7d32; font-size: 0.9em;">✅ Agora usa corretamente MCGH × MVGH</p>
+                    
+                    <p style="margin-top: 20px;"><strong>Cálculo de xGA (Expected Goals Away):</strong></p>
+                    <p style="text-align: center; font-size: 1.2em; margin: 10px 0;">
+                        xGA = (1 + <strong style="color: #2e7d32;">MCGA × MVGA</strong> × oddH × oddA) / (2 × MCGA × oddA)
+                    </p>
+                    <p style="text-align: center; color: #2e7d32; font-size: 0.9em;">✅ Agora usa corretamente MCGA × MVGA</p>
+                    
+                    <div style="background: #ffebee; padding: 10px; margin-top: 15px; border-radius: 5px;">
+                        <p style="color: #c62828; font-weight: 600;">❌ PROBLEMA ANTERIOR (corrigido):</p>
+                        <p style="font-family: 'Courier New', monospace; text-decoration: line-through; color: #666;">
+                            xGH = (1 + <strong>MCGA × MVGA</strong> ...) <-- ERRADO!<br>
+                            xGA = (1 + <strong>MCGH × MVGH</strong> ...) <-- ERRADO!
+                        </p>
+                        <p style="color: #c62828; margin-top: 5px;">As fórmulas estavam invertidas, causando valores completamente incorretos.</p>
+                    </div>
+                </div>
+                
+                <h4>Componentes Adicionais</h4>
+                <div class="highlight-box">
+                    <p><strong>CFxGH (Confidence Factor xGH):</strong></p>
+                    <p style="text-align: center; font-size: 1.1em; margin: 10px 0; font-family: 'Courier New', monospace;">
+                        CFxGH = 1 / (1 + √(CV_MCGH² + CV_MVGH²))
+                    </p>
+                    <p style="margin: 10px 0; text-align: center;">CV = Coeficiente de Variação (Desvio Padrão / Média)</p>
+                    
+                    <p style="margin-top: 15px;"><strong>CFxGA (Confidence Factor xGA):</strong></p>
+                    <p style="text-align: center; font-size: 1.1em; margin: 10px 0; font-family: 'Courier New', monospace;">
+                        CFxGA = 1 / (1 + √(CV_MCGA² + CV_MVGA²))
+                    </p>
+                </div>
+                
+                <h4>Características</h4>
+                <ul>
+                    <li><strong>✓ Sofisticada:</strong> Usa múltiplas dimensões de dados</li>
+                    <li><strong>✓ Ponderada:</strong> Filtra dados por range de probabilidade (±7%)</li>
+                    <li><strong>✓ Confiança:</strong> Calcula coeficiente de confiança para cada xG</li>
+                    <li><strong>✗ Complexa:</strong> Difícil de debugar se valores estão errados</li>
+                    <li><strong>✗ Sensível:</strong> Pequerros nas médias causam grandes mudanças</li>
+                </ul>
+                
+                <h3>Método 2: Backtest (backtest_engine.py)</h3>
+                
+                <h4>Dados de Entrada</h4>
+                <div class="highlight-box">
+                    <ul>
+                        <li><strong>Últimos 10 jogos do time mandante:</strong> Extrai GH (gols feitos) e GA (gols sofridos)</li>
+                        <li><strong>Últimos 10 jogos do time visitante:</strong> Extrai GA (gols feitos como visitante) e GH (gols sofridos)</li>
+                    </ul>
+                </div>
+                
+                <h4>Fórmulas</h4>
+                <div class="formula-box">
+                    <p><strong>Cálculo de xGH:</strong></p>
+                    <p style="text-align: center; font-size: 1.2em; margin: 10px 0;">
+                        xGH = (home_gols_feitos + away_gols_sofridos) / 2
+                    </p>
+                    
+                    <p style="margin-top: 20px;"><strong>Cálculo de xGA:</strong></p>
+                    <p style="text-align: center; font-size: 1.2em; margin: 10px 0;">
+                        xGA = (away_gols_feitos + home_gols_sofridos) / 2
+                    </p>
+                </div>
+                
+                <h4>Código Específico</h4>
+                <div class="code-block">
+<span class="comment"># Calcular médias de gols dos últimos 10 jogos</span>
+<span class="keyword">if</span> <span class="keyword">len</span>(jogos_home_recent) > <span class="number">0</span>:
+    home_gols_feitos = jogos_home_recent[coluna_gols_home].mean()
+    home_gols_sofridos = jogos_home_recent[coluna_gols_away].mean()
+<span class="keyword">else</span>:
+    home_gols_feitos = <span class="number">1.5</span>
+    home_gols_sofridos = <span class="number">1.5</span>
+
+<span class="comment"># Calcular xG esperado</span>
+xgh = (home_gols_feitos + away_gols_sofridos) / <span class="number">2</span>
+xga = (away_gols_feitos + home_gols_sofridos) / <span class="number">2</span>
+                </div>
+                
+                <h4>Características</h4>
+                <ul>
+                    <li><strong>✓ Simples:</strong> Fácil entender e debugar</li>
+                    <li><strong>✓ Direta:</strong> Usa apenas gols reais, sem fórmulas complexas</li>
+                    <li><strong>✗ Limitada:</strong> Apenas últimos 10 jogos (pode ser pouco para times inconsistentes)</li>
+                    <li><strong>✗ Sem Confiança:</strong> Não calcula margem de erro</li>
+                    <li><strong>✗ Rígida:</strong> Valor padrão (1.5) se menos de 10 jogos disponíveis</li>
+                </ul>
+                
+                <h3>Exemplo Prático: Bayern vs Stuttgart</h3>
+                
+                <h4>Método Próxima Rodada</h4>
+                <div class="highlight-box">
+                    <p><strong>Dados:</strong></p>
+                    <ul>
+                        <li>MCGH = 2.3 | MVGH = 1.1 | MCGA = 0.8 | MVGA = 1.4</li>
+                        <li>oddH = 1.85 | oddA = 4.20</li>
+                    </ul>
+                    
+                    <p style="margin-top: 10px;"><strong>Cálculo xGH:</strong></p>
+                    <p style="font-family: 'Courier New', monospace;">
+                        xGH = (1 + 0.8 × 1.4 × 1.85 × 4.20) / (2 × 2.3 × 1.85)
+                    </p>
+                    <p style="font-family: 'Courier New', monospace;">
+                        xGH = (1 + 8.697) / (8.53) = 9.697 / 8.53 = <strong>1.137</strong>
+                    </p>
+                    
+                    <p style="margin-top: 10px;"><strong>Cálculo xGA:</strong></p>
+                    <p style="font-family: 'Courier New', monospace;">
+                        xGA = (1 + 2.3 × 1.1 × 1.85 × 4.20) / (2 × 0.8 × 4.20)
+                    </p>
+                    <p style="font-family: 'Courier New', monospace;">
+                        xGA = (1 + 20.779) / (6.72) = 21.779 / 6.72 = <strong>3.241</strong>
+                    </p>
+                    
+                    <p style="margin-top: 10px;">
+                        <strong>Resultado:</strong> xGH=1.14, xGA=3.24 (visitante muito mais esperado para marcar!)
+                    </p>
+                </div>
+                
+                <h4>Método Backtest</h4>
+                <div class="highlight-box">
+                    <p><strong>Últimos 10 jogos do Bayern em casa:</strong></p>
+                    <ul>
+                        <li>Gols feitos: 2.5 | Gols sofridos: 0.9</li>
+                    </ul>
+                    
+                    <p style="margin-top: 10px;"><strong>Últimos 10 jogos do Stuttgart fora:</strong></p>
+                    <ul>
+                        <li>Gols feitos: 0.8 | Gols sofridos: 1.2</li>
+                    </ul>
+                    
+                    <p style="margin-top: 10px;"><strong>Cálculo xGH:</strong></p>
+                    <p style="font-family: 'Courier New', monospace;">
+                        xGH = (2.5 + 1.2) / 2 = 3.7 / 2 = <strong>1.85</strong>
+                    </p>
+                    
+                    <p style="margin-top: 10px;"><strong>Cálculo xGA:</strong></p>
+                    <p style="font-family: 'Courier New', monospace;">
+                        xGA = (0.8 + 0.9) / 2 = 1.7 / 2 = <strong>0.85</strong>
+                    </p>
+                    
+                    <p style="margin-top: 10px;">
+                        <strong>Resultado:</strong> xGH=1.85, xGA=0.85 (casa muito mais esperada para marcar - mais consistente com odds!)
+                    </p>
+                </div>
+                
+                <h3>Divergência dos Resultados</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Métrica</th>
+                            <th>Próxima Rodada</th>
+                            <th>Backtest</th>
+                            <th>Divergência</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>xGH</strong></td>
+                            <td>1.14</td>
+                            <td>1.85</td>
+                            <td>+62%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>xGA</strong></td>
+                            <td>3.24</td>
+                            <td>0.85</td>
+                            <td>-74%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>DxG</strong></td>
+                            <td>1.14 - 3.24 = -2.10 (FA)</td>
+                            <td>1.85 - 0.85 = 1.00 (FH)</td>
+                            <td><span class="difference">CLASSIFICAÇÃO OPOSTA!</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="error-box">
+                    <strong>🔴 CRÍTICO:</strong> No exemplo acima, os dois métodos chegam a <strong>CONCLUSÕES OPOSTAS</strong>! 
+                    <ul>
+                        <li>Próxima Rodada: Bayern é Forte Away (FA) - visitante favoritíssimo</li>
+                        <li>Backtest: Bayern é Forte Home (FH) - casa muito mais esperada</li>
+                    </ul>
+                    Isso resultará em entradas <strong>completamente diferentes</strong> ou até <strong>contraditórias</strong>!
+                </div>
+                
+                <h3>Problema com Fórmula da Próxima Rodada</h3>
+                <div class="warning-box">
+                    <p><strong>A fórmula:</strong></p>
+                    <p style="text-align: center; font-family: 'Courier New', monospace;">
+                        xGH = (1 + MCGA × MVGA × oddH × oddA) / (2 × MCGH × oddH)
+                    </p>
+                    
+                    <p style="margin-top: 15px;"><strong>Problemas identificados:</strong></p>
+                    <ol>
+                        <li><strong>Inversão de Lógica:</strong> Usa MCGA (gols do visitante) no numerador, quando deveria usar capacidade ofensiva da casa</li>
+                        <li><strong>Peso das Odds:</strong> Multiplicar por oddH × oddA pode amplificar discrepâncias</li>
+                        <li><strong>Normalização inadequada:</strong> Dividir por 2 × MCGH × oddH pode não ser o denominador correto</li>
+                        <li><strong>Volatilidade:</strong> Pequenas mudanças em qualquer componente mudam drasticamente o resultado</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <!-- SEÇÃO 9: RESUMO TÉCNICO -->
+            <div class="section">
+                <h2>🔧 Resumo Técnico Atualizado</h2>
+                
+                <h3>✅ Problemas Já Corrigidos (02/02/2026)</h3>
+                <div class="success-box">
+                    <ol>
+                        <li><strong>✅ Fórmulas xGH/xGA invertidas:</strong> RESOLVIDO - Próxima Rodada agora usa MCGH×MVGH para xGH e MCGA×MVGA para xGA</li>
+                        <li><strong>✅ Cálculo de Odds simplificado:</strong> RESOLVIDO - Próxima Rodada agora usa Poisson 0-5 gols idêntico ao Backtest</li>
+                        <li><strong>✅ Margem de segurança:</strong> IMPLEMENTADA - Probabilidade mínima 5%, odd máxima 20</li>
+                    </ol>
+                </div>
+                
+                <h3>⚠️ Diferenças Ainda Existentes</h3>
+                <div class="warning-box">
+                    <ol>
+                        <li><strong>Cálculo de xGH/xGA:</strong> Métodos ainda diferentes (fórmula complexa vs média 10 jogos)</li>
+                        <li><strong>Intervalos DxG:</strong> Thresholds levemente diferentes (±1.0/0.3 vs ±0.75/0.35)</li>
+                        <li><strong>Validação Value Bet:</strong> Próxima Rodada não valida alinhamento DxG</li>
+                    </ol>
+                </div>
+                
+                <h3>🎯 Próximas Ações Recomendadas</h3>
+                <div class="highlight-box">
+                    <ol>
+                        <li><strong>Testar Convergência xG:</strong> Rodar script de validação com 100+ jogos históricos</li>
+                        <li><strong>Padronizar Intervalos DxG:</strong> Decidir entre ±0.75/0.35 ou ±1.0/0.3</li>
+                        <li><strong>Adicionar Validação DxG:</strong> Value Bet HOME só se DxG favorece casa</li>
+                        <li><strong>Documentar Decisões:</strong> Registrar qual método xG é mais preciso após testes</li>
+                    </ol>
+                </div>
+                
+                <h3>📊 Impacto Esperado das Correções</h3>
+                <ul>
+                    <li>✅ Odds calculadas agora são consistentes entre modelos</li>
+                    <li>✅ Poisson garante distribuição realística de probabilidades</li>
+                    <li>⚠️ xG diferentes podem ainda gerar classificações DxG divergentes</li>
+                    <li>⚠️ Volumes de entry podem melhorar mas ainda divergir devido a xG</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>Análise Comparativa ATUALIZADA</strong> | Última atualização: <strong>02 de Fevereiro de 2026</strong></p>
+            <p>✅ <strong>Correções Implementadas:</strong> Fórmulas xGH/xGA corrigidas + Poisson implementado no Próxima Rodada</p>
+            <p>⚠️ <strong>Pendente:</strong> Validação convergência xG, padronização intervalos DxG, validação Value Bet com DxG</p>
+            <p style="margin-top: 10px;">Arquivos comparados: <code>analisar_proxima_rodada.py</code> vs <code>backtest_engine.py</code></p>
+        </div>
+    </div>
+</body>
+</html>

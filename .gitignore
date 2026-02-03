@@ -1,0 +1,82 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+backtest_execution.log
+backtest_progress.txt
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+.~*
+
+# Data files (CSVs - podem ser grandes)
+fixtures/*.csv
+fixtures/*_*.json
+dados_ligas/*.csv
+dados_ligas_new/*.csv
+backtest/*.csv
+
+# Cache
+.cache/
+*.cache
+
+# OS
+Thumbs.db
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Generated files (exceto os principais)
+ANALISE_*.md
+test_*.py
+debug_*.py
+
+# Arquivos que podem conter dados sensíveis
+*.key
+*.secret
+config.local.py
+settings.local.py

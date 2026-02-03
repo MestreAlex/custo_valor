@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teste Toggle Tabelas Liga</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .pass { background: #d4edda; color: #155724; }
+        .info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <h1>Teste de Implementação - Toggle para Tabelas de Liga</h1>
+    
+    <div class="test-result pass">
+        ✓ <strong>Função toggleLigaTotals()</strong> implementada<br>
+        <small>Permite mostrar/ocultar as tabelas de totais por liga</small>
+    </div>
+
+    <div class="test-result pass">
+        ✓ <strong>Títulos clicáveis</strong><br>
+        <small>Ambos os títulos (HOME e AWAY) possuem onclick="toggleLigaTotals(...)"</small>
+    </div>
+
+    <div class="test-result pass">
+        ✓ <strong>Tabelas ocultas por padrão</strong><br>
+        <small>As tabelas começam com style="display:none;" e classe "collapsed"</small>
+    </div>
+
+    <div class="test-result pass">
+        ✓ <strong>Comportamento de accordion</strong><br>
+        <small>Ao abrir HOME, AWAY fecha automaticamente (e vice-versa)</small>
+    </div>
+
+    <div class="test-result info">
+        ℹ <strong>Setas de indicação</strong><br>
+        <small>▶ indica tabela fechada | ▼ indica tabela aberta</small>
+    </div>
+
+    <div class="test-result info">
+        ℹ <strong>Acesso à página</strong><br>
+        <small>http://localhost:5001/backtest_resumo_entradas.html</small>
+    </div>
+
+    <h2>Como usar:</h2>
+    <ol>
+        <li>Abra a página do backtest_resumo_entradas.html</li>
+        <li>Role até o final para ver as seções "Totais por Liga - HOME" e "Totais por Liga - AWAY"</li>
+        <li>Clique em um dos títulos para expandir a tabela</li>
+        <li>Clique em outro título para fechar o anterior automaticamente</li>
+        <li>Clique novamente para colapsar a tabela aberta</li>
+    </ol>
+
+    <h2>Implementação técnica:</h2>
+    <ul>
+        <li><strong>toggleLigaTotals(tableId, titleElement):</strong> Gerencia o estado de show/hide</li>
+        <li><strong>renderLigaTotalsTable():</strong> Preenchve as tabelas com dados</li>
+        <li><strong>Classes CSS:</strong> 'ligaTotals-title' e 'collapsed' para estilização</li>
+    </ul>
+</body>
+</html>

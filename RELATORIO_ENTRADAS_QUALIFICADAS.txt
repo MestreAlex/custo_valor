@@ -1,0 +1,92 @@
+====================================================================================================
+📊 RELATÓRIO - ENTRADAS QUE ATENDEM OS CRITÉRIOS
+====================================================================================================
+Filtros Aplicados:
+  - Quantidade de entradas >= 30
+  - ROI >= 5%
+  - Lucro >= 5.0
+
+Total de Entradas Qualificadas: 40
+====================================================================================================
+
+Nº   Liga         Tipo   DxG   Entradas   Lucro      ROI %      Winrate %   
+----------------------------------------------------------------------------------------------------
+1    N1           AWAY   LA    31         17.61      56.81      45.16       
+2    E0           AWAY   LH    55         25.63      46.60      20.00       
+3    POL          AWAY   FA    65         25.69      39.52      53.85       
+4    SWZ          AWAY   FA    43         15.95      37.09      69.77       
+5    FIN          AWAY   FA    30         10.08      33.58      66.67       
+6    F1           AWAY   FA    70         22.44      32.06      55.71       
+7    IRL          AWAY   LA    68         20.35      29.93      39.71       
+8    N1           AWAY   FA    46         13.48      29.29      58.70       
+9    G1           AWAY   LA    50         12.85      25.71      46.00       
+10   FIN          AWAY   LA    37         9.02       24.39      45.95       
+11   T1           AWAY   FA    66         16.05      24.32      51.52       
+12   N1           HOME   FH    67         16.10      24.03      61.19       
+13   NOR          HOME   FH    78         18.74      24.02      62.82       
+14   ROU          AWAY   FA    51         12.07      23.67      50.98       
+15   SP1          AWAY   LH    58         12.34      21.27      20.69       
+16   IRL          HOME   LH    56         11.70      20.89      44.64       
+17   ROU          HOME   LH    88         17.45      19.83      44.32       
+18   E1           HOME   FH    145        28.22      19.46      59.31       
+19   DNK          AWAY   FA    32         6.06       18.95      62.50       
+20   MEX          HOME   LH    94         17.76      18.90      50.00       
+21   MEX          HOME   FH    72         13.43      18.65      59.72       
+22   MEX          AWAY   EQ    140        25.54      18.24      40.00       
+23   P1           HOME   FH    64         11.61      18.14      54.69       
+24   T1           HOME   FH    113        18.36      16.25      59.29       
+25   I2           AWAY   FA    86         12.59      14.64      43.02       
+26   BRA          AWAY   FA    43         5.65       13.15      58.14       
+27   USA          AWAY   LA    199        26.13      13.13      37.19       
+28   AUT          HOME   FH    50         5.76       11.52      56.00       
+29   POL          HOME   FH    114        11.93      10.46      61.40       
+30   USA          AWAY   FA    104        10.53      10.13      42.31       
+31   DNK          HOME   LH    54         5.31       9.83       42.59       
+32   CHN          HOME   FH    61         5.89       9.66       55.74       
+33   E1           AWAY   FA    108        8.59       7.96       45.37       
+34   E0           AWAY   EQ    117        8.66       7.40       30.77       
+35   F1           HOME   FH    131        9.16       6.99       55.73       
+36   F1           AWAY   EQ    115        7.49       6.51       31.30       
+37   POL          HOME   LH    146        9.44       6.47       43.15       
+38   BRA          HOME   LH    135        8.67       6.42       46.67       
+39   F1           HOME   LH    92         5.07       5.51       39.13       
+40   D1           HOME   LH    134        7.09       5.29       38.06       
+====================================================================================================
+
+📈 ESTATÍSTICAS GERAIS:
+Total de combinações qualificadas: 40
+
+Distribuição por Tipo:
+  AWAY: 22 entradas
+  HOME: 18 entradas
+
+Distribuição por DxG:
+  EQ: 3 entradas
+  FA: 12 entradas
+  FH: 10 entradas
+  LA: 5 entradas
+  LH: 10 entradas
+
+Distribuição por Liga:
+  F1: 4 entradas
+  N1: 3 entradas
+  POL: 3 entradas
+  MEX: 3 entradas
+  E0: 2 entradas
+  FIN: 2 entradas
+  IRL: 2 entradas
+  T1: 2 entradas
+  ROU: 2 entradas
+  E1: 2 entradas
+  DNK: 2 entradas
+  BRA: 2 entradas
+  USA: 2 entradas
+  SWZ: 1 entradas
+  G1: 1 entradas
+  NOR: 1 entradas
+  SP1: 1 entradas
+  P1: 1 entradas
+  I2: 1 entradas
+  AUT: 1 entradas
+  CHN: 1 entradas
+  D1: 1 entradas

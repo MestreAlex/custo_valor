@@ -1,0 +1,24 @@
+RELATÓRIO DE DOWNLOAD - 2026-01-29 22:33:02
+================================================================================
+
+                           nome total_jogos temporadas times       arquivo_csv      arquivo_excel
+E1         England Championship        7520         14    52   E1_completo.csv   E1_completo.xlsx
+SP2             Spain La Liga 2        6262         14    66  SP2_completo.csv  SP2_completo.xlsx
+I2                Italy Serie B        5270         13    59   I2_completo.csv   I2_completo.xlsx
+I1                Italy Serie A        5165         14    39   I1_completo.csv   I1_completo.xlsx
+SP1               Spain La Liga        5149         14    33  SP1_completo.csv  SP1_completo.xlsx
+F2               France Ligue 2        4944         14    54   F2_completo.csv   F2_completo.xlsx
+F1               France Ligue 1        4864         14    36   F1_completo.csv   F1_completo.xlsx
+T1             Turkey Super Lig        4492         14    43   T1_completo.csv   T1_completo.xlsx
+D2        Germany 2. Bundesliga        4149         14    41   D2_completo.csv   D2_completo.xlsx
+D1           Germany Bundesliga        4148         14    31   D1_completo.csv   D1_completo.xlsx
+N1       Netherlands Eredivisie        4085         14    29   N1_completo.csv   N1_completo.xlsx
+P1       Portugal Primeira Liga        4020         14    34   P1_completo.csv   P1_completo.xlsx
+B1   Belgium Jupiler Pro League        3630         14    29   B1_completo.csv   B1_completo.xlsx
+G1          Greece Super League        3435         14    30   G1_completo.csv   G1_completo.xlsx
+
+================================================================================
+Total de ligas processadas: 14
+Total de jogos baixados: 67,133
+
+Arquivos salvos em: C:\Users\Alex Menezes\projetos\custo_valor\dados_ligas

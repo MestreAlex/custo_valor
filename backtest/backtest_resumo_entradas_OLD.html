@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumo de Entradas - Backtest</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #ecf0f1;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #00d4ff;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .ligas-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+
+        .liga-btn {
+            padding: 12px 16px;
+            border: 2px solid #00d4ff;
+            background: rgba(0, 212, 255, 0.1);
+            color: #00d4ff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .liga-btn:hover {
+            background: rgba(0, 212, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .liga-btn.active {
+            background: #00d4ff;
+            color: #1a1a2e;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
+        }
+
+        .tabelas-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .tabela-wrapper {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #00d4ff;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+        }
+
+        .tabela-titulo {
+            background: linear-gradient(90deg, #0a5f7e 0%, #00d4ff 100%);
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            color: white;
+        }
+
+        .tabela-scroll {
+            overflow-x: auto;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        thead {
+            position: sticky;
+            top: 0;
+            background: #0a5f7e;
+            z-index: 10;
+        }
+
+        th {
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: bold;
+            color: #00d4ff;
+            border: 1px solid #0a5f7e;
+        }
+
+        td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #333;
+            vertical-align: top;
+        }
+
+        tbody tr:nth-child(odd) {
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        tbody tr:hover {
+            background: rgba(0, 212, 255, 0.15);
+        }
+
+        .temporada-col {
+            font-weight: bold;
+            color: #00d4ff;
+            background: rgba(0, 0, 0, 0.3);
+            width: 100px;
+            position: sticky;
+            left: 0;
+            z-index: 5;
+        }
+
+        .entrada-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 11px;
+            min-width: 80px;
+        }
+
+        .entrada-number {
+            font-weight: bold;
+            color: #00ff88;
+        }
+
+        .entrada-lucro {
+            color: #ffaa00;
+        }
+
+        .entrada-lucro.positivo {
+            color: #00ff88;
+        }
+
+        .entrada-lucro.negativo {
+            color: #ff4444;
+        }
+
+        .entrada-stats {
+            font-size: 10px;
+            color: #aaa;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #00d4ff;
+        }
+
+        @media (max-width: 1200px) {
+            .tabelas-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .info-box {
+            background: rgba(0, 212, 255, 0.1);
+            border-left: 4px solid #00d4ff;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .legenda {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 13px;
+        }
+
+        .legenda-item {
+            margin: 8px 0;
+            color: #aaa;
+        }
+
+        .legenda-item strong {
+            color: #00d4ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Resumo de Entradas por Liga e Temporada</h1>
+
+        <div class="info-box">
+            ℹ️ Clique em uma liga abaixo para visualizar as estatísticas de entradas HOME e AWAY
+        </div>
+
+        <div class="ligas-container" id="ligasContainer">
+            <div class="loading">Carregando ligas...</div>
+        </div>
+
+        <div class="tabelas-container">
+            <div class="tabela-wrapper">
+                <div class="tabela-titulo">🏠 Entradas HOME</div>
+                <div class="tabela-scroll">
+                    <table id="tabelaHome">
+                        <thead>
+                            <tr>
+                                <th>Temporada</th>
+                                <th>FH</th>
+                                <th>LH</th>
+                                <th>EQ</th>
+                                <th>LA</th>
+                                <th>FA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="6" class="empty-state">Selecione uma liga</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tabela-wrapper">
+                <div class="tabela-titulo">✈️ Entradas AWAY</div>
+                <div class="tabela-scroll">
+                    <table id="tabelaAway">
+                        <thead>
+                            <tr>
+                                <th>Temporada</th>
+                                <th>FH</th>
+                                <th>LH</th>
+                                <th>EQ</th>
+                                <th>LA</th>
+                                <th>FA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="6" class="empty-state">Selecione uma liga</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div style="padding: 20px;">
+            <h2>📊 Resumo por Liga e Estratégia (Todas as Temporadas)</h2>
+            <div class="tabelas-container">
+                <div class="tabela-wrapper">
+                    <div class="tabela-titulo">🏠 HOME - Resumo por Liga</div>
+                    <div class="tabela-scroll">
+                        <table id="tabelaLigasHome">
+                            <thead>
+                                <tr>
+                                    <th style="position: sticky; left: 0; z-index: 5;">Liga</th>
+                                    <th>FH</th>
+                                    <th>LH</th>
+                                    <th>EQ</th>
+                                    <th>LA</th>
+                                    <th>FA</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="6" class="empty-state">Carregando...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tabela-wrapper">
+                    <div class="tabela-titulo">✈️ AWAY - Resumo por Liga</div>
+                    <div class="tabela-scroll">
+                        <table id="tabelaLigasAway">
+                            <thead>
+                                <tr>
+                                    <th style="position: sticky; left: 0; z-index: 5;">Liga</th>
+                                    <th>FH</th>
+                                    <th>LH</th>
+                                    <th>EQ</th>
+                                    <th>LA</th>
+                                    <th>FA</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="6" class="empty-state">Carregando...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let todasAsLigas = [];
+        let ligaSelecionada = null;
+        let todosDados = {};
+
+        // Carrega todas as ligas e dados
+        async function carregarDados() {
+            try {
+                const response = await fetch('/api/resumo_entradas');
+                if (!response.ok) {
+                    console.error('Erro na resposta:', response.status);
+                    return;
+                }
+
+                const data = await response.json();
+                console.log('Dados carregados:', data);
+
+                todosDados = data;
+                todasAsLigas = Object.keys(data).sort();
+
+                renderizarBotoesLigas();
+
+                // Seleciona primeira liga automaticamente
+                if (todasAsLigas.length > 0) {
+                    selecionarLiga(todasAsLigas[0]);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar dados:', error);
+                document.getElementById('ligasContainer').innerHTML =
+                    '<div class="empty-state">Erro ao carregar dados. Verifique se o backtest foi executado.</div>';
+            }
+        }
+
+        function renderizarBotoesLigas() {
+            const container = document.getElementById('ligasContainer');
+            container.innerHTML = todasAsLigas.map(liga =>
+                `<button class="liga-btn" onclick="selecionarLiga('${liga}')">${liga}</button>`
+            ).join('');
+        }
+
+        function selecionarLiga(liga) {
+            ligaSelecionada = liga;
+
+            // Atualizar botões
+            document.querySelectorAll('.liga-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent === liga) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Renderizar tabelas
+            renderizarTabelas(liga);
+        }
+
+        function renderizarTabelas(liga) {
+            const dadosLiga = todosDados[liga];
+            if (!dadosLiga) return;
+
+            // Extrair temporadas dinamicamente dos dados (aceita yyyy/yyyy e yyyy)
+            const temporadaSet = new Set();
+            Object.keys(dadosLiga).forEach(chave => {
+                const partes = chave.split('_');
+                if (partes.length >= 2) {
+                    const temporada = partes[1]; // A temporada é a segunda parte
+                    temporadaSet.add(temporada);
+                }
+            });
+            
+            // Ordenar temporadas (yyyy/yyyy primeiro, depois yyyy)
+            const temporadas = Array.from(temporadaSet).sort((a, b) => {
+                // Se contém '/', comparar como yyyy/yyyy
+                if (a.includes('/') && b.includes('/')) {
+                    return a.localeCompare(b);
+                }
+                // Se ambas são yyyy, comparar numericamente
+                if (!a.includes('/') && !b.includes('/')) {
+                    return parseInt(a) - parseInt(b);
+                }
+                // yyyy/yyyy vem primeiro
+                return a.includes('/') ? -1 : 1;
+            });
+            
+            const tipos = ['FH', 'LH', 'EQ', 'LA', 'FA'];
+
+            // Renderizar HOME
+            renderizarTabela('tabelaHome', 'HOME', dadosLiga, temporadas, tipos);
+            // Renderizar AWAY
+            renderizarTabela('tabelaAway', 'AWAY', dadosLiga, temporadas, tipos);
+        }
+
+        function renderizarTabela(tabelaId, tipo, dadosLiga, temporadas, tipos) {
+            const tabela = document.getElementById(tabelaId);
+            const tbody = tabela.querySelector('tbody');
+
+            // Limpar tbody
+            tbody.innerHTML = '';
+
+            // Criar linhas para cada temporada
+            temporadas.forEach(temporada => {
+                const tr = document.createElement('tr');
+
+                // Coluna de temporada
+                const tdTemporada = document.createElement('td');
+                tdTemporada.className = 'temporada-col';
+                tdTemporada.textContent = temporada;
+                tr.appendChild(tdTemporada);
+
+                // Colunas para cada tipo
+                tipos.forEach(tipoEntrada => {
+                    const chave = `${tipo}_${temporada}_${tipoEntrada}`;
+                    const dados = dadosLiga[chave] || { entradas: 0, lucro: 0, winrate: 0, roi: 0 };
+
+                    const td = document.createElement('td');
+                    td.innerHTML = formatarCelula(dados);
+                    tr.appendChild(td);
+                });
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        function formatarCelula(dados) {
+            if (dados.entradas === 0) {
+                return '<span style="color: #666;">-</span>';
+            }
+
+            const lucroClass = dados.lucro >= 0 ? 'positivo' : 'negativo';
+            const lucrSign = dados.lucro >= 0 ? '+' : '';
+
+            return `
+                <div class="entrada-info">
+                    <div class="entrada-number">Entradas: ${dados.entradas}</div>
+                    <div class="entrada-lucro ${lucroClass}">Lucro: ${lucrSign}${dados.lucro.toFixed(2)}</div>
+                    <div class="entrada-stats">
+                        <div>WR: ${dados.winrate.toFixed(1)}%</div>
+                        <div>ROI: ${dados.roi.toFixed(2)}%</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function gerarCardsResumo() {
+            const container = document.getElementById('cardsContainer');
+            container.innerHTML = '';
+
+            todasAsLigas.forEach(liga => {
+                const dadosLiga = todosDados[liga];
+                if (!dadosLiga) return;
+
+                // Agregar dados por tipo (HOME/AWAY) e estratégia (FH, LH, EQ, LA, FA)
+                const resumoEstrategias = {};
+                const tipos = ['FH', 'LH', 'EQ', 'LA', 'FA'];
+
+                tipos.forEach(tipo => {
+                    resumoEstrategias[tipo] = {
+                        homeEntradas: 0, homeLucro: 0, homeAcertos: 0,
+                        awayEntradas: 0, awayLucro: 0, awayAcertos: 0
+                    };
+                });
+
+                Object.keys(dadosLiga).forEach(chave => {
+                    const partes = chave.split('_');
+                    if (partes.length >= 3) {
+                        const tipoAposta = partes[0]; // HOME ou AWAY
+                        const estrategia = partes[2]; // FH, LH, EQ, LA, FA
+                        const dados = dadosLiga[chave];
+
+                        if (resumoEstrategias[estrategia]) {
+                            if (tipoAposta === 'HOME') {
+                                resumoEstrategias[estrategia].homeEntradas += dados.entradas || 0;
+                                resumoEstrategias[estrategia].homeLucro += dados.lucro || 0;
+                                resumoEstrategias[estrategia].homeAcertos += dados.acertos || 0;
+                            } else if (tipoAposta === 'AWAY') {
+                                resumoEstrategias[estrategia].awayEntradas += dados.entradas || 0;
+                                resumoEstrategias[estrategia].awayLucro += dados.lucro || 0;
+                                resumoEstrategias[estrategia].awayAcertos += dados.acertos || 0;
+                            }
+                        }
+                    }
+                });
+
+                // Criar card para a liga
+                const card = document.createElement('div');
+                card.style.cssText = 'border: 1px solid #ccc; border-radius: 4px; padding: 8px; background: #f9f9f9; box-shadow: 0 1px 2px rgba(0,0,0,0.1); font-size: 11px;';
+                
+                let html = `<h4 style="margin: 0 0 6px 0; font-size: 12px; color: #333; text-align: center;">${liga}</h4>`;
+                html += '<div>';
+
+                tipos.forEach(tipo => {
+                    const res = resumoEstrategias[tipo];
+                    const totalEntradas = res.homeEntradas + res.awayEntradas;
+                    
+                    if (totalEntradas > 0) {
+                        const totalLucro = res.homeLucro + res.awayLucro;
+                        const totalAcertos = res.homeAcertos + res.awayAcertos;
+                        const winrate = (totalAcertos / totalEntradas) * 100;
+                        const roi = (totalLucro / totalEntradas) * 100;
+                        const lucroClass = totalLucro >= 0 ? 'color: green; font-weight: bold;' : 'color: red; font-weight: bold;';
+
+                        html += `
+                            <div style="margin-bottom: 4px; padding: 4px; background: white; border-radius: 2px; line-height: 1.3;">
+                                <strong style="font-size: 11px;">${tipo}</strong><br>
+                                <span style="font-size: 10px;">E:${totalEntradas} | <span style="${lucroClass}">L:${totalLucro >= 0 ? '+' : ''}${totalLucro.toFixed(1)}</span></span><br>
+                                <span style="font-size: 10px;">WR:${winrate.toFixed(0)}% ROI:${roi.toFixed(1)}%</span>
+                            </div>
+                        `;
+                    }
+                });
+
+                html += '</div>';
+                card.innerHTML = html;
+                container.appendChild(card);
+            });
+        }
+
+        // Inicializar ao carregar a página
+        window.addEventListener('load', () => {
+            carregarDados();
+            // Gerar cards após carregar dados
+            setTimeout(gerarCardsResumo, 500);
+        });
+
+        // Atualizar cards quando mudar de liga (para highlight)
+        function selecionarLiga(liga) {
+            ligaSelecionada = liga;
+            document.querySelectorAll('.liga-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent === liga) {
+                    btn.classList.add('active');
+                }
+            });
+            renderizarTabelas(liga);
+        }
+    </script>
+</body>
+</html>

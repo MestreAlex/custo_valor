@@ -1,0 +1,1960 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backtest - Temporada 2024/2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .controls {
+            padding: 30px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #bd2130 100%);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+        }
+        
+        .btn-info {
+            background: linear-gradient(135deg, #17a2b8 0%, #0c5460 100%);
+            color: white;
+        }
+        
+        .btn-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(23, 162, 184, 0.3);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            padding: 30px;
+            background: white;
+        }
+        
+        .stat-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .progress-container {
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        
+        .progress-bar-container {
+            background: #e9ecef;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+            height: 100%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .rodada-info {
+            padding: 30px;
+            background: white;
+        }
+        
+        .rodada-info h2 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+        }
+        
+        .value-bets-container {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .value-bet-card {
+            background: #f8f9fa;
+            border-left: 5px solid #28a745;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .value-bet-card.loss {
+            border-left-color: #dc3545;
+        }
+        
+        .value-bet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .match {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+        
+        .entrada-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .entrada-home {
+            background: #28a745;
+        }
+        
+        .entrada-away {
+            background: #007bff;
+        }
+        
+        .value-bet-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            font-size: 0.9em;
+        }
+        
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .detail-label {
+            color: #6c757d;
+            font-size: 0.85em;
+            margin-bottom: 3px;
+        }
+        
+        .detail-value {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .resultado {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .resultado.lucro {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .resultado.perda {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+            font-size: 1.2em;
+        }
+        
+        .entradas-historico {
+            padding: 30px;
+            background: white;
+        }
+        
+        .entradas-historico h2 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+        
+        thead {
+            background: #1e3c72;
+            color: white;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .lp-positivo {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .lp-negativo {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .filters-container {
+            background: white;
+            padding: 20px 30px;
+            border-top: 2px solid #e9ecef;
+        }
+        
+        .filters-title {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 15px;
+        }
+        
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(136px, 1fr));
+            gap: 15px;
+            align-items: end;
+        }
+        
+        .filter-range-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .filter-range-inputs {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        
+        .filter-range-inputs input {
+            padding: 6px 8px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9em;
+            width: 60px;
+        }
+        
+        .filter-range-inputs input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .filter-range-separator {
+            font-weight: bold;
+            color: #495057;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .filter-label {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .filter-select {
+            padding: 8px 12px;
+            border: 2px solid #00d4ff;
+            border-radius: 6px;
+            font-size: 0.95em;
+            background: rgba(0, 0, 0, 0.6);
+            color: #ffffff;
+            cursor: pointer;
+            min-height: 38px;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: #00d4ff;
+            background: rgba(0, 0, 0, 0.7);
+        }
+        
+        .filter-select option {
+            background: rgba(0, 0, 0, 0.8);
+            color: #ffffff;
+        }
+        
+        .btn-limpar-filtros {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.3s;
+        }
+        
+        .btn-limpar-filtros:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            padding: 12px 0 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: translateY(-1px);
+        }
+
+        /* Tema unificado (backtest_resumo_entradas) */
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #ecf0f1;
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid #00d4ff;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+        }
+
+        .header {
+            background: linear-gradient(90deg, #0a5f7e 0%, #00d4ff 100%);
+        }
+
+        .header h1 {
+            color: #00d4ff;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .nav-link {
+            color: #00d4ff;
+            background: rgba(0, 212, 255, 0.12);
+            border: 1px solid rgba(0, 212, 255, 0.35);
+        }
+
+        .nav-link:hover {
+            background: rgba(0, 212, 255, 0.25);
+        }
+
+        table {
+            color: #ecf0f1;
+        }
+
+        thead {
+            background: #0a5f7e;
+        }
+
+        th {
+            color: #00d4ff;
+            border: 1px solid #0a5f7e;
+        }
+
+        td {
+            border: 1px solid #333;
+        }
+
+        tbody tr:nth-child(odd) {
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        tbody tr:hover {
+            background: rgba(0, 212, 255, 0.15);
+        }
+
+        .controls {
+            background: rgba(0, 0, 0, 0.35);
+            color: #ecf0f1;
+        }
+
+        .btn {
+            border: 1px solid rgba(0, 212, 255, 0.35);
+        }
+
+        .btn-primary,
+        .btn-secondary,
+        .btn-danger,
+        .btn-warning,
+        .btn-info {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+        }
+
+        .btn-primary:hover,
+        .btn-secondary:hover,
+        .btn-danger:hover,
+        .btn-warning:hover,
+        .btn-info:hover {
+            background: rgba(0, 212, 255, 0.35);
+        }
+
+        /* Padronização de título e navegação */
+        .header {
+            padding: 26px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.1em;
+            margin-bottom: 8px;
+        }
+        .nav-links {
+            gap: 12px;
+            padding: 12px 0 18px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+        .nav-link {
+            padding: 8px 14px;
+            font-size: 0.9em;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Backtest - Temporada 2024/2025</h1>
+            <div class="nav-links">
+                <a href="http://localhost:8000/proxima_rodada.html" class="nav-link">Próxima Rodada</a>
+                <a href="http://localhost:8000/jogos_salvos.html" class="nav-link">Jogos Salvos</a>
+                <a href="http://localhost:8000/analise_salvos.html" class="nav-link">Análise Salvos</a>
+                <a href="http://localhost:5001/backtest.html" class="nav-link">Backtest</a>
+                <a href="http://localhost:5001/backtest_salvos.html" class="nav-link">Backtests Salvos</a>
+                <a href="http://localhost:5001/backtest_resumo_entradas.html" class="nav-link">Resumo Entradas</a>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <label for="seletorLiga" style="font-weight: 600; color: #333;">Liga:</label>
+                <select id="seletorLiga" style="padding: 8px 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 0.95em; background: white; cursor: pointer; min-height: 38px; min-width: 250px;" onchange="alterarLigaETemporada()">
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <label for="seletorTemporada" style="font-weight: 600; color: #333;">📅 Temporada:</label>
+                <select id="seletorTemporada" style="padding: 8px 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 0.95em; background: white; cursor: pointer; min-height: 38px; min-width: 140px;" onchange="alterarLigaETemporada()">
+                    <option value="2025-26">2025-26</option>
+                    <option value="2024-25" selected>2024-25</option>
+                    <option value="2023-24">2023-24</option>
+                    <option value="2022-23">2022-23</option>
+                    <option value="2021-22">2021-22</option>
+                    <option value="2020-21">2020-21</option>
+                    <option value="2026">2026</option>
+                    <option value="2025">2025</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
+                    <option value="2020">2020</option>
+                </select>
+            </div>
+            <button id="btnProcessar" class="btn btn-primary" onclick="processarRodada()">
+                ▶️ Processar Próxima Rodada
+            </button>
+            <button id="btnProcessarTodas" class="btn btn-secondary" onclick="processarTodas()">
+                ⏩ Processar Todas as Rodadas
+            </button>
+            <button class="btn btn-danger" onclick="resetarBacktest()">
+                🔄 Resetar Backtest
+            </button>
+            <button class="btn btn-warning" onclick="resetarTodos()">
+                ⚠️ Resetar Todos os Backtests
+            </button>
+            <button class="btn btn-success" onclick="salvarBacktestAtual()" style="background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);">
+                💾 Salvar Backtest
+            </button>
+            <button class="btn btn-info" onclick="window.location.href='backtest_salvos.html'">
+                📊 Análise de Backtests Salvos
+            </button>
+            <button id="btnBacktestCompleto" class="btn btn-primary" onclick="processarBacktestCompleto()" style="background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%); font-weight: bold;">
+                🚀 Backtest Completo (Todas as Temporadas)
+            </button>
+            <button id="btnBacktestGlobal" class="btn btn-danger" onclick="processarBacktestGlobal()" style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); font-weight: bold;">
+                🌍 Backtest Global (Todas as Ligas)
+            </button>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-bar-container">
+                <div id="progressBar" class="progress-bar" style="width: 0%">0%</div>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-number" id="rodadaAtual">0</div>
+                <div class="stat-label">Rodada Atual</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="totalEntradas">0</div>
+                <div class="stat-label">Total de Entradas</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="winRate" style="color: #28a745;">0%</div>
+                <div class="stat-label">Win Rate</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="roi" style="color: #007bff;">0%</div>
+                <div class="stat-label">ROI</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="lucroTotal" style="color: #28a745;">+0.00</div>
+                <div class="stat-label">Lucro Total</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="acertos" style="color: #28a745;">0</div>
+                <div class="stat-label">Acertos</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="erros" style="color: #dc3545;">0</div>
+                <div class="stat-label">Erros</div>
+            </div>
+        </div>
+        
+        <div class="filters-container">
+            <div class="filters-title">🔍 Filtros</div>
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label class="filter-label">DxG:</label>
+                    <select id="filtroDxG" class="filter-select" multiple onchange="aplicarFiltros()">
+                        <option value="FH">FH</option>
+                        <option value="LH">LH</option>
+                        <option value="EQ">EQ</option>
+                        <option value="LA">LA</option>
+                        <option value="FA">FA</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Entrada:</label>
+                    <select id="filtroEntrada" class="filter-select" multiple onchange="aplicarFiltros()">
+                        <option value="HOME">HOME</option>
+                        <option value="AWAY">AWAY</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">L/P:</label>
+                    <select id="filtroLP" class="filter-select" multiple onchange="aplicarFiltros()">
+                        <option value="positivo">Positivo</option>
+                        <option value="negativo">Negativo</option>
+                    </select>
+                </div>
+                <div class="filter-range-group">
+                    <label class="filter-label">ODD CASA:</label>
+                    <div class="filter-range-inputs">
+                        <input type="number" id="oddCasaMin" placeholder="Min" step="0.01" onchange="aplicarFiltros()">
+                        <span class="filter-range-separator">-</span>
+                        <input type="number" id="oddCasaMax" placeholder="Max" step="0.01" onchange="aplicarFiltros()">
+                    </div>
+                </div>
+                <div class="filter-range-group">
+                    <label class="filter-label">ODD VISIT:</label>
+                    <div class="filter-range-inputs">
+                        <input type="number" id="oddVisitMin" placeholder="Min" step="0.01" onchange="aplicarFiltros()">
+                        <span class="filter-range-separator">-</span>
+                        <input type="number" id="oddVisitMax" placeholder="Max" step="0.01" onchange="aplicarFiltros()">
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <button class="btn-limpar-filtros" onclick="limparFiltros()">Limpar Filtros</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="rodadaInfo" class="rodada-info" style="display: none;">
+            <h2>📊 Última Rodada Processada</h2>
+            <div id="valueBetsContainer" class="value-bets-container"></div>
+        </div>
+        
+        <div class="entradas-historico">
+            <h2>📋 Histórico de Entradas</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Casa</th>
+                            <th>Visitante</th>
+                            <th>Resultado</th>
+                            <th>Entrada</th>
+                            <th>Odd Entrada</th>
+                            <th>xG Casa</th>
+                            <th>xG Visit</th>
+                            <th>DxG</th>
+                            <th>L/P</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaEntradas">
+                        <tr>
+                            <td colspan="9" style="text-align: center; color: #6c757d;">
+                                Nenhuma entrada processada ainda
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let processandoTodas = false;
+        
+        async function carregarStatus() {
+            try {
+                console.log('🔵 [carregarStatus] Chamando /api/backtest/status...');
+                const response = await fetch('http://localhost:5001/api/backtest/status');
+                const data = await response.json();
+                
+                console.log('🔵 [carregarStatus] Resposta recebida:', data);
+                
+                if (data.success) {
+                    console.log(`🔵 [carregarStatus] Status: total_jogos=${data.status.total_jogos}, processados=${data.status.jogos_processados}, completo=${data.status.completo}`);
+                    atualizarInterface(data.status);
+                } else {
+                    console.error('❌ [carregarStatus] Erro no status:', data.error);
+                }
+            } catch (error) {
+                console.error('❌ [carregarStatus] Erro ao carregar status:', error);
+            }
+        }
+        
+        function atualizarInterface(status) {
+            console.log('🟢 [atualizarInterface] Iniciando atualização, status:', JSON.stringify(status));
+            
+            document.getElementById('rodadaAtual').textContent = status.rodada_atual;
+            document.getElementById('totalEntradas').textContent = status.total_entradas;
+            document.getElementById('winRate').textContent = status.winrate + '%';
+            document.getElementById('roi').textContent = status.roi + '%';
+            
+            const lucroTotal = status.lucro_total;
+            document.getElementById('lucroTotal').textContent = (lucroTotal >= 0 ? '+' : '') + lucroTotal.toFixed(2);
+            document.getElementById('lucroTotal').style.color = lucroTotal >= 0 ? '#28a745' : '#dc3545';
+            
+            document.getElementById('acertos').textContent = status.acertos;
+            document.getElementById('erros').textContent = status.erros;
+            
+            // Atualizar barra de progresso
+            const progresso = (status.jogos_processados / status.total_jogos * 100).toFixed(1);
+            document.getElementById('progressBar').style.width = progresso + '%';
+            document.getElementById('progressBar').textContent = progresso + '%';
+            
+            console.log(`📊 [atualizarInterface] Status - Completo: ${status.completo}, Jogos: ${status.jogos_processados}/${status.total_jogos}`);
+            console.log(`📊 [atualizarInterface] Verificando: status.completo=${status.completo}, status.total_jogos=${status.total_jogos}, tipo=${typeof status.total_jogos}`);
+            
+            // Desabilitar botões se completo, habilitar se há dados para processar
+            if (status.completo) {
+                console.log('🔴 [atualizarInterface] Backtest completo, desabilitando botões');
+                document.getElementById('btnProcessar').disabled = true;
+                document.getElementById('btnProcessarTodas').disabled = true;
+                alert('Backtest completo! Todos os jogos da temporada foram processados.');
+            } else if (status.total_jogos && status.total_jogos > 0) {
+                console.log(`🟢 [atualizarInterface] Botões HABILITADOS! total_jogos=${status.total_jogos}`);
+                const btn1 = document.getElementById('btnProcessar');
+                const btn2 = document.getElementById('btnProcessarTodas');
+                console.log(`🟢 [atualizarInterface] btnProcessar encontrado: ${btn1 ? 'SIM' : 'NÃO'}`);
+                console.log(`🟢 [atualizarInterface] btnProcessarTodas encontrado: ${btn2 ? 'SIM' : 'NÃO'}`);
+                if (btn1) btn1.disabled = false;
+                if (btn2) btn2.disabled = false;
+                console.log(`✅ [atualizarInterface] Após habilitar - btnProcessar.disabled=${btn1 ? btn1.disabled : 'elemento não encontrado'}`);
+            } else {
+                console.log(`🟡 [atualizarInterface] Nenhum jogo disponível (total_jogos=${status.total_jogos}), desabilitando botões`);
+                document.getElementById('btnProcessar').disabled = true;
+                document.getElementById('btnProcessarTodas').disabled = true;
+            }
+        }
+        
+        async function processarRodada() {
+            document.getElementById('btnProcessar').disabled = true;
+            document.getElementById('btnProcessarTodas').disabled = true;
+            
+            try {
+                const response = await fetch('http://localhost:5001/api/backtest/processar', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    if (data.completo) {
+                        alert(data.mensagem);
+                    } else {
+                        mostrarResultadoRodada(data.resultado);
+                        await carregarEntradas();
+                    }
+                    await carregarStatus();
+                }
+            } catch (error) {
+                console.error('Erro ao processar rodada:', error);
+                alert('Erro ao processar rodada. Verifique se a API está rodando.');
+            } finally {
+                document.getElementById('btnProcessar').disabled = false;
+                document.getElementById('btnProcessarTodas').disabled = false;
+            }
+        }
+        
+        async function processarTodas() {
+            if (!confirm('Deseja processar todas as rodadas restantes automaticamente?')) {
+                return;
+            }
+            
+            processandoTodas = true;
+            document.getElementById('btnProcessar').disabled = true;
+            document.getElementById('btnProcessarTodas').disabled = true;
+            
+            while (processandoTodas) {
+                try {
+                    const response = await fetch('http://localhost:5001/api/backtest/processar', {
+                        method: 'POST'
+                    });
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        if (data.completo) {
+                            alert(data.mensagem);
+                            break;
+                        } else {
+                            mostrarResultadoRodada(data.resultado);
+                            await carregarStatus();
+                            await new Promise(resolve => setTimeout(resolve, 500)); // Delay de 500ms
+                        }
+                    }
+                } catch (error) {
+                    console.error('Erro ao processar rodada:', error);
+                    break;
+                }
+            }
+            
+            await carregarEntradas();
+            processandoTodas = false;
+            document.getElementById('btnProcessar').disabled = false;
+            document.getElementById('btnProcessarTodas').disabled = false;
+        }
+        
+        function mostrarResultadoRodada(resultado) {
+            const container = document.getElementById('valueBetsContainer');
+            const rodadaInfo = document.getElementById('rodadaInfo');
+            
+            if (resultado.value_bets.length === 0) {
+                container.innerHTML = '<p style="color: #6c757d; text-align: center;">Nenhum value bet identificado nesta rodada.</p>';
+            } else {
+                container.innerHTML = resultado.value_bets.map((vb, idx) => `
+                    <div class="value-bet-card ${vb.lp < 0 ? 'loss' : ''}">
+                        <div class="value-bet-header">
+                            <div class="match">${vb.home} vs ${vb.away}</div>
+                            <div class="entrada-badge entrada-${vb.entrada.toLowerCase()}">${vb.entrada}</div>
+                        </div>
+                        <div class="value-bet-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Resultado</span>
+                                <span class="detail-value">${vb.fthg} x ${vb.ftag}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">DxG</span>
+                                <span class="detail-value"><strong>${vb.dxg}</strong></span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Odd ${vb.entrada}</span>
+                                <span class="detail-value">${vb.entrada === 'HOME' ? vb.b365h : vb.b365a}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">xG Casa</span>
+                                <span class="detail-value">${vb.xgh}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">xG Visit</span>
+                                <span class="detail-value">${vb.xga}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Odd Calc Casa</span>
+                                <span class="detail-value">${vb.odd_home_calc}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Odd Calc Visit</span>
+                                <span class="detail-value">${vb.odd_away_calc}</span>
+                            </div>
+                        </div>
+                        <div class="resultado ${vb.lp > 0 ? 'lucro' : 'perda'}">
+                            ${vb.lp > 0 ? '✅ LUCRO' : '❌ PERDA'}: ${(vb.lp >= 0 ? '+' : '')}${vb.lp.toFixed(2)}
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            rodadaInfo.style.display = 'block';
+        }
+        
+        async function carregarEntradas() {
+            try {
+                const response = await fetch('http://localhost:5001/api/backtest/entradas');
+                const data = await response.json();
+                
+                console.log('🔵 [carregarEntradas] Data recebido:', data);
+                console.log(`🔵 [carregarEntradas] Sucesso: ${data.success}, Total de entradas: ${data.entradas ? data.entradas.length : 0}`);
+                
+                const tbody = document.getElementById('tabelaEntradas');
+                
+                if (data.success && data.entradas && data.entradas.length > 0) {
+                    console.log(`🔵 [carregarEntradas] Preenchendo tabela com ${data.entradas.length} entradas`);
+                    tbody.innerHTML = data.entradas.map((entrada, idx) => `
+                        <tr data-dxg="${entrada.dxg}" data-entrada="${entrada.entrada}" data-lp="${entrada.lp > 0 ? 'positivo' : 'negativo'}" data-odds-casa="${entrada.b365h}" data-odds-visit="${entrada.b365a}">
+                            <td>${idx + 1}</td>
+                            <td>${entrada.home}</td>
+                            <td>${entrada.away}</td>
+                            <td>${entrada.fthg} x ${entrada.ftag}</td>
+                            <td><strong>${entrada.entrada}</strong></td>
+                            <td>${entrada.entrada === 'HOME' ? entrada.b365h : entrada.b365a}</td>
+                            <td>${entrada.xgh}</td>
+                            <td>${entrada.xga}</td>
+                            <td>${entrada.dxg}</td>
+                            <td class="${entrada.lp > 0 ? 'lp-positivo' : 'lp-negativo'}">
+                                ${(entrada.lp >= 0 ? '+' : '')}${entrada.lp.toFixed(2)}
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    console.log('🟡 [carregarEntradas] Nenhuma entrada encontrada ou processada ainda');
+                    tbody.innerHTML = '<tr><td colspan="10" style="text-align: center; color: #6c757d;">Nenhuma entrada processada ainda</td></tr>';
+                }
+                
+                // 🟢 NÃO CONTROLAR BOTÕES AQUI!
+                // O controle dos botões deve ser feito apenas em atualizarInterface()
+                // baseado se há jogos disponíveis para processar, não se há entradas já processadas
+                console.log('✅ [carregarEntradas] Tabela atualizada (controle de botões feito por atualizarInterface)');
+            } catch (error) {
+                console.error('❌ [carregarEntradas] Erro ao carregar entradas:', error);
+            }
+        }
+        
+        async function resetarBacktest() {
+            if (!confirm('Tem certeza que deseja resetar o backtest? Todos os dados serão perdidos.')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('http://localhost:5001/api/backtest/resetar', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(data.mensagem);
+                    location.reload();
+                }
+            } catch (error) {
+                console.error('Erro ao resetar backtest:', error);
+                alert('Erro ao resetar backtest. Verifique se a API está rodando.');
+            }
+        }
+        
+        async function resetarTodos() {
+            if (!confirm('⚠️ ATENÇÃO! Isso vai resetar TODOS os backtests de TODAS as ligas. Tem certeza?')) {
+                return;
+            }
+            
+            if (!confirm('Confirmar? Essa ação não pode ser desfeita!')) {
+                return;
+            }
+            
+            try {
+                const btnReset = event.target;
+                btnReset.disabled = true;
+                btnReset.textContent = '⏳ Resetando...';
+                
+                const response = await fetch('http://localhost:5001/api/backtest/resetar-todos', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Limpar localStorage também
+                    localStorage.removeItem('backtest_acumulado');
+                    localStorage.removeItem('backtest_acumulado_nome');
+                    localStorage.removeItem('backtest_acumulado_data');
+                    alert(`✅ ${data.mensagem}\n\nLigas resetadas: ${data.ligas_resetadas.length}\n\n📌 localStorage também foi limpo!`);
+                    location.reload();
+                } else {
+                    alert('Erro ao resetar backtests: ' + data.error);
+                    btnReset.disabled = false;
+                    btnReset.textContent = '⚠️ Resetar Todos os Backtests';
+                }
+            } catch (error) {
+                console.error('Erro ao resetar todos os backtests:', error);
+                alert('Erro ao resetar backtests. Verifique se a API está rodando.');
+                event.target.disabled = false;
+                event.target.textContent = '⚠️ Resetar Todos os Backtests';
+            }
+        }
+        
+        async function processarBacktestCompleto() {
+            const seletorLiga = document.getElementById('seletorLiga');
+            const liga = seletorLiga.value;
+            
+            if (!liga) {
+                alert('❌ Por favor, selecione uma liga primeiro!');
+                return;
+            }
+            
+            // VERIFICAR SE AS APIs ESTÃO DISPONÍVEIS
+            try {
+                console.log('🔍 Verificando disponibilidade das APIs...');
+                
+                const check5001 = await fetch('http://localhost:5001/api/backtest/status');
+                if (!check5001.ok) throw new Error('API porta 5001 não responde');
+                
+                const check5000 = await fetch('http://localhost:5001/api/salvar_backtest_json', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ entradas: [] }) // Teste com array vazio
+                });
+                if (!check5000.ok) throw new Error('API porta 5000 não responde');
+                
+                console.log('✅ Ambas as APIs estão disponíveis!');
+            } catch (error) {
+                alert(`❌ ERRO: As APIs necessárias não estão disponíveis!\n\n` +
+                      `Certifique-se de que estão rodando:\n` +
+                      `• Porta 5001: api_backtest.py\n` +
+                      `• Porta 5000: servidor_api.py\n\n` +
+                      `Erro: ${error.message}`);
+                return;
+            }
+            
+            if (!confirm(`🚀 Iniciar backtest completo da liga ${liga}?\n\n` +
+                        `Isso vai processar TODAS as temporadas disponíveis:\n` +
+                        `• 2020-21\n• 2021-22\n• 2022-23\n• 2023-24\n• 2024-25\n• 2025-26\n\n` +
+                        `Cada temporada será salva automaticamente.\n\n` +
+                        `⏱️ Pode levar alguns minutos. Continuar?`)) {
+                return;
+            }
+            
+            const btnBacktest = document.getElementById('btnBacktestCompleto');
+            const btnOriginalText = btnBacktest.textContent;
+            btnBacktest.disabled = true;
+            
+            // Temporadas a processar
+            const temporadas = ['2020-21', '2021-22', '2022-23', '2023-24', '2024-25', '2025-26'];
+            const resultados = {
+                sucesso: [],
+                erro: [],
+                total_entradas: 0
+            };
+            
+            // Função auxiliar para salvar com retry
+            async function salvarComRetry(entradas, liga, temporada, maxTentativas = 3) {
+                for (let tentativa = 1; tentativa <= maxTentativas; tentativa++) {
+                    try {
+                        console.log(`💾 Tentativa ${tentativa}/${maxTentativas} de salvar ${liga} - ${temporada}...`);
+                        
+                        const response = await fetch('http://localhost:5001/api/salvar_backtest_json', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ entradas })
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}`);
+                        }
+                        
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            console.log(`✅ Salvo com sucesso na tentativa ${tentativa}!`);
+                            return { success: true, data };
+                        } else {
+                            throw new Error(data.error || 'Erro desconhecido');
+                        }
+                    } catch (error) {
+                        console.error(`❌ Tentativa ${tentativa} falhou: ${error.message}`);
+                        if (tentativa < maxTentativas) {
+                            await new Promise(resolve => setTimeout(resolve, 1000)); // Aguardar 1s antes de tentar novamente
+                        }
+                    }
+                }
+                return { success: false, error: 'Todas as tentativas falharam' };
+            }
+            
+            try {
+                for (let i = 0; i < temporadas.length; i++) {
+                    const temporada = temporadas[i];
+                    btnBacktest.textContent = `⏳ Processando ${temporada} (${i + 1}/${temporadas.length})...`;
+                    
+                    console.log(`\n🚀 === INICIANDO ${liga} - ${temporada} ===`);
+                    
+                    try {
+                        // 1. Selecionar temporada no dropdown
+                        const seletorTemporada = document.getElementById('seletorTemporada');
+                        seletorTemporada.value = temporada;
+                        
+                        // 2. Resetar backtest para essa temporada
+                        console.log(`🔄 Resetando ${liga} - ${temporada}...`);
+                        const resetResponse = await fetch('http://localhost:5001/api/backtest/resetar', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ liga, temporada })
+                        });
+                        
+                        if (!resetResponse.ok) {
+                            throw new Error('Falha ao resetar backtest');
+                        }
+                        
+                        // 3. Aguardar carregar status
+                        await carregarStatus();
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                        
+                        // 4. Processar todas as rodadas
+                        console.log(`⚙️ Processando rodadas de ${liga} - ${temporada}...`);
+                        let rodadasProcessadas = 0;
+                        let completo = false;
+                        
+                        while (!completo && rodadasProcessadas < 100) { // Limite de segurança
+                            const processarResponse = await fetch('http://localhost:5001/api/backtest/processar', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ liga, temporada })
+                            });
+                            
+                            const processarData = await processarResponse.json();
+                            
+                            if (!processarData.success) {
+                                throw new Error(processarData.mensagem || 'Erro ao processar rodada');
+                            }
+                            
+                            if (processarData.completo) {
+                                completo = true;
+                                console.log(`✅ ${liga} - ${temporada} completo!`);
+                            } else {
+                                rodadasProcessadas++;
+                                // Atualizar texto do botão com progresso
+                                btnBacktest.textContent = `⏳ ${temporada} - Rodada ${rodadasProcessadas} (${i + 1}/${temporadas.length})`;
+                            }
+                            
+                            await new Promise(resolve => setTimeout(resolve, 100)); // Pequeno delay
+                        }
+                        
+                        // 5. Salvar backtest dessa temporada
+                        console.log(`💾 Salvando ${liga} - ${temporada}...`);
+                        
+                        // Pegar entradas da temporada
+                        const entradasResponse = await fetch('http://localhost:5001/api/backtest/entradas');
+                        const entradasData = await entradasResponse.json();
+                        
+                        if (entradasData.success && entradasData.entradas && entradasData.entradas.length > 0) {
+                            // Adicionar metadata às entradas
+                            const entradasComMetadata = entradasData.entradas.map(entrada => ({
+                                ...entrada,
+                                liga,
+                                temporada
+                            }));
+                            
+                            // Salvar via API com retry
+                            const resultadoSalvar = await salvarComRetry(entradasComMetadata, liga, temporada);
+                            
+                            if (resultadoSalvar.success) {
+                                resultados.sucesso.push({
+                                    liga,
+                                    temporada,
+                                    entradas: entradasComMetadata.length
+                                });
+                                resultados.total_entradas += entradasComMetadata.length;
+                                console.log(`✅ Salvo: ${liga} - ${temporada} (${entradasComMetadata.length} entradas)`);
+                            } else {
+                                throw new Error('Falha ao salvar backtest');
+                            }
+                        } else {
+                            console.log(`⚠️ ${liga} - ${temporada}: Nenhuma entrada encontrada`);
+                            resultados.erro.push({
+                                liga,
+                                temporada,
+                                motivo: 'Sem entradas'
+                            });
+                        }
+                        
+                    } catch (error) {
+                        console.error(`❌ Erro em ${liga} - ${temporada}:`, error);
+                        resultados.erro.push({
+                            liga,
+                            temporada,
+                            motivo: error.message
+                        });
+                    }
+                    
+                    // Pequeno delay entre temporadas
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+                
+                // 6. Mostrar resumo final
+                let mensagemFinal = `✅ BACKTEST COMPLETO FINALIZADO!\n\n`;
+                mensagemFinal += `Liga: ${liga}\n`;
+                mensagemFinal += `Temporadas processadas com sucesso: ${resultados.sucesso.length}/${temporadas.length}\n`;
+                mensagemFinal += `Total de entradas salvas: ${resultados.total_entradas}\n\n`;
+                
+                if (resultados.sucesso.length > 0) {
+                    mensagemFinal += `✅ Sucesso:\n`;
+                    resultados.sucesso.forEach(r => {
+                        mensagemFinal += `  • ${r.temporada}: ${r.entradas} entradas\n`;
+                    });
+                }
+                
+                if (resultados.erro.length > 0) {
+                    mensagemFinal += `\n❌ Erros:\n`;
+                    resultados.erro.forEach(r => {
+                        mensagemFinal += `  • ${r.temporada}: ${r.motivo}\n`;
+                    });
+                }
+                
+                mensagemFinal += `\n📊 Clique em "Análise de Backtests Salvos" para ver os resultados!`;
+                
+                alert(mensagemFinal);
+                
+                // Recarregar status da última temporada
+                await carregarStatus();
+                
+            } catch (error) {
+                console.error('❌ Erro no backtest completo:', error);
+                alert(`❌ Erro ao processar backtest completo:\n\n${error.message}`);
+            } finally {
+                btnBacktest.disabled = false;
+                btnBacktest.textContent = btnOriginalText;
+            }
+        }
+        
+        async function processarBacktestGlobal() {
+            // VERIFICAR SE AS APIs ESTÃO DISPONÍVEIS
+            try {
+                console.log('🔍 Verificando disponibilidade das APIs...');
+                
+                const check5001 = await fetch('http://localhost:5001/api/backtest/status');
+                if (!check5001.ok) throw new Error('API porta 5001 não responde');
+                
+                const check5000 = await fetch('http://localhost:5001/api/salvar_backtest_json', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ entradas: [] })
+                });
+                if (!check5000.ok) throw new Error('API porta 5000 não responde');
+                
+                console.log('✅ Ambas as APIs estão disponíveis!');
+            } catch (error) {
+                alert(`❌ ERRO: As APIs necessárias não estão disponíveis!\n\n` +
+                      `Certifique-se de que estão rodando:\n` +
+                      `• Porta 5001: api_backtest.py\n` +
+                      `• Porta 5000: servidor_api.py\n\n` +
+                      `Erro: ${error.message}`);
+                return;
+            }
+            
+            if (!confirm(`🌍 BACKTEST GLOBAL - TODAS AS LIGAS E TEMPORADAS\n\n` +
+                        `Isso vai processar:\n` +
+                        `• 31 ligas diferentes\n` +
+                        `• 6 temporadas cada (2020-21 até 2025-26)\n` +
+                        `• Total: ~186 backtests\n\n` +
+                        `⏱️ Pode levar de 30 minutos a 2 horas.\n` +
+                        `💾 Cada temporada será salva automaticamente.\n\n` +
+                        `⚠️ NÃO FECHE O NAVEGADOR durante o processo!\n\n` +
+                        `Continuar?`)) {
+                return;
+            }
+            
+            if (!confirm(`⚠️ CONFIRMAÇÃO FINAL\n\nTem certeza absoluta que deseja continuar?\n\nEsta é uma operação LONGA e INTENSA!`)) {
+                return;
+            }
+            
+            const btnGlobal = document.getElementById('btnBacktestGlobal');
+            const btnOriginalText = btnGlobal.textContent;
+            btnGlobal.disabled = true;
+            
+            // Desabilitar outros botões durante processamento
+            document.getElementById('btnProcessar').disabled = true;
+            document.getElementById('btnProcessarTodas').disabled = true;
+            document.getElementById('btnBacktestCompleto').disabled = true;
+            
+            // Temporadas a processar
+            const temporadas = ['2020-21', '2021-22', '2022-23', '2023-24', '2024-25', '2025-26'];
+            
+            // Buscar todas as ligas disponíveis
+            let ligas = [];
+            try {
+                const ligasResponse = await fetch('http://localhost:5001/api/backtest/ligas');
+                const ligasData = await ligasResponse.json();
+                if (ligasData.success && ligasData.ligas) {
+                    ligas = Object.keys(ligasData.ligas);
+                } else {
+                    throw new Error('Falha ao buscar ligas disponíveis');
+                }
+            } catch (error) {
+                alert(`❌ Erro ao buscar ligas: ${error.message}`);
+                btnGlobal.disabled = false;
+                btnGlobal.textContent = btnOriginalText;
+                return;
+            }
+            
+            const totalCombinacoes = ligas.length * temporadas.length;
+            let processados = 0;
+            const horaInicio = new Date();
+            
+            const resultados = {
+                sucesso: [],
+                erro: [],
+                semDados: [],
+                total_entradas: 0,
+                total_ligas_processadas: 0,
+                total_temporadas_processadas: 0
+            };
+            
+            console.log(`\n🌍 ===== INICIANDO BACKTEST GLOBAL =====`);
+            console.log(`Total de ligas: ${ligas.length}`);
+            console.log(`Total de temporadas: ${temporadas.length}`);
+            console.log(`Total de combinações: ${totalCombinacoes}`);
+            console.log(`Hora de início: ${horaInicio.toLocaleTimeString()}`);
+            
+            // Função auxiliar para salvar com retry (reutilizável)
+            async function salvarComRetry(entradas, liga, temporada, maxTentativas = 3) {
+                for (let tentativa = 1; tentativa <= maxTentativas; tentativa++) {
+                    try {
+                        console.log(`💾 Tentativa ${tentativa}/${maxTentativas} de salvar ${liga} - ${temporada}...`);
+                        
+                        const response = await fetch('http://localhost:5001/api/salvar_backtest_json', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ entradas })
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}`);
+                        }
+                        
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            console.log(`✅ Salvo com sucesso na tentativa ${tentativa}!`);
+                            return { success: true, data };
+                        } else {
+                            throw new Error(data.error || 'Erro desconhecido');
+                        }
+                    } catch (error) {
+                        console.error(`❌ Tentativa ${tentativa} falhou: ${error.message}`);
+                        if (tentativa < maxTentativas) {
+                            await new Promise(resolve => setTimeout(resolve, 1000));
+                        }
+                    }
+                }
+                return { success: false, error: 'Todas as tentativas falharam' };
+            }
+            
+            try {
+                for (let iLiga = 0; iLiga < ligas.length; iLiga++) {
+                    const liga = ligas[iLiga];
+                    let ligaSucesso = false;
+                    
+                    console.log(`\n📍 === LIGA ${iLiga + 1}/${ligas.length}: ${liga} ===`);
+                    
+                    for (let iTemp = 0; iTemp < temporadas.length; iTemp++) {
+                        const temporada = temporadas[iTemp];
+                        processados++;
+                        
+                        const porcentagem = Math.round((processados / totalCombinacoes) * 100);
+                        const tempoDecorrido = ((new Date() - horaInicio) / 1000 / 60).toFixed(1); // minutos
+                        const tempoMedioPorItem = (new Date() - horaInicio) / processados;
+                        const tempoRestante = ((totalCombinacoes - processados) * tempoMedioPorItem / 1000 / 60).toFixed(0);
+                        
+                        btnGlobal.textContent = `⏳ ${liga} ${temporada} | ${processados}/${totalCombinacoes} (${porcentagem}%) | ${tempoDecorrido}min | ~${tempoRestante}min restantes`;
+                        
+                        console.log(`\n🚀 [${processados}/${totalCombinacoes}] ${liga} - ${temporada}`);
+                        
+                        try {
+                            // 1. Selecionar liga e temporada
+                            const seletorLiga = document.getElementById('seletorLiga');
+                            const seletorTemporada = document.getElementById('seletorTemporada');
+                            seletorLiga.value = liga;
+                            seletorTemporada.value = temporada;
+                            
+                            // 2. Resetar backtest
+                            const resetResponse = await fetch('http://localhost:5001/api/backtest/resetar', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ liga, temporada })
+                            });
+                            
+                            if (!resetResponse.ok) {
+                                throw new Error('Falha ao resetar');
+                            }
+                            
+                            await new Promise(resolve => setTimeout(resolve, 200));
+
+                            // 2.1 Resumo de validação da liga/temporada
+                            try {
+                                const resumoResp = await fetch('http://localhost:5001/api/backtest/resumo', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ liga, temporada })
+                                });
+                                const resumoData = await resumoResp.json();
+                                if (resumoData.success && resumoData.resumo) {
+                                    console.log(`🧾 Resumo ${liga} ${temporada}:`, resumoData.resumo);
+                                } else {
+                                    console.warn(`⚠️ Resumo indisponível para ${liga} ${temporada}`);
+                                }
+                            } catch (e) {
+                                console.warn(`⚠️ Falha ao obter resumo ${liga} ${temporada}: ${e.message}`);
+                            }
+                            
+                            // 3. Processar todas as rodadas
+                            let rodadasProcessadas = 0;
+                            let completo = false;
+                            const maxRodadas = 100;
+                            
+                            while (!completo && rodadasProcessadas < maxRodadas) {
+                                const processarResponse = await fetch('http://localhost:5001/api/backtest/processar', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ liga, temporada })
+                                });
+                                
+                                const processarData = await processarResponse.json();
+                                
+                                if (!processarData.success) {
+                                    throw new Error(processarData.mensagem || 'Erro ao processar');
+                                }
+                                
+                                if (processarData.completo) {
+                                    completo = true;
+                                } else {
+                                    rodadasProcessadas++;
+                                }
+                                
+                                await new Promise(resolve => setTimeout(resolve, 50));
+                            }
+                            
+                            // 4. Buscar entradas
+                            const entradasResponse = await fetch('http://localhost:5001/api/backtest/entradas');
+                            const entradasData = await entradasResponse.json();
+                            
+                            if (entradasData.success && entradasData.entradas && entradasData.entradas.length > 0) {
+                                // 5. Salvar entradas com retry
+                                const entradasComMetadata = entradasData.entradas.map(entrada => ({
+                                    ...entrada,
+                                    liga,
+                                    temporada
+                                }));
+                                
+                                const resultadoSalvar = await salvarComRetry(entradasComMetadata, liga, temporada);
+                                
+                                if (resultadoSalvar.success) {
+                                    resultados.sucesso.push({
+                                        liga,
+                                        temporada,
+                                        entradas: entradasComMetadata.length
+                                    });
+                                    resultados.total_entradas += entradasComMetadata.length;
+                                    ligaSucesso = true;
+                                    console.log(`✅ ${liga} - ${temporada}: ${entradasComMetadata.length} entradas salvas`);
+                                } else {
+                                    throw new Error('Falha ao salvar');
+                                }
+                            } else {
+                                console.log(`⚠️ ${liga} - ${temporada}: Sem dados`);
+                                resultados.semDados.push({ liga, temporada });
+                            }
+                            
+                        } catch (error) {
+                            console.error(`❌ ${liga} - ${temporada}: ${error.message}`);
+                            resultados.erro.push({
+                                liga,
+                                temporada,
+                                motivo: error.message
+                            });
+                        }
+                        
+                        // Pequeno delay entre temporadas
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                    }
+                    
+                    if (ligaSucesso) {
+                        resultados.total_ligas_processadas++;
+                    }
+                    
+                    // Delay maior entre ligas
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                }
+                
+                // Gerar relatório final
+                const horaFim = new Date();
+                const duracaoTotal = ((horaFim - horaInicio) / 1000 / 60).toFixed(1);
+                
+                resultados.total_temporadas_processadas = resultados.sucesso.length;
+                
+                let mensagemFinal = `🌍 BACKTEST GLOBAL CONCLUÍDO!\n\n`;
+                mensagemFinal += `⏱️ Duração: ${duracaoTotal} minutos\n`;
+                mensagemFinal += `📊 Ligas processadas: ${resultados.total_ligas_processadas}/${ligas.length}\n`;
+                mensagemFinal += `📅 Temporadas salvas: ${resultados.total_temporadas_processadas}/${totalCombinacoes}\n`;
+                mensagemFinal += `💾 Total de entradas: ${resultados.total_entradas}\n\n`;
+                
+                mensagemFinal += `✅ Sucesso: ${resultados.sucesso.length}\n`;
+                mensagemFinal += `⚠️ Sem dados: ${resultados.semDados.length}\n`;
+                mensagemFinal += `❌ Erros: ${resultados.erro.length}\n\n`;
+                
+                if (resultados.erro.length > 0 && resultados.erro.length <= 10) {
+                    mensagemFinal += `Erros encontrados:\n`;
+                    resultados.erro.forEach(e => {
+                        mensagemFinal += `  • ${e.liga} ${e.temporada}: ${e.motivo}\n`;
+                    });
+                    mensagemFinal += `\n`;
+                }
+                
+                mensagemFinal += `📊 Clique em "Análise de Backtests Salvos" para ver todos os resultados!`;
+                
+                console.log(`\n🎉 ===== BACKTEST GLOBAL FINALIZADO =====`);
+                console.log(mensagemFinal);
+                
+                alert(mensagemFinal);
+                
+                // Recarregar última liga/temporada
+                await carregarStatus();
+                
+            } catch (error) {
+                console.error('❌ Erro crítico no backtest global:', error);
+                alert(`❌ Erro crítico:\n\n${error.message}\n\nProcessados: ${processados}/${totalCombinacoes}`);
+            } finally {
+                btnGlobal.disabled = false;
+                btnGlobal.textContent = btnOriginalText;
+                document.getElementById('btnProcessar').disabled = false;
+                document.getElementById('btnProcessarTodas').disabled = false;
+                document.getElementById('btnBacktestCompleto').disabled = false;
+            }
+        }
+        
+        async function salvarBacktestAtual() {
+            console.log('🔵 Iniciando salvamento do backtest...');
+            try {
+                // Usar sempre a mesma chave única
+                const CHAVE_UNICA = 'backtest_acumulado';
+                
+                // Pegar liga selecionada do dropdown
+                const seletorLiga = document.getElementById('seletorLiga');
+                const liga = seletorLiga.value;
+                
+                // Pegar temporada do input
+                const seletorTemporada = document.getElementById('seletorTemporada');
+                const temporada = seletorTemporada.value || '2024-25';
+                
+                if (!liga) {
+                    alert('❌ Nenhuma liga selecionada.');
+                    return;
+                }
+                
+                console.log(`🔵 Liga selecionada: ${liga}`);
+                console.log(`🔵 Temporada: ${temporada}`);
+                
+                // Verificar se há dados na tabela
+                const tbody = document.getElementById('tabelaEntradas');
+                const linhas = tbody ? tbody.querySelectorAll('tr[data-dxg]') : [];
+                
+                console.log(`🔵 Linhas encontradas na tabela: ${linhas.length}`);
+                
+                if (linhas.length === 0) {
+                    alert('❌ Nenhuma entrada para salvar. Processe algumas rodadas primeiro.');
+                    return;
+                }
+                
+                // Extrair dados da tabela - FILTRAR APENAS DA LIGA SELECIONADA
+                const dadosFormatados = [];
+                linhas.forEach((linha, idx) => {
+                    const cells = linha.cells;
+                    if (cells.length >= 10) {
+                        // Extrair resultado (ex: "2 x 1" -> gc=2, gv=1)
+                        const resultado = cells[3].textContent.trim().split('x');
+                        const gc = parseInt(resultado[0]) || 0;
+                        const gv = parseInt(resultado[1]) || 0;
+                        
+                        // Pegar odd de entrada
+                        const entrada = cells[4].textContent.trim();
+                        const oddCasa = parseFloat(linha.getAttribute('data-odds-casa')) || 0;
+                        const oddVisitante = parseFloat(linha.getAttribute('data-odds-visit')) || 0;
+                        const oddEntrada = parseFloat(cells[5].textContent.trim()) || 0;
+                        
+                        // 🔴 IMPORTANTE: Verificar se a entrada pertence à liga selecionada
+                        // A liga está no rodapé de cada tabela ou pode ser identificada
+                        // Vamos salvar apenas entradas que correspondem à liga selecionada
+                        const lihaLiga = cells[0].textContent.trim(); // Primeira coluna pode ter a liga
+                        
+                        dadosFormatados.push({
+                            data: new Date().toLocaleDateString('pt-BR'), // Usar data atual como fallback
+                            temporada: temporada,  // NOVO: Adicionar temporada
+                            liga: liga,
+                            casa: cells[1].textContent.trim(),
+                            visitante: cells[2].textContent.trim(),
+                            gc: gc,
+                            gv: gv,
+                            odd_casa: oddCasa,
+                            odd_visitante: oddVisitante,
+                            xg_casa: parseFloat(cells[6].textContent.trim()) || 0,
+                            xg_visitante: parseFloat(cells[7].textContent.trim()) || 0,
+                            dxg: cells[8].textContent.trim(),
+                            entrada: entrada,
+                            lp: parseFloat(cells[9].textContent.trim()) || 0
+                        });
+                        
+                        if (idx < 2) {
+                            console.log(`🔵 Exemplo linha ${idx + 1}:`, dadosFormatados[idx]);
+                        }
+                    }
+                });
+                
+                if (dadosFormatados.length === 0) {
+                    alert('❌ Não foi possível extrair dados da tabela.');
+                    return;
+                }
+                
+                console.log(`🔵 Total de jogos extraídos: ${dadosFormatados.length}`);
+                
+                // Carregar dados existentes do arquivo único
+                let dadosExistentes = [];
+                const dadosExistentesStr = localStorage.getItem(CHAVE_UNICA);
+                if (dadosExistentesStr) {
+                    dadosExistentes = JSON.parse(dadosExistentesStr);
+                    console.log(`🔵 Dados existentes no arquivo: ${dadosExistentes.length} entradas`);
+                }
+                
+                // Combinar dados (evitar duplicatas pelo mesmo jogo)
+                const dadosCombinados = [...dadosExistentes];
+                let novasEntradas = 0;
+                let duplicadas = 0;
+                
+                dadosFormatados.forEach(novo => {
+                    const jaExiste = dadosExistentes.some(existente => 
+                        existente.liga === novo.liga && 
+                        existente.casa === novo.casa && 
+                        existente.visitante === novo.visitante &&
+                        existente.temporada === novo.temporada  // NOVO: Também considerar temporada na comparação
+                    );
+                    if (!jaExiste) {
+                        dadosCombinados.push(novo);
+                        novasEntradas++;
+                    } else {
+                        duplicadas++;
+                    }
+                });
+                
+                console.log(`🔵 Novas entradas adicionadas: ${novasEntradas}`);
+                console.log(`🔵 Entradas duplicadas ignoradas: ${duplicadas}`);
+                
+                // Salvar no localStorage (arquivo único)
+                localStorage.setItem(CHAVE_UNICA, JSON.stringify(dadosCombinados));
+                localStorage.setItem(CHAVE_UNICA + '_nome', 'Backtest Acumulado MultiLiga');
+                localStorage.setItem(CHAVE_UNICA + '_data', Date.now().toString());
+                
+                console.log(`🔵 Salvamento concluído! Total no arquivo: ${dadosCombinados.length}`);
+                
+                // Calcular estatísticas
+                const totalEntradas = dadosCombinados.length;
+                const acertos = dadosCombinados.filter(d => d.lp > 0).length;
+                const lucroTotal = dadosCombinados.reduce((sum, d) => sum + parseFloat(d.lp), 0);
+                const winRate = ((acertos / totalEntradas) * 100).toFixed(1);
+                const roi = ((lucroTotal / totalEntradas) * 100).toFixed(1);
+                const ligasUnicas = [...new Set(dadosCombinados.map(d => d.liga))];
+                
+                // novasEntradas já foi declarada acima no loop
+                const nomeArquivo = 'Backtest Acumulado MultiLiga';
+                
+                // Salvar também em arquivo JSON via API
+                console.log(`🔵 Salvando ${dadosCombinados.length} entradas em arquivo JSON...`);
+                console.log(`🔵 Ligas no arquivo: ${[...new Set(dadosCombinados.map(d => d.liga))].join(', ')}`);
+                console.log(`🔵 Temporadas: ${[...new Set(dadosCombinados.map(d => d.temporada))].join(', ')}`);
+                try {
+                    const respostaJSON = await fetch('http://localhost:5001/api/salvar_backtest_json', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ dados: dadosCombinados })
+                    });
+                    if (respostaJSON.ok) {
+                        console.log('🟢 Arquivo JSON salvo com sucesso!');
+                    } else {
+                        console.warn('🟡 Aviso: Não foi possível salvar o JSON, mas o localStorage foi atualizado');
+                    }
+                } catch (erroJSON) {
+                    console.warn('🟡 Aviso: Erro ao salvar JSON, mas o localStorage foi atualizado', erroJSON);
+                }
+                
+                alert(`✅ Backtest ${dadosExistentes.length > 0 ? 'atualizado' : 'salvo'} com sucesso!
+
+📋 Nome: ${nomeArquivo}
+🏆 Liga atual: ${liga}
+${novasEntradas > 0 ? `➕ Novas entradas: ${novasEntradas}\n` : ''}📊 Total de Entradas: ${totalEntradas}
+🎯 Ligas: ${ligasUnicas.join(', ')}
+✓ Taxa de Acerto: ${winRate}%
+💰 ROI: ${roi}%
+💵 Lucro Total: ${lucroTotal >= 0 ? '+' : ''}${lucroTotal.toFixed(2)}
+
+Acesse "Análise de Backtests Salvos" para visualizar.`);
+                
+            } catch (error) {
+                console.error('Erro ao salvar backtest:', error);
+                alert('❌ Erro ao salvar backtest. Verifique se a API está rodando.');
+            }
+        }
+        
+        function aplicarFiltros() {
+            const filtroDxGEl = document.getElementById('filtroDxG');
+            const filtroEntradaEl = document.getElementById('filtroEntrada');
+            const filtroLPEl = document.getElementById('filtroLP');
+            
+            const filtroDxG = Array.from(filtroDxGEl.selectedOptions).map(opt => opt.value);
+            const filtroEntrada = Array.from(filtroEntradaEl.selectedOptions).map(opt => opt.value);
+            const filtroLP = Array.from(filtroLPEl.selectedOptions).map(opt => opt.value);
+            
+            const oddCasaMin = parseFloat(document.getElementById('oddCasaMin').value) || 0;
+            const oddCasaMax = parseFloat(document.getElementById('oddCasaMax').value) || Infinity;
+            const oddVisitMin = parseFloat(document.getElementById('oddVisitMin').value) || 0;
+            const oddVisitMax = parseFloat(document.getElementById('oddVisitMax').value) || Infinity;
+            
+            const linhas = document.querySelectorAll('#tabelaEntradas tr[data-dxg]');
+            
+            let totalEntradasFiltradas = 0;
+            let acertosFiltrados = 0;
+            let totalLPFiltrado = 0;
+            
+            linhas.forEach(linha => {
+                const dxgLinha = linha.getAttribute('data-dxg');
+                const entradaLinha = linha.getAttribute('data-entrada');
+                const lpLinha = linha.getAttribute('data-lp');
+                const oddsCasaLinha = parseFloat(linha.getAttribute('data-odds-casa')) || 0;
+                const oddsVisitLinha = parseFloat(linha.getAttribute('data-odds-visit')) || 0;
+                
+                let mostrar = true;
+                
+                if (filtroDxG.length > 0 && !filtroDxG.includes(dxgLinha)) {
+                    mostrar = false;
+                }
+                
+                if (filtroEntrada.length > 0 && !filtroEntrada.includes(entradaLinha)) {
+                    mostrar = false;
+                }
+                
+                if (filtroLP.length > 0 && !filtroLP.includes(lpLinha)) {
+                    mostrar = false;
+                }
+                
+                if (oddsCasaLinha > 0 && (oddsCasaLinha < oddCasaMin || oddsCasaLinha > oddCasaMax)) {
+                    mostrar = false;
+                }
+                
+                if (oddsVisitLinha > 0 && (oddsVisitLinha < oddVisitMin || oddsVisitLinha > oddVisitMax)) {
+                    mostrar = false;
+                }
+                
+                if (mostrar) {
+                    linha.style.display = '';
+                    totalEntradasFiltradas++;
+                    
+                    // Calcular estatísticas das linhas filtradas
+                    const lpCell = linha.cells[9]; // Coluna L/P
+                    if (lpCell) {
+                        const lpValue = parseFloat(lpCell.textContent);
+                        if (!isNaN(lpValue)) {
+                            totalLPFiltrado += lpValue;
+                            if (lpValue > 0) {
+                                acertosFiltrados++;
+                            }
+                        }
+                    }
+                } else {
+                    linha.style.display = 'none';
+                }
+            });
+            
+            // Atualizar estatísticas com base nos filtros
+            if (totalEntradasFiltradas > 0) {
+                const winRate = (acertosFiltrados / totalEntradasFiltradas) * 100;
+                const roi = (totalLPFiltrado / totalEntradasFiltradas) * 100;
+                
+                document.getElementById('totalEntradas').textContent = totalEntradasFiltradas;
+                document.getElementById('winRate').textContent = winRate.toFixed(1) + '%';
+                document.getElementById('roi').textContent = roi.toFixed(1) + '%';
+                document.getElementById('lucroTotal').textContent = (totalLPFiltrado >= 0 ? '+' : '') + totalLPFiltrado.toFixed(2);
+                document.getElementById('acertos').textContent = acertosFiltrados;
+                document.getElementById('erros').textContent = totalEntradasFiltradas - acertosFiltrados;
+            }
+        }
+        
+        function limparFiltros() {
+            document.getElementById('filtroDxG').selectedIndex = -1;
+            document.getElementById('filtroEntrada').selectedIndex = -1;
+            document.getElementById('filtroLP').selectedIndex = -1;
+            document.getElementById('oddCasaMin').value = '';
+            document.getElementById('oddCasaMax').value = '';
+            document.getElementById('oddVisitMin').value = '';
+            document.getElementById('oddVisitMax').value = '';
+            
+            // Mostrar todas as linhas
+            const linhas = document.querySelectorAll('#tabelaEntradas tr[data-dxg]');
+            linhas.forEach(linha => {
+                linha.style.display = '';
+            });
+            
+            // Recarregar estatísticas originais
+            carregarStatus();
+        }
+        
+        // Carregar ligas ao iniciar
+        async function carregarLigas() {
+            try {
+                console.log('🔵 [carregarLigas] Iniciando carregamento de ligas...');
+                console.log('🔵 [carregarLigas] URL: http://localhost:5001/api/backtest/ligas');
+                
+                const response = await fetch('http://localhost:5001/api/backtest/ligas');
+                console.log('🔵 [carregarLigas] Response status:', response.status);
+                console.log('🔵 [carregarLigas] Response ok:', response.ok);
+                
+                const data = await response.json();
+                console.log('🔵 [carregarLigas] Data recebido:', data);
+                console.log('🔵 [carregarLigas] data.success:', data.success);
+                console.log('🔵 [carregarLigas] data.ligas:', data.ligas);
+                console.log('🔵 [carregarLigas] Número de ligas:', Object.keys(data.ligas || {}).length);
+                
+                if (data.success && data.ligas) {
+                    const seletor = document.getElementById('seletorLiga');
+                    console.log('🔵 [carregarLigas] Seletor encontrado:', seletor);
+                    console.log('🔵 [carregarLigas] Opções existentes:', seletor.options.length);
+                    
+                    // Limpar seletor
+                    while (seletor.options.length > 0) {
+                        seletor.remove(0);
+                    }
+                    console.log('🔵 [carregarLigas] Seletor limpo');
+                    
+                    // Adicionar opções
+                    let contador = 0;
+                    for (const codigo in data.ligas) {
+                        const nome = data.ligas[codigo];
+                        const option = new Option(`${codigo} - ${nome}`, codigo);
+                        
+                        if (codigo === data.atual) {
+                            option.selected = true;
+                        }
+                        
+                        seletor.add(option);
+                        contador++;
+                        
+                        if (contador <= 3) {
+                            console.log(`🔵 [carregarLigas] Adicionada opção ${contador}: ${codigo} - ${nome}`);
+                        }
+                    }
+                    
+                    console.log('🔵 [carregarLigas] Total de opções adicionadas:', contador);
+                    console.log('🔵 [carregarLigas] Opções no seletor após adicionar:', seletor.options.length);
+                    
+                    // Atualizar descrição
+                    if (data.atual && data.ligas[data.atual]) {
+                        document.getElementById('descricaoLiga').textContent = 
+                            `${data.atual} - ${data.ligas[data.atual]} | Testando estratégia de Value Bets`;
+                        console.log('🔵 [carregarLigas] Descrição atualizada para liga atual:', data.atual);
+                    }
+                    
+                    console.log('🔵 [carregarLigas] Carregamento concluído com sucesso!');
+                } else {
+                    console.error('🔴 [carregarLigas] Resposta inválida:', data);
+                }
+            } catch (error) {
+                console.error('🔴 [carregarLigas] Erro ao carregar ligas:', error);
+                console.error('🔴 [carregarLigas] Erro detalhado:', error.message);
+                console.error('🔴 [carregarLigas] Stack:', error.stack);
+            }
+        }
+        
+        async function alterarLigaETemporada() {
+            const liga = document.getElementById('seletorLiga').value;
+            const temporada = document.getElementById('seletorTemporada').value;
+            
+            console.log(`🔄 Alterando para Liga: ${liga}, Temporada: ${temporada}`);
+            
+            // Desabilitar botões durante o carregamento
+            document.getElementById('btnProcessar').disabled = true;
+            document.getElementById('btnProcessarTodas').disabled = true;
+            
+            try {
+                const response = await fetch('http://localhost:5001/api/backtest/selecionar-liga', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ liga: liga, temporada: temporada })
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    console.log('✅ Liga alterada com sucesso, recarregando dados...');
+                    // Recarregar status e entradas ao invés de recarregar a página
+                    await carregarStatus();
+                    await carregarEntradas();
+                    console.log('✅ Dados recarregados com sucesso');
+                } else {
+                    alert('Erro ao alterar liga: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Erro ao alterar liga:', error);
+                alert('Erro ao alterar liga. Verifique se a API está rodando.');
+            }
+        }
+        
+        async function alterarLiga() {
+            // Mantém função para compatibilidade, mas usa a nova
+            await alterarLigaETemporada();
+        }
+        
+        // Carregar status ao iniciar
+        window.addEventListener('DOMContentLoaded', async function() {
+            console.log('🟢 [DOMContentLoaded] DOM carregado, aguardando 100ms...');
+            setTimeout(async function() {
+                console.log('🟢 [DOMContentLoaded] Executando inicialização...');
+                try {
+                    console.log('🟢 [DOMContentLoaded] 1/3 - Carregando ligas...');
+                    await carregarLigas();
+                    console.log('🟢 [DOMContentLoaded] 2/3 - Carregando status...');
+                    await carregarStatus();
+                    console.log('🟢 [DOMContentLoaded] 3/3 - Carregando entradas...');
+                    await carregarEntradas();
+                    console.log('🟢 [DOMContentLoaded] Inicialização completa!');
+                } catch (error) {
+                    console.error('🔴 [DOMContentLoaded] Erro na inicialização:', error);
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>

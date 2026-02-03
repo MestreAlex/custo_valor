@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Análise de Backtests Salvos</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 15px 0;
+        }
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        .control-panel {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .control-section {
+            margin-bottom: 15px;
+        }
+        .control-section label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1e3c72;
+            font-size: 0.95em;
+        }
+        .control-section select, .control-section input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9em;
+            width: 100%;
+            max-width: 300px;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+        }
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+        .btn-info {
+            background: linear-gradient(135deg, #0066cc 0%, #0099ff 100%);
+            color: white;
+        }
+        .btn-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .stat-box {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .stat-number {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+        .stat-label {
+            font-size: 0.85em;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95em;
+        }
+        thead {
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+        thead th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #1e3c72;
+        }
+        tbody td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+        .center-cell {
+            text-align: center;
+        }
+        .confidence {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #6c757d;
+            border-top: 1px solid #e9ecef;
+        }
+        .save-panel {
+            padding: 20px;
+            background: linear-gradient(135deg, #e8f4f8 0%, #f0f8fc 100%);
+            border-bottom: 2px solid #0099ff;
+        }
+        .save-panel h3 {
+            color: #0066cc;
+            margin-bottom: 15px;
+        }
+        .save-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .save-input input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid #0099ff;
+            border-radius: 5px;
+            font-size: 0.95em;
+        }
+        .liga-lucro-btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            background-color: #f1f3f5;
+            color: #333;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            cursor: default;
+            margin: 5px;
+        }
+        .liga-lucro-btn.positivo {
+            background-color: #b7f0c1;
+            color: #1b4332;
+        }
+        .liga-lucro-btn.negativo {
+            background-color: #f6b3b3;
+            color: #7f1d1d;
+        }
+        .ligas-lucro-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 15px 0;
+            justify-content: center;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #1e3c72;
+        }
+        .ai-panel {
+            background: #ffffff;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            margin: 20px;
+            padding: 15px 20px;
+        }
+        .ai-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .ai-title {
+            font-weight: 700;
+            color: #1e3c72;
+        }
+        .ai-toggle {
+            background: #2a5298;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .ai-content {
+            margin-top: 12px;
+            color: #495057;
+            font-size: 0.95em;
+            display: none;
+        }
+        .ai-start-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .ai-start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+        .ai-start-btn:active {
+            transform: translateY(0);
+        }
+        .ai-loading {
+            text-align: center;
+            padding: 20px;
+            color: #1e3c72;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+        .ai-results {
+            margin-top: 20px;
+        }
+        .ai-resumo {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 1.05em;
+        }
+        .ai-insights {
+            background: #f0f7ff;
+            border-left: 4px solid #0066cc;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .ai-insights-title {
+            font-weight: 700;
+            color: #0066cc;
+            margin-bottom: 10px;
+        }
+        .ai-insight-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            line-height: 1.6;
+        }
+        .ai-insight-item:last-child {
+            border-bottom: none;
+        }
+        .ai-recomendacoes {
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 15px 20px;
+            border-radius: 8px;
+        }
+        .ai-recomendacoes-title {
+            font-weight: 700;
+            color: #ff9800;
+            margin-bottom: 10px;
+        }
+        .ai-recomendacao-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            line-height: 1.6;
+        }
+        .ai-recomendacao-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Tema unificado (backtest_resumo_entradas) */
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #ecf0f1;
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid #00d4ff;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+        }
+
+        .header {
+            background: linear-gradient(90deg, #0a5f7e 0%, #00d4ff 100%);
+        }
+
+        .header h1 {
+            color: #00d4ff;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .nav-links {
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            color: #00d4ff;
+            background: rgba(0, 212, 255, 0.12);
+            border: 1px solid rgba(0, 212, 255, 0.35);
+        }
+
+        .nav-link:hover {
+            background: rgba(0, 212, 255, 0.25);
+        }
+
+        table {
+            color: #ecf0f1;
+        }
+
+        thead {
+            background: #0a5f7e;
+        }
+
+        th {
+            color: #00d4ff;
+            border: 1px solid #0a5f7e;
+        }
+
+        td {
+            border: 1px solid #333;
+        }
+
+        tbody tr:nth-child(odd) {
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        tbody tr:hover {
+            background: rgba(0, 212, 255, 0.15);
+        }
+
+        .control-panel,
+        .button-group,
+        .ai-panel {
+            background: rgba(0, 0, 0, 0.35);
+            color: #ecf0f1;
+        }
+
+        .control-section label {
+            color: #00d4ff;
+        }
+
+        .control-section select,
+        .control-section input {
+            background: rgba(0, 0, 0, 0.6);
+            color: #ffffff;
+            border: 1px solid #00d4ff;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            width: 100%;
+            max-width: 300px;
+        }
+        .control-section select option {
+            background: rgba(0, 0, 0, 0.8);
+            color: #ffffff;
+        }
+        .control-section select:focus,
+        .control-section input:focus {
+            outline: none;
+            background: rgba(0, 0, 0, 0.7);
+            border-color: #00d4ff;
+        }
+
+        .btn {
+            border: 1px solid rgba(0, 212, 255, 0.35);
+        }
+
+        .btn-primary,
+        .btn-danger,
+        .btn-success,
+        .btn-info {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+        }
+
+        .btn-primary:hover,
+        .btn-danger:hover,
+        .btn-success:hover,
+        .btn-info:hover {
+            background: rgba(0, 212, 255, 0.35);
+        }
+
+        /* Padronização de título e navegação */
+        .header {
+            padding: 26px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.1em;
+            margin-bottom: 8px;
+        }
+        .nav-links {
+            gap: 12px;
+            padding: 12px 0 18px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+        .nav-link {
+            padding: 8px 14px;
+            font-size: 0.9em;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Análise de Backtests Salvos</h1>
+            <div class="nav-links">
+                <a href="http://localhost:8000/proxima_rodada.html" class="nav-link">Próxima Rodada</a>
+                <a href="http://localhost:8000/jogos_salvos.html" class="nav-link">Jogos Salvos</a>
+                <a href="http://localhost:8000/analise_salvos.html" class="nav-link">Análise Salvos</a>
+                <a href="http://localhost:5001/backtest.html" class="nav-link">Backtest</a>
+                <a href="http://localhost:5001/backtest_salvos.html" class="nav-link">Backtests Salvos</a>
+                <a href="http://localhost:5001/backtest_resumo_entradas.html" class="nav-link">Resumo Entradas</a>
+            </div>
+        </div>
+
+        <div class="ai-panel">
+            <div class="ai-header">
+                <div class="ai-title">🤖 Análise de Padrões por IA</div>
+                <button class="ai-toggle" onclick="toggleAI()">Mostrar</button>
+            </div>
+            <div id="aiContent" class="ai-content">
+                <button id="iniciarBtn" class="ai-start-btn" onclick="iniciarAnalise()">INICIAR ANÁLISE</button>
+                <div id="aiLoading" class="ai-loading" style="display: none;">
+                    ⏳ Analisando dados...
+                </div>
+                <div id="aiResults" class="ai-results" style="display: none;">
+                    <div id="aiResumo" class="ai-resumo"></div>
+                    <div id="aiInsights" class="ai-insights"></div>
+                    <div id="aiRecomendacoes" class="ai-recomendacoes"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="save-panel">
+            <h3>💾 Salvar Resultado do Backtest</h3>
+            <div class="save-input">
+                <input type="text" id="nomeSalvamento" placeholder="Digite um nome para salvar este resultado (ex: BRA_Rodada_1)" value="">
+                <button class="btn btn-success" onclick="salvarBacktest()">Salvar Resultado Atual</button>
+            </div>
+            <div style="font-size: 0.9em; color: #666; margin-top: 10px;">
+                💡 Dica: Salve os resultados após completar as rodadas de uma liga para análise com IA
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div class="control-section">
+                    <label for="seletorSalvamento">📁 Selecionar Resultado Salvo:</label>
+                    <select id="seletorSalvamento" onchange="carregarSalvamento()">
+                        <option value="">-- Carregue um resultado salvo --</option>
+                    </select>
+                </div>
+                <div class="control-section">
+                    <label for="seletorTemporadaAnalise">📅 Filtrar por Temporada:</label>
+                    <select id="seletorTemporadaAnalise" onchange="aplicarFiltros()">
+                        <option value="">Todas as temporadas</option>
+                    </select>
+                </div>
+                <div class="control-section">
+                    <label for="filtroLiga">🏆 Filtrar por Liga:</label>
+                    <select id="filtroLiga" multiple size="1" onchange="aplicarFiltros()">
+                        <option value="">Todas as ligas</option>
+                    </select>
+                </div>
+                <div class="control-section">
+                    <label for="filtroEntrada">🎯 Filtrar por Entrada:</label>
+                    <select id="filtroEntrada" multiple size="1" onchange="aplicarFiltros()">
+                        <option value="HOME">HOME</option>
+                        <option value="AWAY">AWAY</option>
+                    </select>
+                </div>
+                <div class="control-section">
+                    <label for="filtroDxG">📈 Filtrar por DxG:</label>
+                    <select id="filtroDxG" multiple size="1" onchange="aplicarFiltros()">
+                        <option value="FH">FH (Favorito Home)</option>
+                        <option value="LH">LH (Levemente Home)</option>
+                        <option value="EQ">EQ (Equilibrado)</option>
+                        <option value="LA">LA (Levemente Away)</option>
+                        <option value="FA">FA (Favorito Away)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn btn-success" onclick="carregarDoArquivo()" style="background: linear-gradient(135deg, #28a745 0%, #218838 100%);">
+                📂 Carregar Arquivo JSON
+            </button>
+            <button class="btn btn-info" onclick="aplicarFiltros()">🔍 Aplicar Filtros</button>
+            <button class="btn btn-danger" onclick="limparTodosBacktests()">🗑️ Limpar Salvamento Acumulado</button>
+            <button class="btn btn-primary" onclick="resetarFiltros()">↺ Resetar Filtros</button>
+            <button class="btn btn-primary" onclick="excluirSalvamento()" id="btnExcluir" style="display: none;">🗑️ Excluir</button>
+        </div>
+
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-number" id="totalEntradas">-</div>
+                <div class="stat-label">Total de Entradas</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="winRate">-</div>
+                <div class="stat-label">Taxa de Acerto (%)</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="roi" style="color: #6c757d;">-</div>
+                <div class="stat-label">ROI (%)</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="totalLucro" style="color: #6c757d;">-</div>
+                <div class="stat-label">Lucro Total</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="ligas">-</div>
+                <div class="stat-label">Total de Ligas</div>
+            </div>
+        </div>
+
+        <div id="ligasLucroContainer" style="text-align: center; padding: 15px; background: #f8f9fa; border-bottom: 2px solid #e9ecef; display: none;">
+            <strong style="color: #1e3c72;">💰 Lucro por Liga:</strong>
+            <div class="ligas-lucro-container" id="ligasLucro"></div>
+        </div>
+
+        <div class="table-wrapper">
+            <div id="emptyState" class="empty-state">
+                <h3>📂 Carregue um resultado salvo para visualizar</h3>
+                <p>Selecione um salvamento na lista acima para ver as entradas do backtest</p>
+            </div>
+            <table id="tabelaResultados" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Liga</th>
+                        <th>Casa</th>
+                        <th>Visitante</th>
+                        <th class="center-cell">GC</th>
+                        <th class="center-cell">GV</th>
+                        <th class="center-cell">Odd Casa</th>
+                        <th class="center-cell">Odd Visit</th>
+                        <th class="center-cell">xG Esperado Casa</th>
+                        <th class="center-cell">xG Esperado Visit</th>
+                        <th class="center-cell">DxG</th>
+                        <th class="center-cell">Entrada</th>
+                        <th class="center-cell">L/P</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            <p>Sistema de Análise de Backtests - Salve e analise seus resultados com IA</p>
+        </div>
+    </div>
+
+    <script>
+        // Função para obter URL base da API
+        function getApiBaseUrl() {
+            // Se a página está sendo servida pela porta 8000 (Flask), usar localhost:8000
+            if (window.location.port === '8000') {
+                return 'http://localhost:8000';
+            }
+            // Para API de backtest, usar porta 5001
+            return 'http://localhost:5001';
+        }
+
+        const API_BASE_URL = getApiBaseUrl();
+        const API_BACKTEST_URL = 'http://localhost:5001';
+
+        let salvagensCriadas = {};
+        let salvamentoAtual = null;
+        let dadosAtual = [];
+
+        // Carregar salvagens do localStorage ao iniciar
+        window.addEventListener('DOMContentLoaded', () => {
+            carregarSalvagens();
+        });
+
+        function limparTodosBacktests() {
+            console.log('🔴 Solicitação de limpeza de salvamentos');
+            
+            if (!confirm('⚠️ ATENÇÃO!\n\nIsto irá EXCLUIR PERMANENTEMENTE todos os salvamentos acumulados.\n\nDeseja continuar?')) {
+                console.log('🔴 Limpeza cancelada pelo usuário');
+                return;
+            }
+            
+            // Excluir APENAS o backtest_acumulado (arquivo único de salvamentos)
+            const CHAVE_UNICA = 'backtest_acumulado';
+            
+            console.log(`🔴 Excluindo salvamento: ${CHAVE_UNICA}`);
+            
+            // Remover as 3 chaves relacionadas ao salvamento
+            localStorage.removeItem(CHAVE_UNICA);
+            localStorage.removeItem(CHAVE_UNICA + '_nome');
+            localStorage.removeItem(CHAVE_UNICA + '_data');
+            
+            console.log('🔴 Salvamento excluído!');
+            
+            alert('✅ Salvamento excluído com sucesso!\n\nA página será recarregada.');
+            location.reload();
+        }
+
+        function carregarSalvagens() {
+            console.log('🔵 Carregando salvamentos...');
+            const CHAVE_UNICA = 'backtest_acumulado';
+            
+            const seletor = document.getElementById('seletorSalvamento');
+            
+            // Verificar se existe o salvamento único
+            const dadosSalvos = localStorage.getItem(CHAVE_UNICA);
+            
+            if (dadosSalvos) {
+                const nome = localStorage.getItem(CHAVE_UNICA + '_nome') || 'Backtest Acumulado MultiLiga';
+                const data = new Date(parseInt(localStorage.getItem(CHAVE_UNICA + '_data')) || Date.now());
+                const dataFormatada = data.toLocaleDateString('pt-BR') + ' ' + data.toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'});
+                
+                const dados = JSON.parse(dadosSalvos);
+                const totalEntradas = dados.length;
+                const ligas = [...new Set(dados.map(d => d.liga))].sort().join(', ');
+                
+                const option = document.createElement('option');
+                option.value = CHAVE_UNICA;
+                option.text = `${nome} (${totalEntradas} entradas - ${dataFormatada})`;
+                seletor.appendChild(option);
+                
+                console.log(`🔵 Salvamento encontrado: ${totalEntradas} entradas de ${dados.length > 0 ? new Set(dados.map(d => d.liga)).size : 0} ligas`);
+                
+                salvagensCriadas[CHAVE_UNICA] = {
+                    nome: nome,
+                    data: data,
+                    tamanho: JSON.stringify(dadosSalvos).length
+                };
+            } else {
+                console.log('🔵 Nenhum salvamento encontrado');
+            }
+        }
+
+        async function carregarDoArquivo() {
+            console.log('📂 Carregando dados do arquivo JSON...');
+            const CHAVE_UNICA = 'backtest_acumulado';
+            try {
+                const response = await fetch('http://localhost:5001/api/backtest_acumulado');
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error(data.message || 'Erro ao carregar arquivo');
+                }
+
+                const entradas = data.entradas || [];
+                if (entradas.length === 0) {
+                    alert('⚠️ O arquivo de backtest está vazio no momento.');
+                    return;
+                }
+
+                // Salvar no localStorage para usar a UI atual
+                localStorage.setItem(CHAVE_UNICA, JSON.stringify(entradas));
+                localStorage.setItem(CHAVE_UNICA + '_nome', 'Backtest Acumulado (Arquivo)');
+                localStorage.setItem(CHAVE_UNICA + '_data', Date.now().toString());
+
+                // Recarregar seletor e abrir automaticamente
+                const seletor = document.getElementById('seletorSalvamento');
+                while (seletor.firstChild) {
+                    seletor.removeChild(seletor.firstChild);
+                }
+
+                carregarSalvagens();
+                seletor.value = CHAVE_UNICA;
+                carregarSalvamento();
+
+                alert(`✅ Dados carregados do arquivo!\n\nTotal de entradas: ${entradas.length}`);
+            } catch (error) {
+                console.error('❌ Erro ao carregar arquivo JSON:', error);
+                alert(`❌ Erro ao carregar arquivo JSON:\n\n${error.message}\n\nVerifique se o servidor na porta 5000 está rodando.`);
+            }
+        }
+
+        function carregarSalvamento() {
+            console.log('🔵 Função carregarSalvamento() chamada');
+            const seletor = document.getElementById('seletorSalvamento');
+            const chaveSelecionada = seletor.value;
+            
+            console.log(`🔵 Chave selecionada: ${chaveSelecionada}`);
+            
+            if (!chaveSelecionada) {
+                console.log('🔵 Nenhuma chave selecionada, mostrando estado vazio');
+                document.getElementById('emptyState').style.display = 'block';
+                document.getElementById('tabelaResultados').style.display = 'none';
+                document.getElementById('btnExcluir').style.display = 'none';
+                document.getElementById('ligasLucroContainer').style.display = 'none';
+                resetarEstatisticas();
+                return;
+            }
+            
+            salvamentoAtual = chaveSelecionada;
+            const dados = JSON.parse(localStorage.getItem(chaveSelecionada));
+            dadosAtual = dados;
+            
+            console.log(`🔵 Dados carregados: ${dados.length} entradas`);
+            console.log(`🔵 Amostra dos dados (primeiros 2):`, dados.slice(0, 2));
+            
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('tabelaResultados').style.display = 'table';
+            document.getElementById('btnExcluir').style.display = 'block';
+            
+            // Preenchimento filtros
+            preencherFiltros(dados);
+            
+            // Carregar dados na tabela
+            preencherTabela(dados);
+            aplicarFiltros();
+        }
+
+        function preencherFiltros(dados) {
+            const ligas = [...new Set(dados.map(d => d.liga))].sort();
+            const temporadas = [...new Set(dados.map(d => d.temporada || '2024-25'))].sort().reverse();  // NOVO: adicionar temporadas
+            
+            const filtroLiga = document.getElementById('filtroLiga');
+            const filtroTemporada = document.getElementById('seletorTemporadaAnalise');  // NOVO: seletor de temporada
+            
+            // Limpar opções antigas de liga (exceto a primeira)
+            while (filtroLiga.children.length > 1) {
+                filtroLiga.removeChild(filtroLiga.lastChild);
+            }
+            
+            ligas.forEach(liga => {
+                const option = document.createElement('option');
+                option.value = liga;
+                option.text = liga;
+                filtroLiga.appendChild(option);
+            });
+            
+            // NOVO: Preencherseletor de temporada
+            if (filtroTemporada) {
+                // Limpar opções antigas (exceto a primeira)
+                while (filtroTemporada.children.length > 1) {
+                    filtroTemporada.removeChild(filtroTemporada.lastChild);
+                }
+                
+                temporadas.forEach(temporada => {
+                    const option = document.createElement('option');
+                    option.value = temporada;
+                    option.text = temporada;
+                    filtroTemporada.appendChild(option);
+                });
+            }
+        }
+
+        function preencherTabela(dados) {
+            const tbody = document.getElementById('tbody');
+            tbody.innerHTML = '';
+            
+            dados.forEach(jogo => {
+                const tr = document.createElement('tr');
+                tr.setAttribute('data-liga', jogo.liga);
+                tr.setAttribute('data-entrada', jogo.entrada);
+                tr.setAttribute('data-dxg', jogo.dxg);
+                tr.setAttribute('data-temporada', jogo.temporada || '2024-25');
+                
+                const dxgCor = obterCorDxG(jogo.dxg);
+                const entradaCor = jogo.entrada === 'HOME' ? '#28a745' : '#007bff';
+                const entradaText = jogo.entrada === 'HOME' ? 'HOME' : 'AWAY';
+                
+                const lp = parseFloat(jogo.lp);
+                const lpCor = lp > 0 ? '#28a745' : (lp < 0 ? '#dc3545' : '#6c757d');
+                const lpText = lp > 0 ? '+' + lp.toFixed(2) : lp.toFixed(2);
+                
+                // Mapeamento correto dos nomes de campos
+                const data = jogo.date || 'N/A';
+                const casa = jogo.home || 'N/A';
+                const visitante = jogo.away || 'N/A';
+                const gc = jogo.fthg || 0;
+                const gv = jogo.ftag || 0;
+                const oddCasa = parseFloat(jogo.b365h || jogo.odd_home_calc || 0).toFixed(2);
+                const oddVisitante = parseFloat(jogo.b365a || jogo.odd_away_calc || 0).toFixed(2);
+                const xgCasa = parseFloat(jogo.xgh || 0).toFixed(2);
+                const xgVisitante = parseFloat(jogo.xga || 0).toFixed(2);
+                
+                tr.innerHTML = `
+                    <td>${data}</td>
+                    <td><strong>${jogo.liga}</strong></td>
+                    <td>${casa}</td>
+                    <td>${visitante}</td>
+                    <td class="center-cell">${gc}</td>
+                    <td class="center-cell">${gv}</td>
+                    <td class="center-cell">${oddCasa}</td>
+                    <td class="center-cell">${oddVisitante}</td>
+                    <td class="center-cell">${xgCasa}</td>
+                    <td class="center-cell">${xgVisitante}</td>
+                    <td class="center-cell"><strong style="color: ${dxgCor};">${jogo.dxg}</strong></td>
+                    <td class="center-cell"><span style="background-color: ${entradaCor}; color: white; padding: 4px 8px; border-radius: 4px; font-weight: 600;">${entradaText}</span></td>
+                    <td class="center-cell"><strong style="color: ${lpCor};">${lpText}</strong></td>
+                `;
+                
+                tbody.appendChild(tr);
+            });
+        }
+
+        function obterCorDxG(dxg) {
+            const cores = {
+                'FH': '#28a745',
+                'LH': '#ffc107',
+                'EQ': '#6c757d',
+                'LA': '#ffc107',
+                'FA': '#dc3545'
+            };
+            return cores[dxg] || '#6c757d';
+        }
+
+        function aplicarFiltros() {
+            const filtroLiga = Array.from(document.getElementById('filtroLiga').selectedOptions).map(opt => opt.value);
+            const filtroEntrada = Array.from(document.getElementById('filtroEntrada').selectedOptions).map(opt => opt.value);
+            const filtroDxG = Array.from(document.getElementById('filtroDxG').selectedOptions).map(opt => opt.value);
+            const filtroTemporada = document.getElementById('seletorTemporadaAnalise').value;  // NOVO: obter temporada selecionada
+            
+            const linhas = document.querySelectorAll('#tbody tr');
+            let totalEntradas = 0;
+            let acertos = 0;
+            let totalLP = 0;
+            const ligasLucro = {};
+            const ligasUnicos = new Set();
+            
+            linhas.forEach(linha => {
+                const liga = linha.getAttribute('data-liga');
+                const entrada = linha.getAttribute('data-entrada');
+                const dxg = linha.getAttribute('data-dxg');
+                const temporada = linha.getAttribute('data-temporada') || '2024-25';  // NOVO: obter temporada da linha
+                
+                let mostrar = true;
+                
+                // NOVO: Filtrar por temporada
+                if (filtroTemporada && temporada !== filtroTemporada) {
+                    mostrar = false;
+                }
+                
+                if (filtroLiga.length > 0 && !filtroLiga.includes(liga)) {
+                    mostrar = false;
+                }
+                
+                if (filtroEntrada.length > 0 && !filtroEntrada.includes(entrada)) {
+                    mostrar = false;
+                }
+                
+                if (filtroDxG.length > 0 && !filtroDxG.includes(dxg)) {
+                    mostrar = false;
+                }
+                
+                if (mostrar) {
+                    linha.style.display = '';
+                    totalEntradas++;
+                    ligasUnicos.add(liga);
+                    
+                    const lpCell = linha.cells[12];
+                    const lpValue = parseFloat(lpCell.textContent);
+                    
+                    if (!isNaN(lpValue)) {
+                        totalLP += lpValue;
+                        if (lpValue > 0) {
+                            acertos++;
+                        }
+                        
+                        if (!ligasLucro[liga]) {
+                            ligasLucro[liga] = 0;
+                        }
+                        ligasLucro[liga] += lpValue;
+                    }
+                } else {
+                    linha.style.display = 'none';
+                }
+            });
+            
+            // Atualizar estatísticas
+            const winRate = totalEntradas > 0 ? (acertos / totalEntradas * 100).toFixed(1) : '-';
+            const roi = totalEntradas > 0 ? (totalLP / totalEntradas * 100).toFixed(1) : '-';
+            const totalLucroFormatado = totalEntradas > 0 ? (totalLP >= 0 ? '+' : '') + totalLP.toFixed(2) : '-';
+            
+            document.getElementById('totalEntradas').textContent = totalEntradas;
+            document.getElementById('winRate').textContent = winRate;
+            document.getElementById('roi').textContent = roi;
+            document.getElementById('roi').style.color = roi === '-' ? '#6c757d' : (parseFloat(roi) > 0 ? '#28a745' : '#dc3545');
+            document.getElementById('totalLucro').textContent = totalLucroFormatado;
+            document.getElementById('totalLucro').style.color = totalLucroFormatado === '-' ? '#6c757d' : (totalLP > 0 ? '#28a745' : '#dc3545');
+            document.getElementById('ligas').textContent = ligasUnicos.size;
+            
+            // Mostrar lucro por liga
+            if (Object.keys(ligasLucro).length > 0) {
+                document.getElementById('ligasLucroContainer').style.display = 'block';
+                const container = document.getElementById('ligasLucro');
+                container.innerHTML = '';
+                
+                Object.entries(ligasLucro).sort((a, b) => b[1] - a[1]).forEach(([liga, lucro]) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'liga-lucro-btn ' + (lucro >= 0 ? 'positivo' : 'negativo');
+                    btn.textContent = `${liga}: ${lucro >= 0 ? '+' : ''}${lucro.toFixed(2)}`;
+                    container.appendChild(btn);
+                });
+            } else {
+                document.getElementById('ligasLucroContainer').style.display = 'none';
+            }
+        }
+
+        function resetarEstatisticas() {
+            document.getElementById('totalEntradas').textContent = '-';
+            document.getElementById('winRate').textContent = '-';
+            document.getElementById('roi').textContent = '-';
+            document.getElementById('roi').style.color = '#6c757d';
+            document.getElementById('totalLucro').textContent = '-';
+            document.getElementById('totalLucro').style.color = '#6c757d';
+            document.getElementById('ligas').textContent = '-';
+        }
+
+        function resetarFiltros() {
+            document.getElementById('filtroLiga').value = '';
+            document.getElementById('filtroEntrada').value = '';
+            document.getElementById('filtroDxG').value = '';
+            aplicarFiltros();
+        }
+
+        function salvarBacktest() {
+            // Buscar dados atuais do backtest via API
+            fetch(`${API_BACKTEST_URL}/api/backtest/status`)
+                .then(r => r.json())
+                .then(statusData => {
+                    if (!statusData.success) {
+                        alert('Nenhum backtest ativo. Selecione uma liga e processe algumas rodadas.');
+                        return;
+                    }
+                    
+                    fetch(`${API_BACKTEST_URL}/api/backtest/entradas`)
+                        .then(r => r.json())
+                        .then(entradasData => {
+                            const entradas = entradasData.entradas || [];
+                            
+                            if (entradas.length === 0) {
+                                alert('Nenhuma entrada para salvar. Processe rodadas primeiro.');
+                                return;
+                            }
+                            
+                            const nome = document.getElementById('nomeSalvamento').value || 
+                                        `Backtest_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}_${new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'}).replace(/:/g, '-')}`;
+                            
+                            // Converter dados do backtest para formato compatível
+                            const dadosFormatados = entradas.map(e => ({
+                                data: e.data || '',
+                                liga: e.liga || '',
+                                casa: e.casa || '',
+                                visitante: e.visitante || '',
+                                gc: e.gols_casa || 0,
+                                gv: e.gols_visitante || 0,
+                                odd_casa: e.odd_casa || 0,
+                                odd_visitante: e.odd_visitante || 0,
+                                xg_casa: e.xg_casa || 0,
+                                xg_visitante: e.xg_visitante || 0,
+                                dxg: e.dxg || 'EQ',
+                                entrada: e.entrada || '',
+                                lp: e.lp || 0
+                            }));
+                            
+                            const chave = 'backtest_' + Date.now();
+                            localStorage.setItem(chave, JSON.stringify(dadosFormatados));
+                            localStorage.setItem(chave + '_nome', nome);
+                            localStorage.setItem(chave + '_data', Date.now().toString());
+                            
+                            alert(`✅ Backtest salvo com sucesso!\nNome: ${nome}\nEntradas: ${dadosFormatados.length}`);
+                            
+                            // Recarregar seletor
+                            document.getElementById('seletorSalvamento').innerHTML = '<option value="">-- Carregue um resultado salvo --</option>';
+                            carregarSalvagens();
+                            document.getElementById('nomeSalvamento').value = '';
+                        })
+                        .catch(e => alert('Erro ao buscar entradas: ' + e.message));
+                })
+                .catch(e => alert('Erro ao buscar status: ' + e.message));
+        }
+
+        function toggleAI() {
+            const content = document.getElementById('aiContent');
+            const btn = event.target;
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                btn.textContent = 'Ocultar';
+            } else {
+                content.style.display = 'none';
+                btn.textContent = 'Mostrar';
+            }
+        }
+
+        async function iniciarAnalise() {
+            console.log('🟢 Iniciando análise de IA...');
+            
+            if (!salvamentoAtual || dadosAtual.length === 0) {
+                console.log('🔴 Erro: Nenhum salvamento carregado');
+                alert('❌ Carregue um resultado salvo primeiro.');
+                return;
+            }
+
+            console.log(`🟢 Salvamento atual: ${salvamentoAtual}`);
+            console.log(`🟢 Total de entradas: ${dadosAtual.length}`);
+
+            const btn = document.getElementById('iniciarBtn');
+            const loading = document.getElementById('aiLoading');
+            const results = document.getElementById('aiResults');
+            
+            btn.style.display = 'none';
+            loading.style.display = 'block';
+            results.style.display = 'none';
+            
+            try {
+                console.log(`🟢 Enviando requisição para ${API_BASE_URL}/api/analisar_padroes_backtest`);
+                
+                const response = await fetch(`${API_BASE_URL}/api/analisar_padroes_backtest`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        tipo: 'backtest_salvos',
+                        salvamento: salvamentoAtual,
+                        dados: dadosAtual
+                    })
+                });
+                
+                console.log('🟢 Resposta recebida. Status:', response.status);
+                
+                if (!response.ok) {
+                    console.error('🔴 Erro na resposta da API. Status:', response.status);
+                    throw new Error('Erro na requisição');
+                }
+                
+                const data = await response.json();
+                console.log('🟢 Dados da resposta:', data);
+                
+                if (data.success && data.data) {
+                    console.log('🟢 Análise bem-sucedida, exibindo resultados');
+                    exibirResultados(data.data);
+                } else {
+                    console.error('🔴 Resposta sem sucesso:', data);
+                    alert('Erro ao analisar padrões');
+                    btn.style.display = 'block';
+                    loading.style.display = 'none';
+                }
+            } catch (erro) {
+                console.error('🔴 Erro na análise:', erro);
+                console.error('🔴 Detalhes:', erro.message);
+                console.error('🔴 Stack:', erro.stack);
+                alert('Erro ao conectar com a API: ' + erro.message + '\n\nVerifique se a API está rodando na porta 8000.');
+                btn.style.display = 'block';
+                loading.style.display = 'none';
+            }
+        }
+
+        function exibirResultados(dados) {
+            console.log('🟢 Exibindo resultados da IA:', dados);
+            const loading = document.getElementById('aiLoading');
+            const results = document.getElementById('aiResults');
+            const resumoDiv = document.getElementById('aiResumo');
+            const insightsDiv = document.getElementById('aiInsights');
+            const recomendacoesDiv = document.getElementById('aiRecomendacoes');
+            
+            // Resumo
+            resumoDiv.innerHTML = '<strong>' + (dados.resumo || 'Sem dados') + '</strong>';
+            
+            // Insights
+            if (dados.insights && dados.insights.length > 0) {
+                let insightsHtml = '<div class="ai-insights-title">Insights Identificados</div>';
+                dados.insights.forEach(function(insight) {
+                    insightsHtml += '<div class="ai-insight-item">' + formatarComTabulacao(insight) + '</div>';
+                });
+                insightsDiv.innerHTML = insightsHtml;
+            } else {
+                insightsDiv.innerHTML = '<div class="ai-insights-title">Insights Identificados</div><div class="ai-insight-item">Nenhum insight disponível</div>';
+            }
+            
+            // Recomendações - Agrupadas por Período
+            if (dados.recomendacoes && dados.recomendacoes.length > 0) {
+                let recomendacoesHtml = '<div class="ai-recomendacoes-title">Recomendações para Maximizar Lucros</div>';
+                
+                // Agrupar recomendações por período
+                let recInicio = [];
+                let recMeio = [];
+                let recFim = [];
+                let recGeral = [];
+                
+                dados.recomendacoes.forEach(function(rec) {
+                    let recLower = rec.toLowerCase();
+                    if (recLower.includes('início')) {
+                        recInicio.push(rec);
+                    } else if (recLower.includes('meio')) {
+                        recMeio.push(rec);
+                    } else if (recLower.includes('fim')) {
+                        recFim.push(rec);
+                    } else {
+                        recGeral.push(rec);
+                    }
+                });
+                
+                // Exibir por período
+                if (recInicio.length > 0) {
+                    recomendacoesHtml += '<div style="margin-top: 12px; border-left: 3px solid #ff6b6b; padding-left: 12px;"><strong style="color: #ff6b6b;">📍 INÍCIO DA TEMPORADA</strong>';
+                    recInicio.forEach(function(rec) {
+                        recomendacoesHtml += '<div class="ai-recomendacao-item"><strong>✓</strong> ' + formatarComTabulacao(rec) + '</div>';
+                    });
+                    recomendacoesHtml += '</div>';
+                }
+                
+                if (recMeio.length > 0) {
+                    recomendacoesHtml += '<div style="margin-top: 12px; border-left: 3px solid #4dabf7; padding-left: 12px;"><strong style="color: #4dabf7;">📍 MEIO DA TEMPORADA</strong>';
+                    recMeio.forEach(function(rec) {
+                        recomendacoesHtml += '<div class="ai-recomendacao-item"><strong>✓</strong> ' + formatarComTabulacao(rec) + '</div>';
+                    });
+                    recomendacoesHtml += '</div>';
+                }
+                
+                if (recFim.length > 0) {
+                    recomendacoesHtml += '<div style="margin-top: 12px; border-left: 3px solid #37b24d; padding-left: 12px;"><strong style="color: #37b24d;">📍 FIM DA TEMPORADA</strong>';
+                    recFim.forEach(function(rec) {
+                        recomendacoesHtml += '<div class="ai-recomendacao-item"><strong>✓</strong> ' + formatarComTabulacao(rec) + '</div>';
+                    });
+                    recomendacoesHtml += '</div>';
+                }
+                
+                if (recGeral.length > 0) {
+                    recomendacoesHtml += '<div style="margin-top: 12px; border-left: 3px solid #ffd43b; padding-left: 12px;"><strong style="color: #ffd43b;">📍 GERAL (TODOS OS PERÍODOS)</strong>';
+                    recGeral.forEach(function(rec) {
+                        recomendacoesHtml += '<div class="ai-recomendacao-item"><strong>✓</strong> ' + formatarComTabulacao(rec) + '</div>';
+                    });
+                    recomendacoesHtml += '</div>';
+                }
+                
+                recomendacoesDiv.innerHTML = recomendacoesHtml;
+            } else {
+                recomendacoesDiv.innerHTML = '<div class="ai-recomendacoes-title">Recomendações para Maximizar Lucros</div><div class="ai-recomendacao-item">Nenhuma recomendação disponível</div>';
+            }
+            
+            loading.style.display = 'none';
+            results.style.display = 'block';
+        }
+
+        function formatarComTabulacao(text) {
+            // Escapa HTML primeiro
+            text = escapeHtml(text);
+            
+            // Remove espaços/tabs entre sinais de +/- e números para colá-los
+            text = text.replace(/([+\-])\s+(\d)/g, '$1$2');
+            
+            // Identifica padrões comuns e adiciona tabulação
+            text = text.replace(/([A-Za-zÀ-ÿ\s]+):\s*/g, '$1:\t');
+            text = text.replace(/([A-Za-zÀ-ÿ\s]+)\s*-\s*/g, '$1 -\t');
+            
+            // Adiciona tabulação após números seguidos de texto
+            text = text.replace(/(\d+\.?\d*%?)\s+([A-Za-zÀ-ÿ])/g, '$1\t$2');
+            
+            return text;
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        function excluirSalvamento() {
+            if (!salvamentoAtual) return;
+            
+            if (!confirm(`Tem certeza que deseja excluir este salvamento?\n\nNão será possível recuperar.`)) {
+                return;
+            }
+            
+            localStorage.removeItem(salvamentoAtual);
+            localStorage.removeItem(salvamentoAtual + '_nome');
+            localStorage.removeItem(salvamentoAtual + '_data');
+            
+            alert('✅ Salvamento excluído com sucesso.');
+            
+            // Recarregar seletor
+            document.getElementById('seletorSalvamento').innerHTML = '<option value="">-- Carregue um resultado salvo --</option>';
+            document.getElementById('seletorSalvamento').value = '';
+            carregarSalvagens();
+            carregarSalvamento();
+        }
+    </script>
+</body>
+</html>

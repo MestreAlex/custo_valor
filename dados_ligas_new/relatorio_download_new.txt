@@ -1,0 +1,19 @@
+RELATÓRIO - LIGAS PADRÃO /new
+================================================================================
+codigo          nome  jogos  colunas  temporadas
+   AUT       Austria   2548       25          14
+   BRA        Brazil   5320       25          14
+   CHN         China   2808       25          12
+   DNK       Denmark   2868       25          14
+   FIN       Finland   2544       25          14
+   IRL       Ireland   2563       25          14
+   JPN         Japan   4523       25          14
+   MEX        Mexico   4515       25          14
+   NOR        Norway   3382       25          14
+   POL        Poland   3936       25          14
+   ROU       Romania   4045       25          14
+   RUS        Russia   3304       22          14
+   SWE        Sweden   3384       25          14
+   USA United States   5816       25          14
+
+Arquivos salvos em: C:\Users\Alex Menezes\projetos\custo_valor\dados_ligas_new

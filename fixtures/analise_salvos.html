@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Analise de Jogos Salvos</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 15px 0;
+        }
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        .ai-panel {
+            background: #ffffff;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            margin: 20px;
+            padding: 15px 20px;
+        }
+        .ai-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .ai-title {
+            font-weight: 700;
+            color: #1e3c72;
+        }
+        .ai-toggle {
+            background: #2a5298;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .ai-content {
+            margin-top: 12px;
+            color: #495057;
+            font-size: 0.95em;
+            display: none;
+        }
+        .ai-start-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .ai-start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+        .ai-start-btn:active {
+            transform: translateY(0);
+        }
+        .ai-loading {
+            text-align: center;
+            padding: 20px;
+            color: #1e3c72;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+        .ai-results {
+            margin-top: 20px;
+        }
+        .ai-resumo {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 1.05em;
+        }
+        .ai-insights {
+            background: #f0f7ff;
+            border-left: 4px solid #0066cc;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .ai-insights-title {
+            font-weight: 700;
+            color: #0066cc;
+            margin-bottom: 10px;
+        }
+        .ai-insight-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            line-height: 1.6;
+        }
+        .ai-insight-item:last-child {
+            border-bottom: none;
+        }
+        .ai-recomendacoes {
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 15px 20px;
+            border-radius: 8px;
+        }
+        .ai-recomendacoes-title {
+            font-weight: 700;
+            color: #ff9800;
+            margin-bottom: 10px;
+        }
+        .ai-recomendacao-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            line-height: 1.6;
+        }
+        .ai-recomendacao-item:last-child {
+            border-bottom: none;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .stat-box {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .stat-number { font-size: 1.8em; font-weight: bold; color: #1e3c72; }
+        .stat-label { font-size: 0.85em; color: #6c757d; margin-top: 5px; }
+        .ligas-lucro-container {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+        .ligas-lucro-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .liga-lucro-btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            background-color: #f1f3f5;
+            color: #333;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            cursor: default;
+        }
+        .liga-lucro-btn.positivo {
+            background-color: #b7f0c1;
+            color: #1b4332;
+        }
+        .liga-lucro-btn.negativo {
+            background-color: #f6b3b3;
+            color: #7f1d1d;
+        }
+        .table-container { overflow-x: auto; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 0.95em; }
+        thead { background: #f8f9fa; border-bottom: 2px solid #e9ecef; }
+        th { padding: 12px; text-align: left; font-weight: 600; color: #1e3c72; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        td { padding: 10px 12px; border-bottom: 1px solid #e9ecef; font-size: 0.75em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        th.entrada-col { width: 80px; }
+        .calc-odd {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            padding: 6px 10px;
+            border-radius: 6px;
+            display: inline-block;
+            min-width: 45px;
+            text-align: center;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .confidence {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        .value-bet {
+            background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+            color: #000;
+            font-weight: 900;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.3);
+            border: 2px solid #00ff88;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .value-bet::before { content: "✓ "; margin-right: 3px; }
+        .bad-bet {
+            background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+            color: white;
+            font-weight: 900;
+            box-shadow: 0 0 15px rgba(255, 68, 68, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.2);
+            border: 2px solid #ff4444;
+        }
+        .bad-bet::before { content: "✗ "; margin-right: 3px; }
+        .neutral-bet {
+            background: linear-gradient(135deg, #ffaa00 0%, #ff8800 100%);
+            color: #000;
+            font-weight: 700;
+            box-shadow: 0 0 12px rgba(255, 170, 0, 0.5);
+            border: 2px solid #ffaa00;
+        }
+        .neutral-bet::before { content: "◆ "; margin-right: 3px; }
+        .center-cell { text-align: center; font-size: 0.85em; }
+        .footer { text-align: center; padding: 20px; background: #f8f9fa; color: #6c757d; }
+        .filters-container {
+            background: white;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .filters-title {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 15px;
+        }
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(136px, 1fr));
+            gap: 15px;
+            align-items: end;
+        }
+        .filter-range-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .filter-range-inputs {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        .filter-range-inputs input {
+            padding: 6px 8px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9em;
+            width: 60px;
+        }
+        .filter-range-inputs input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .filter-range-separator {
+            font-weight: bold;
+            color: #495057;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .filter-label {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #495057;
+        }
+        .filter-select {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95em;
+            background: white;
+            cursor: pointer;
+            min-height: 38px;
+        }
+        .filter-select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .btn-limpar-filtros {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9em;
+            height: fit-content;
+        }
+        .btn-limpar-filtros:hover {
+            background: #5a6268;
+        }
+        
+        /* Tema baseado em backtest_resumo_entradas */
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #ecf0f1;
+        }
+        .container {
+            background: transparent;
+            box-shadow: none;
+        }
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            color: #00d4ff;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            color: #00d4ff;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+        .nav-links {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 12px 0 18px;
+        }
+        .nav-link {
+            color: #00d4ff;
+            background: rgba(0, 212, 255, 0.12);
+            border: 1px solid rgba(0, 212, 255, 0.35);
+        }
+        .nav-link:hover {
+            background: rgba(0, 212, 255, 0.25);
+        }
+        .ai-panel, .filters-container, .table-container, .stats, .ligas-lucro-container {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.35);
+            color: #ecf0f1;
+        }
+        .stat-box {
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(0, 212, 255, 0.35);
+        }
+        .stat-number {
+            color: #00d4ff;
+        }
+        .stat-label {
+            color: #b0c4de;
+        }
+        table {
+            color: #ecf0f1;
+        }
+        thead {
+            background: #0a5f7e;
+            border-bottom: 2px solid #0a5f7e;
+        }
+        th {
+            color: #00d4ff;
+            border: 1px solid #0a5f7e;
+        }
+        td {
+            border: 1px solid #333;
+        }
+        tbody tr:nth-child(odd) {
+            background: rgba(0, 212, 255, 0.05);
+        }
+        tbody tr:hover {
+            background: rgba(0, 212, 255, 0.15);
+        }
+        .liga-badge {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+            border: 1px solid rgba(0, 212, 255, 0.35);
+        }
+        .calc-odd, .confidence {
+            background: rgba(0, 0, 0, 0.35);
+            color: #ecf0f1;
+        }
+        .ai-toggle, .ai-start-btn {
+            background: #00d4ff;
+            color: #1a1a2e;
+            border: 1px solid rgba(0, 212, 255, 0.35);
+        }
+        .footer {
+            background: rgba(0, 0, 0, 0.3);
+            color: #b0c4de;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Analise dos Jogos Salvos</h1>
+            <div class="nav-links">
+                <a href="http://localhost:8000/proxima_rodada.html" class="nav-link">Próxima Rodada</a>
+                <a href="http://localhost:8000/jogos_salvos.html" class="nav-link">Jogos Salvos</a>
+                <a href="http://localhost:8000/analise_salvos.html" class="nav-link">Análise Salvos</a>
+                <a href="http://localhost:5001/backtest.html" class="nav-link">Backtest</a>
+                <a href="http://localhost:5001/backtest_salvos.html" class="nav-link">Backtests Salvos</a>
+                <a href="http://localhost:5001/backtest_resumo_entradas.html" class="nav-link">Resumo Entradas</a>
+            </div>
+        </div>
+        <div class="ai-panel">
+            <div class="ai-header">
+                <div class="ai-title">Analise de padroes por IA</div>
+                <button class="ai-toggle" onclick="toggleAI()">Mostrar</button>
+            </div>
+            <div id="aiContent" class="ai-content">
+                <button id="iniciarBtn" class="ai-start-btn" onclick="iniciarAnalise()">INICIAR ANALISE</button>
+                <div id="aiLoading" class="ai-loading" style="display: none;">
+                    Analisando dados...
+                </div>
+                <div id="aiResults" class="ai-results" style="display: none;">
+                    <div id="aiResumo" class="ai-resumo"></div>
+                    <div id="aiInsights" class="ai-insights"></div>
+                    <div id="aiRecomendacoes" class="ai-recomendacoes"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="filters-container">
+            <div class="filters-title">🔍 Filtros</div>
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label class="filter-label">Data:</label>
+                    <select id="filtroData" class="filter-select" multiple onchange="aplicarFiltros()">
+                        <option value="31/01/2026">31/01/2026</option>
+                        <option value="30/01/2026">30/01/2026</option>
+                        <option value="02/02/2026">02/02/2026</option>
+                        <option value="01/02/2026">01/02/2026</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Liga:</label>
+                    <select id="filtroLiga" class="filter-select" multiple onchange="aplicarFiltros()">
+                        <option value="B1">B1</option>
+                        <option value="D1">D1</option>
+                        <option value="D2">D2</option>
+                        <option value="E0">E0</option>
+                        <option value="E1">E1</option>
+                        <option value="F1">F1</option>
+                        <option value="F2">F2</option>
+                        <option value="G1">G1</option>
+                        <option value="I1">I1</option>
+                        <option value="I2">I2</option>
+                        <option value="MEX">MEX</option>
+                        <option value="N1">N1</option>
+                        <option value="P1">P1</option>
+                        <option value="POL">POL</option>
+                        <option value="SP1">SP1</option>
+                        <option value="SP2">SP2</option>
+                        <option value="SWZ">SWZ</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">DxG:</label>
+                    <select id="filtroDxG" class="filter-select" multiple onchange="aplicarFiltros()">
+                        <option value="FH">FH</option>
+                        <option value="LH">LH</option>
+                        <option value="EQ">EQ</option>
+                        <option value="LA">LA</option>
+                        <option value="FA">FA</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Entrada:</label>
+                    <select id="filtroEntrada" class="filter-select" multiple onchange="aplicarFiltros()">
+                        <option value="HOME">HOME</option>
+                        <option value="AWAY">AWAY</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">L/P:</label>
+                    <select id="filtroLP" class="filter-select" multiple onchange="aplicarFiltros()">
+                        <option value="positivo">Positivo</option>
+                        <option value="negativo">Negativo</option>
+                    </select>
+                </div>
+                <div class="filter-range-group">
+                    <label class="filter-label">ODD CASA:</label>
+                    <div class="filter-range-inputs">
+                        <input type="number" id="oddCasaMin" placeholder="Min" step="0.01" onchange="aplicarFiltros()">
+                        <span class="filter-range-separator">-</span>
+                        <input type="number" id="oddCasaMax" placeholder="Max" step="0.01" onchange="aplicarFiltros()">
+                    </div>
+                </div>
+                <div class="filter-range-group">
+                    <label class="filter-label">ODD VISIT:</label>
+                    <div class="filter-range-inputs">
+                        <input type="number" id="oddVisitMin" placeholder="Min" step="0.01" onchange="aplicarFiltros()">
+                        <span class="filter-range-separator">-</span>
+                        <input type="number" id="oddVisitMax" placeholder="Max" step="0.01" onchange="aplicarFiltros()">
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <button class="btn-limpar-filtros" onclick="limparFiltros()">Limpar Filtros</button>
+                </div>
+            </div>
+        </div>
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-number" id="winRate">-</div>
+                <div class="stat-label">Win Rate (%)</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="roi">-</div>
+                <div class="stat-label">ROI (%)</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="totalLucro">-</div>
+                <div class="stat-label">Total de Lucro</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="totalFiltrados">0</div>
+                <div class="stat-label">Jogos Filtrados</div>
+            </div>
+        </div>
+        <div class="ligas-lucro-container">
+            <div class="ligas-lucro-row" id="ligasLucroRow1"></div>
+            <div class="ligas-lucro-row" id="ligasLucroRow2"></div>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>DATA</th>
+                        <th>LIGA</th>
+                        <th>HOME</th>
+                        <th>AWAY</th>
+                        <th class="center-cell">GH</th>
+                        <th class="center-cell">GA</th>
+                        <th class="center-cell">ODD CASA</th>
+                        <th class="center-cell">ODD VISIT</th>
+                        <th class="center-cell">CFG</th>
+                        <th class="center-cell">DxG</th>
+                        <th class="center-cell">xGH</th>
+                        <th class="center-cell">xGA</th>
+                        <th class="entrada-col">ENTRADA</th>
+                        <th class="center-cell">L/P</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaResultados">
+
+                    <tr data-data="30/01/2026" data-liga="D1" data-dxg="EQ" data-entrada="AWAY" data-lp="negativo" data-odds-casa="1.95" data-odds-visit="3.5">
+                        <td>30/01/2026</td>
+                        <td>D1</td>
+                        <td>FC Koln</td>
+                        <td>Wolfsburg</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1.95</td>
+                        <td class="center-cell">3.50</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 242, 0); color: #000;">47.5%</span></td>
+                        <td class="center-cell"><strong>EQ</strong></td>
+                        <td class="center-cell">0.98</td>
+                        <td class="center-cell">1.10</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">AWAY</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="30/01/2026" data-liga="D2" data-dxg="LH" data-entrada="HOME" data-lp="negativo" data-odds-casa="2.35" data-odds-visit="2.8">
+                        <td>30/01/2026</td>
+                        <td>D2</td>
+                        <td>Magdeburg</td>
+                        <td>Hannover</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2.35</td>
+                        <td class="center-cell">2.80</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 225, 0); color: #000;">44.2%</span></td>
+                        <td class="center-cell"><strong>LH</strong></td>
+                        <td class="center-cell">1.42</td>
+                        <td class="center-cell">0.93</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">HOME</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="30/01/2026" data-liga="D2" data-dxg="EQ" data-entrada="AWAY" data-lp="negativo" data-odds-casa="1.91" data-odds-visit="4.0">
+                        <td>30/01/2026</td>
+                        <td>D2</td>
+                        <td>Nurnberg</td>
+                        <td>Preußen Münster</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1.91</td>
+                        <td class="center-cell">4.00</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(222, 255, 0); color: #000;">56.5%</span></td>
+                        <td class="center-cell"><strong>EQ</strong></td>
+                        <td class="center-cell">1.19</td>
+                        <td class="center-cell">1.46</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">AWAY</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="30/01/2026" data-liga="F1" data-dxg="LH" data-entrada="AWAY" data-lp="negativo" data-odds-casa="1.4" data-odds-visit="7.0">
+                        <td>30/01/2026</td>
+                        <td>F1</td>
+                        <td>Lens</td>
+                        <td>Le Havre</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1.40</td>
+                        <td class="center-cell">7.00</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 233, 0); color: #000;">45.8%</span></td>
+                        <td class="center-cell"><strong>LH</strong></td>
+                        <td class="center-cell">1.64</td>
+                        <td class="center-cell">1.34</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">AWAY</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="30/01/2026" data-liga="F2" data-dxg="FA" data-entrada="AWAY" data-lp="positivo" data-odds-casa="3.75" data-odds-visit="1.85">
+                        <td>30/01/2026</td>
+                        <td>F2</td>
+                        <td>Clermont</td>
+                        <td>Reims</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">3.75</td>
+                        <td class="center-cell">1.85</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(236, 255, 0); color: #000;">53.6%</span></td>
+                        <td class="center-cell"><strong>FA</strong></td>
+                        <td class="center-cell">1.39</td>
+                        <td class="center-cell">3.53</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #007bff; color: white;">AWAY</span></td>
+                        <td class="center-cell">0.81</td>
+                    </tr>
+
+                    <tr data-data="30/01/2026" data-liga="F2" data-dxg="LH" data-entrada="HOME" data-lp="positivo" data-odds-casa="1.95" data-odds-visit="3.6">
+                        <td>30/01/2026</td>
+                        <td>F2</td>
+                        <td>Grenoble</td>
+                        <td>Amiens</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1.95</td>
+                        <td class="center-cell">3.60</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 227, 0); color: #000;">44.6%</span></td>
+                        <td class="center-cell"><strong>LH</strong></td>
+                        <td class="center-cell">1.70</td>
+                        <td class="center-cell">0.72</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #28a745; color: white;">HOME</span></td>
+                        <td class="center-cell">0.91</td>
+                    </tr>
+
+                    <tr data-data="30/01/2026" data-liga="F2" data-dxg="FA" data-entrada="AWAY" data-lp="positivo" data-odds-casa="3.25" data-odds-visit="2.1">
+                        <td>30/01/2026</td>
+                        <td>F2</td>
+                        <td>Laval</td>
+                        <td>Pau FC</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">3.25</td>
+                        <td class="center-cell">2.10</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(184, 255, 0); color: #000;">63.7%</span></td>
+                        <td class="center-cell"><strong>FA</strong></td>
+                        <td class="center-cell">0.64</td>
+                        <td class="center-cell">2.01</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #007bff; color: white;">AWAY</span></td>
+                        <td class="center-cell">1.05</td>
+                    </tr>
+
+                    <tr data-data="30/01/2026" data-liga="P1" data-dxg="LH" data-entrada="AWAY" data-lp="negativo" data-odds-casa="1.79" data-odds-visit="4.75">
+                        <td>30/01/2026</td>
+                        <td>P1</td>
+                        <td>Guimaraes</td>
+                        <td>Moreirense</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1.79</td>
+                        <td class="center-cell">4.75</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 231, 0); color: #000;">45.4%</span></td>
+                        <td class="center-cell"><strong>LH</strong></td>
+                        <td class="center-cell">1.28</td>
+                        <td class="center-cell">0.89</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">AWAY</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="31/01/2026" data-liga="B1" data-dxg="LH" data-entrada="HOME" data-lp="negativo" data-odds-casa="2.25" data-odds-visit="2.7">
+                        <td>31/01/2026</td>
+                        <td>B1</td>
+                        <td>Waregem</td>
+                        <td>Westerlo</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2.25</td>
+                        <td class="center-cell">2.70</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 236, 0); color: #000;">46.4%</span></td>
+                        <td class="center-cell"><strong>LH</strong></td>
+                        <td class="center-cell">1.50</td>
+                        <td class="center-cell">0.52</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">HOME</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="31/01/2026" data-liga="D1" data-dxg="EQ" data-entrada="AWAY" data-lp="negativo" data-odds-casa="1.8" data-odds-visit="4.33">
+                        <td>31/01/2026</td>
+                        <td>D1</td>
+                        <td>Hoffenheim</td>
+                        <td>Union Berlin</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1.80</td>
+                        <td class="center-cell">4.33</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(153, 255, 0); color: #000;">69.9%</span></td>
+                        <td class="center-cell"><strong>EQ</strong></td>
+                        <td class="center-cell">1.77</td>
+                        <td class="center-cell">2.03</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">AWAY</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="31/01/2026" data-liga="D1" data-dxg="LH" data-entrada="AWAY" data-lp="positivo" data-odds-casa="1.55" data-odds-visit="5.5">
+                        <td>31/01/2026</td>
+                        <td>D1</td>
+                        <td>RB Leipzig</td>
+                        <td>Mainz</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">1.55</td>
+                        <td class="center-cell">5.50</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 232, 0); color: #000;">45.5%</span></td>
+                        <td class="center-cell"><strong>LH</strong></td>
+                        <td class="center-cell">1.83</td>
+                        <td class="center-cell">1.01</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #007bff; color: white;">AWAY</span></td>
+                        <td class="center-cell">4.30</td>
+                    </tr>
+
+                    <tr data-data="31/01/2026" data-liga="D1" data-dxg="LA" data-entrada="HOME" data-lp="negativo" data-odds-casa="8.0" data-odds-visit="1.29">
+                        <td>31/01/2026</td>
+                        <td>D1</td>
+                        <td>Hamburg</td>
+                        <td>Bayern Munich</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">8.00</td>
+                        <td class="center-cell">1.29</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 227, 0); color: #000;">44.7%</span></td>
+                        <td class="center-cell"><strong>LA</strong></td>
+                        <td class="center-cell">1.12</td>
+                        <td class="center-cell">2.04</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">HOME</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="31/01/2026" data-liga="D2" data-dxg="FA" data-entrada="AWAY" data-lp="positivo" data-odds-casa="2.7" data-odds-visit="2.45">
+                        <td>31/01/2026</td>
+                        <td>D2</td>
+                        <td>Kaiserslautern</td>
+                        <td>Elversberg</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">2.70</td>
+                        <td class="center-cell">2.45</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 189, 0); color: #000;">37.1%</span></td>
+                        <td class="center-cell"><strong>FA</strong></td>
+                        <td class="center-cell">0.51</td>
+                        <td class="center-cell">1.69</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #007bff; color: white;">AWAY</span></td>
+                        <td class="center-cell">1.38</td>
+                    </tr>
+
+                    <tr data-data="31/01/2026" data-liga="E0" data-dxg="LA" data-entrada="HOME" data-lp="negativo" data-odds-casa="5.75" data-odds-visit="1.55">
+                        <td>31/01/2026</td>
+                        <td>E0</td>
+                        <td>Leeds</td>
+                        <td>Arsenal</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">5.75</td>
+                        <td class="center-cell">1.55</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 215, 0); color: #000;">42.3%</span></td>
+                        <td class="center-cell"><strong>LA</strong></td>
+                        <td class="center-cell">0.92</td>
+                        <td class="center-cell">1.76</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">HOME</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="31/01/2026" data-liga="E0" data-dxg="LH" data-entrada="AWAY" data-lp="negativo" data-odds-casa="1.5" data-odds-visit="6.0">
+                        <td>31/01/2026</td>
+                        <td>E0</td>
+                        <td>Chelsea</td>
+                        <td>West Ham</td>
+                        <td class="center-cell">3</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">1.50</td>
+                        <td class="center-cell">6.00</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(254, 255, 0); color: #000;">50.0%</span></td>
+                        <td class="center-cell"><strong>LH</strong></td>
+                        <td class="center-cell">1.58</td>
+                        <td class="center-cell">0.81</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">AWAY</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="31/01/2026" data-liga="E1" data-dxg="EQ" data-entrada="AWAY" data-lp="positivo" data-odds-casa="2.15" data-odds-visit="3.2">
+                        <td>31/01/2026</td>
+                        <td>E1</td>
+                        <td>Blackburn</td>
+                        <td>Hull</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">2.15</td>
+                        <td class="center-cell">3.20</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 231, 0); color: #000;">45.5%</span></td>
+                        <td class="center-cell"><strong>EQ</strong></td>
+                        <td class="center-cell">1.24</td>
+                        <td class="center-cell">1.20</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #007bff; color: white;">AWAY</span></td>
+                        <td class="center-cell">2.10</td>
+                    </tr>
+
+                    <tr data-data="31/01/2026" data-liga="E1" data-dxg="EQ" data-entrada="AWAY" data-lp="negativo" data-odds-casa="1.68" data-odds-visit="4.5">
+                        <td>31/01/2026</td>
+                        <td>E1</td>
+                        <td>Middlesbrough</td>
+                        <td>Norwich</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1.68</td>
+                        <td class="center-cell">4.50</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(180, 255, 0); color: #000;">64.7%</span></td>
+                        <td class="center-cell"><strong>EQ</strong></td>
+                        <td class="center-cell">1.06</td>
+                        <td class="center-cell">0.99</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">AWAY</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="31/01/2026" data-liga="E1" data-dxg="LA" data-entrada="AWAY" data-lp="negativo" data-odds-casa="2.45" data-odds-visit="2.75">
+                        <td>31/01/2026</td>
+                        <td>E1</td>
+                        <td>Millwall</td>
+                        <td>Sheffield United</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2.45</td>
+                        <td class="center-cell">2.75</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 246, 0); color: #000;">48.4%</span></td>
+                        <td class="center-cell"><strong>LA</strong></td>
+                        <td class="center-cell">1.04</td>
+                        <td class="center-cell">1.40</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">AWAY</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="31/01/2026" data-liga="E1" data-dxg="EQ" data-entrada="HOME" data-lp="positivo" data-odds-casa="3.2" data-odds-visit="2.35">
+                        <td>31/01/2026</td>
+                        <td>E1</td>
+                        <td>Portsmouth</td>
+                        <td>West Brom</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">3.20</td>
+                        <td class="center-cell">2.35</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 221, 0); color: #000;">43.5%</span></td>
+                        <td class="center-cell"><strong>EQ</strong></td>
+                        <td class="center-cell">1.03</td>
+                        <td class="center-cell">1.05</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #28a745; color: white;">HOME</span></td>
+                        <td class="center-cell">2.10</td>
+                    </tr>
+
+                    <tr data-data="31/01/2026" data-liga="E1" data-dxg="FA" data-entrada="AWAY" data-lp="negativo" data-odds-casa="3.1" data-odds-visit="2.15">
+                        <td>31/01/2026</td>
+                        <td>E1</td>
+                        <td>QPR</td>
+                        <td>Coventry</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">3.10</td>
+                        <td class="center-cell">2.15</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 232, 0); color: #000;">45.6%</span></td>
+                        <td class="center-cell"><strong>FA</strong></td>
+                        <td class="center-cell">1.01</td>
+                        <td class="center-cell">2.41</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">AWAY</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="31/01/2026" data-liga="G1" data-dxg="LA" data-entrada="AWAY" data-lp="positivo" data-odds-casa="2.1" data-odds-visit="3.7">
+                        <td>31/01/2026</td>
+                        <td>G1</td>
+                        <td>Volos NFC</td>
+                        <td>Larisa</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">2.10</td>
+                        <td class="center-cell">3.70</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 194, 0); color: #000;">38.1%</span></td>
+                        <td class="center-cell"><strong>LA</strong></td>
+                        <td class="center-cell">0.37</td>
+                        <td class="center-cell">0.84</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #007bff; color: white;">AWAY</span></td>
+                        <td class="center-cell">2.58</td>
+                    </tr>
+
+                    <tr data-data="31/01/2026" data-liga="I2" data-dxg="LH" data-entrada="HOME" data-lp="positivo" data-odds-casa="3.3" data-odds-visit="2.25">
+                        <td>31/01/2026</td>
+                        <td>I2</td>
+                        <td>Avellino</td>
+                        <td>Cesena</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">3.30</td>
+                        <td class="center-cell">2.25</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(212, 255, 0); color: #000;">58.3%</span></td>
+                        <td class="center-cell"><strong>LH</strong></td>
+                        <td class="center-cell">1.21</td>
+                        <td class="center-cell">0.68</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #28a745; color: white;">HOME</span></td>
+                        <td class="center-cell">2.20</td>
+                    </tr>
+
+                    <tr data-data="31/01/2026" data-liga="MEX" data-dxg="EQ" data-entrada="HOME" data-lp="negativo" data-odds-casa="4.75" data-odds-visit="1.66">
+                        <td>31/01/2026</td>
+                        <td>MEX</td>
+                        <td>Puebla</td>
+                        <td>Toluca</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">4.75</td>
+                        <td class="center-cell">1.66</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(220, 255, 0); color: #000;">56.8%</span></td>
+                        <td class="center-cell"><strong>EQ</strong></td>
+                        <td class="center-cell">1.38</td>
+                        <td class="center-cell">1.63</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">HOME</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="31/01/2026" data-liga="MEX" data-dxg="LA" data-entrada="AWAY" data-lp="positivo" data-odds-casa="3.75" data-odds-visit="1.96">
+                        <td>31/01/2026</td>
+                        <td>MEX</td>
+                        <td>Juarez</td>
+                        <td>Cruz Azul</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">3.75</td>
+                        <td class="center-cell">1.96</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 221, 0); color: #000;">43.5%</span></td>
+                        <td class="center-cell"><strong>LA</strong></td>
+                        <td class="center-cell">0.47</td>
+                        <td class="center-cell">1.27</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #007bff; color: white;">AWAY</span></td>
+                        <td class="center-cell">0.92</td>
+                    </tr>
+
+                    <tr data-data="31/01/2026" data-liga="MEX" data-dxg="LA" data-entrada="AWAY" data-lp="negativo" data-odds-casa="1.66" data-odds-visit="4.75">
+                        <td>31/01/2026</td>
+                        <td>MEX</td>
+                        <td>Atlas</td>
+                        <td>Mazatlan FC</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1.66</td>
+                        <td class="center-cell">4.75</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 216, 0); color: #000;">42.5%</span></td>
+                        <td class="center-cell"><strong>LA</strong></td>
+                        <td class="center-cell">0.63</td>
+                        <td class="center-cell">1.13</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">AWAY</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="31/01/2026" data-liga="N1" data-dxg="EQ" data-entrada="AWAY" data-lp="negativo" data-odds-casa="2.3" data-odds-visit="3.0">
+                        <td>31/01/2026</td>
+                        <td>N1</td>
+                        <td>Zwolle</td>
+                        <td>Telstar</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2.30</td>
+                        <td class="center-cell">3.00</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(223, 255, 0); color: #000;">56.1%</span></td>
+                        <td class="center-cell"><strong>EQ</strong></td>
+                        <td class="center-cell">1.34</td>
+                        <td class="center-cell">1.45</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">AWAY</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="31/01/2026" data-liga="P1" data-dxg="LH" data-entrada="HOME" data-lp="negativo" data-odds-casa="2.2" data-odds-visit="3.4">
+                        <td>31/01/2026</td>
+                        <td>P1</td>
+                        <td>Santa Clara</td>
+                        <td>Estoril</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">2.20</td>
+                        <td class="center-cell">3.40</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 244, 0); color: #000;">48.0%</span></td>
+                        <td class="center-cell"><strong>LH</strong></td>
+                        <td class="center-cell">1.52</td>
+                        <td class="center-cell">0.95</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">HOME</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="31/01/2026" data-liga="P1" data-dxg="LA" data-entrada="AWAY" data-lp="positivo" data-odds-casa="2.5" data-odds-visit="2.7">
+                        <td>31/01/2026</td>
+                        <td>P1</td>
+                        <td>Rio Ave</td>
+                        <td>Arouca</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">2.50</td>
+                        <td class="center-cell">2.70</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 240, 0); color: #000;">47.2%</span></td>
+                        <td class="center-cell"><strong>LA</strong></td>
+                        <td class="center-cell">0.71</td>
+                        <td class="center-cell">1.12</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #007bff; color: white;">AWAY</span></td>
+                        <td class="center-cell">1.62</td>
+                    </tr>
+
+                    <tr data-data="31/01/2026" data-liga="POL" data-dxg="LA" data-entrada="AWAY" data-lp="negativo" data-odds-casa="2.15" data-odds-visit="3.25">
+                        <td>31/01/2026</td>
+                        <td>POL</td>
+                        <td>Gornik Zabrze</td>
+                        <td>Piast Gliwice</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2.15</td>
+                        <td class="center-cell">3.25</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 214, 0); color: #000;">42.1%</span></td>
+                        <td class="center-cell"><strong>LA</strong></td>
+                        <td class="center-cell">0.57</td>
+                        <td class="center-cell">0.96</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">AWAY</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="31/01/2026" data-liga="SP1" data-dxg="LA" data-entrada="HOME" data-lp="negativo" data-odds-casa="5.25" data-odds-visit="1.62">
+                        <td>31/01/2026</td>
+                        <td>SP1</td>
+                        <td>Levante</td>
+                        <td>Ath Madrid</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">5.25</td>
+                        <td class="center-cell">1.62</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 225, 0); color: #000;">44.2%</span></td>
+                        <td class="center-cell"><strong>LA</strong></td>
+                        <td class="center-cell">1.07</td>
+                        <td class="center-cell">1.41</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">HOME</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="31/01/2026" data-liga="SP2" data-dxg="EQ" data-entrada="AWAY" data-lp="negativo" data-odds-casa="1.91" data-odds-visit="3.8">
+                        <td>31/01/2026</td>
+                        <td>SP2</td>
+                        <td>Albacete</td>
+                        <td>Zaragoza</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1.91</td>
+                        <td class="center-cell">3.80</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 242, 0); color: #000;">47.6%</span></td>
+                        <td class="center-cell"><strong>EQ</strong></td>
+                        <td class="center-cell">1.06</td>
+                        <td class="center-cell">0.97</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">AWAY</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="31/01/2026" data-liga="SWZ" data-dxg="EQ" data-entrada="AWAY" data-lp="negativo" data-odds-casa="2.1" data-odds-visit="3.2">
+                        <td>31/01/2026</td>
+                        <td>SWZ</td>
+                        <td>Servette</td>
+                        <td>Sion</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2.10</td>
+                        <td class="center-cell">3.20</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 248, 0); color: #000;">48.7%</span></td>
+                        <td class="center-cell"><strong>EQ</strong></td>
+                        <td class="center-cell">1.27</td>
+                        <td class="center-cell">1.34</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">AWAY</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="01/02/2026" data-liga="B1" data-dxg="LA" data-entrada="AWAY" data-lp="negativo" data-odds-casa="3.4" data-odds-visit="2.1">
+                        <td>01/02/2026</td>
+                        <td>B1</td>
+                        <td>Standard</td>
+                        <td>Anderlecht</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">3.40</td>
+                        <td class="center-cell">2.10</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 229, 0); color: #000;">45.0%</span></td>
+                        <td class="center-cell"><strong>LA</strong></td>
+                        <td class="center-cell">0.59</td>
+                        <td class="center-cell">1.53</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">AWAY</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="01/02/2026" data-liga="B1" data-dxg="FA" data-entrada="AWAY" data-lp="positivo" data-odds-casa="3.8" data-odds-visit="1.9">
+                        <td>01/02/2026</td>
+                        <td>B1</td>
+                        <td>Dender</td>
+                        <td>Genk</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">3.80</td>
+                        <td class="center-cell">1.90</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 227, 0); color: #000;">44.5%</span></td>
+                        <td class="center-cell"><strong>FA</strong></td>
+                        <td class="center-cell">0.45</td>
+                        <td class="center-cell">1.55</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #007bff; color: white;">AWAY</span></td>
+                        <td class="center-cell">0.86</td>
+                    </tr>
+
+                    <tr data-data="01/02/2026" data-liga="B1" data-dxg="EQ" data-entrada="AWAY" data-lp="negativo" data-odds-casa="2.1" data-odds-visit="3.1">
+                        <td>01/02/2026</td>
+                        <td>B1</td>
+                        <td>St. Gilloise</td>
+                        <td>Club Brugge</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2.10</td>
+                        <td class="center-cell">3.10</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 237, 0); color: #000;">46.6%</span></td>
+                        <td class="center-cell"><strong>EQ</strong></td>
+                        <td class="center-cell">1.14</td>
+                        <td class="center-cell">1.15</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">AWAY</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="01/02/2026" data-liga="D2" data-dxg="EQ" data-entrada="AWAY" data-lp="negativo" data-odds-casa="2.45" data-odds-visit="2.8">
+                        <td>01/02/2026</td>
+                        <td>D2</td>
+                        <td>Dresden</td>
+                        <td>Bielefeld</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2.45</td>
+                        <td class="center-cell">2.80</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 245, 0); color: #000;">48.1%</span></td>
+                        <td class="center-cell"><strong>EQ</strong></td>
+                        <td class="center-cell">0.98</td>
+                        <td class="center-cell">1.19</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">AWAY</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="01/02/2026" data-liga="D2" data-dxg="LH" data-entrada="HOME" data-lp="negativo" data-odds-casa="2.2" data-odds-visit="3.1">
+                        <td>01/02/2026</td>
+                        <td>D2</td>
+                        <td>Hertha</td>
+                        <td>Darmstadt</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2.20</td>
+                        <td class="center-cell">3.10</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 227, 0); color: #000;">44.6%</span></td>
+                        <td class="center-cell"><strong>LH</strong></td>
+                        <td class="center-cell">1.67</td>
+                        <td class="center-cell">0.97</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">HOME</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="01/02/2026" data-liga="E0" data-dxg="FH" data-entrada="HOME" data-lp="positivo" data-odds-casa="1.57" data-odds-visit="5.0">
+                        <td>01/02/2026</td>
+                        <td>E0</td>
+                        <td>Man United</td>
+                        <td>Fulham</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1.57</td>
+                        <td class="center-cell">5.00</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 214, 0); color: #000;">42.1%</span></td>
+                        <td class="center-cell"><strong>FH</strong></td>
+                        <td class="center-cell">1.87</td>
+                        <td class="center-cell">0.21</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #28a745; color: white;">HOME</span></td>
+                        <td class="center-cell">0.54</td>
+                    </tr>
+
+                    <tr data-data="01/02/2026" data-liga="F1" data-dxg="LH" data-entrada="HOME" data-lp="positivo" data-odds-casa="2.1" data-odds-visit="3.6">
+                        <td>01/02/2026</td>
+                        <td>F1</td>
+                        <td>Angers</td>
+                        <td>Metz</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2.10</td>
+                        <td class="center-cell">3.60</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 221, 0); color: #000;">43.4%</span></td>
+                        <td class="center-cell"><strong>LH</strong></td>
+                        <td class="center-cell">1.35</td>
+                        <td class="center-cell">0.68</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #28a745; color: white;">HOME</span></td>
+                        <td class="center-cell">1.05</td>
+                    </tr>
+
+                    <tr data-data="01/02/2026" data-liga="G1" data-dxg="LA" data-entrada="AWAY" data-lp="negativo" data-odds-casa="2.7" data-odds-visit="2.7">
+                        <td>01/02/2026</td>
+                        <td>G1</td>
+                        <td>AEK</td>
+                        <td>Olympiakos</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2.70</td>
+                        <td class="center-cell">2.70</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 227, 0); color: #000;">44.5%</span></td>
+                        <td class="center-cell"><strong>LA</strong></td>
+                        <td class="center-cell">0.46</td>
+                        <td class="center-cell">1.00</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">AWAY</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="01/02/2026" data-liga="I1" data-dxg="EQ" data-entrada="AWAY" data-lp="negativo" data-odds-casa="1.95" data-odds-visit="4.5">
+                        <td>01/02/2026</td>
+                        <td>I1</td>
+                        <td>Torino</td>
+                        <td>Lecce</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1.95</td>
+                        <td class="center-cell">4.50</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 209, 0); color: #000;">41.2%</span></td>
+                        <td class="center-cell"><strong>EQ</strong></td>
+                        <td class="center-cell">1.23</td>
+                        <td class="center-cell">0.94</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">AWAY</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="01/02/2026" data-liga="MEX" data-dxg="LH" data-entrada="HOME" data-lp="negativo" data-odds-casa="3.2" data-odds-visit="2.15">
+                        <td>01/02/2026</td>
+                        <td>MEX</td>
+                        <td>Club Leon</td>
+                        <td>Tigres UANL</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">3.20</td>
+                        <td class="center-cell">2.15</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 211, 0); color: #000;">41.4%</span></td>
+                        <td class="center-cell"><strong>LH</strong></td>
+                        <td class="center-cell">1.04</td>
+                        <td class="center-cell">0.60</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">HOME</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="01/02/2026" data-liga="MEX" data-dxg="LH" data-entrada="HOME" data-lp="negativo" data-odds-casa="3.3" data-odds-visit="2.15">
+                        <td>01/02/2026</td>
+                        <td>MEX</td>
+                        <td>Queretaro</td>
+                        <td>Pachuca</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">3.30</td>
+                        <td class="center-cell">2.15</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 227, 0); color: #000;">44.5%</span></td>
+                        <td class="center-cell"><strong>LH</strong></td>
+                        <td class="center-cell">1.19</td>
+                        <td class="center-cell">0.69</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">HOME</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="01/02/2026" data-liga="N1" data-dxg="LH" data-entrada="HOME" data-lp="positivo" data-odds-casa="2.35" data-odds-visit="2.9">
+                        <td>01/02/2026</td>
+                        <td>N1</td>
+                        <td>Heracles</td>
+                        <td>For Sittard</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2.35</td>
+                        <td class="center-cell">2.90</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 235, 0); color: #000;">46.3%</span></td>
+                        <td class="center-cell"><strong>LH</strong></td>
+                        <td class="center-cell">1.47</td>
+                        <td class="center-cell">0.99</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #28a745; color: white;">HOME</span></td>
+                        <td class="center-cell">1.29</td>
+                    </tr>
+
+                    <tr data-data="01/02/2026" data-liga="N1" data-dxg="EQ" data-entrada="AWAY" data-lp="negativo" data-odds-casa="1.73" data-odds-visit="4.2">
+                        <td>01/02/2026</td>
+                        <td>N1</td>
+                        <td>PSV Eindhoven</td>
+                        <td>Feyenoord</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1.73</td>
+                        <td class="center-cell">4.20</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 219, 0); color: #000;">43.0%</span></td>
+                        <td class="center-cell"><strong>EQ</strong></td>
+                        <td class="center-cell">1.59</td>
+                        <td class="center-cell">1.31</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">AWAY</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="01/02/2026" data-liga="SP1" data-dxg="LH" data-entrada="HOME" data-lp="negativo" data-odds-casa="2.8" data-odds-visit="2.8">
+                        <td>01/02/2026</td>
+                        <td>SP1</td>
+                        <td>Getafe</td>
+                        <td>Celta</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2.80</td>
+                        <td class="center-cell">2.80</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 218, 0); color: #000;">42.8%</span></td>
+                        <td class="center-cell"><strong>LH</strong></td>
+                        <td class="center-cell">1.03</td>
+                        <td class="center-cell">0.64</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">HOME</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="01/02/2026" data-liga="SP1" data-dxg="LH" data-entrada="HOME" data-lp="negativo" data-odds-casa="2.3" data-odds-visit="3.4">
+                        <td>01/02/2026</td>
+                        <td>SP1</td>
+                        <td>Ath Bilbao</td>
+                        <td>Sociedad</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2.30</td>
+                        <td class="center-cell">3.40</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 225, 0); color: #000;">44.2%</span></td>
+                        <td class="center-cell"><strong>LH</strong></td>
+                        <td class="center-cell">1.48</td>
+                        <td class="center-cell">0.65</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">HOME</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="01/02/2026" data-liga="SWZ" data-dxg="FH" data-entrada="HOME" data-lp="negativo" data-odds-casa="2.35" data-odds-visit="2.57">
+                        <td>01/02/2026</td>
+                        <td>SWZ</td>
+                        <td>Luzern</td>
+                        <td>St. Gallen</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">2.35</td>
+                        <td class="center-cell">2.57</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 222, 0); color: #000;">43.7%</span></td>
+                        <td class="center-cell"><strong>FH</strong></td>
+                        <td class="center-cell">2.06</td>
+                        <td class="center-cell">0.66</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">HOME</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                    <tr data-data="01/02/2026" data-liga="SWZ" data-dxg="FH" data-entrada="HOME" data-lp="positivo" data-odds-casa="1.79" data-odds-visit="4.0">
+                        <td>01/02/2026</td>
+                        <td>SWZ</td>
+                        <td>Young Boys</td>
+                        <td>Zurich</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1.79</td>
+                        <td class="center-cell">4.00</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(253, 255, 0); color: #000;">50.3%</span></td>
+                        <td class="center-cell"><strong>FH</strong></td>
+                        <td class="center-cell">2.87</td>
+                        <td class="center-cell">0.78</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #28a745; color: white;">HOME</span></td>
+                        <td class="center-cell">0.75</td>
+                    </tr>
+
+                    <tr data-data="02/02/2026" data-liga="E0" data-dxg="LH" data-entrada="AWAY" data-lp="negativo" data-odds-casa="1.8" data-odds-visit="4.75">
+                        <td>02/02/2026</td>
+                        <td>E0</td>
+                        <td>Sunderland</td>
+                        <td>Burnley</td>
+                        <td class="center-cell">2</td>
+                        <td class="center-cell">1</td>
+                        <td class="center-cell">1.80</td>
+                        <td class="center-cell">4.75</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 202, 0); color: #000;">39.8%</span></td>
+                        <td class="center-cell"><strong>LH</strong></td>
+                        <td class="center-cell">1.18</td>
+                        <td class="center-cell">0.77</td>
+                        <td class="center-cell"><span class="confidence" style="background-color: #dc3545; color: white;">AWAY</span></td>
+                        <td class="center-cell">-1.00</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="footer">
+            <p>Analise baseada nos jogos salvos</p>
+        </div>
+    </div>
+    <script>
+        function aplicarFiltros() {
+            const filtroDataEl = document.getElementById('filtroData');
+            const filtroLigaEl = document.getElementById('filtroLiga');
+            const filtroDxGEl = document.getElementById('filtroDxG');
+            const filtroEntradaEl = document.getElementById('filtroEntrada');
+            const filtroLPEl = document.getElementById('filtroLP');
+            
+            const filtroData = Array.from(filtroDataEl.selectedOptions).map(opt => opt.value);
+            const filtroLiga = Array.from(filtroLigaEl.selectedOptions).map(opt => opt.value);
+            const filtroDxG = Array.from(filtroDxGEl.selectedOptions).map(opt => opt.value);
+            const filtroEntrada = Array.from(filtroEntradaEl.selectedOptions).map(opt => opt.value);
+            const filtroLP = Array.from(filtroLPEl.selectedOptions).map(opt => opt.value);
+            
+            const oddCasaMin = parseFloat(document.getElementById('oddCasaMin').value) || 0;
+            const oddCasaMax = parseFloat(document.getElementById('oddCasaMax').value) || Infinity;
+            const oddVisitMin = parseFloat(document.getElementById('oddVisitMin').value) || 0;
+            const oddVisitMax = parseFloat(document.getElementById('oddVisitMax').value) || Infinity;
+            
+            const linhas = document.querySelectorAll('#tabelaResultados tr');
+            
+            let jogosFiltrados = 0;
+            let acertos = 0;
+            let totalLP = 0;
+            const ligasLucro = {}; // Objeto para armazenar lucro por liga
+            
+            linhas.forEach(linha => {
+                const dataLinha = linha.getAttribute('data-data');
+                const ligaLinha = linha.getAttribute('data-liga');
+                const dxgLinha = linha.getAttribute('data-dxg');
+                const entradaLinha = linha.getAttribute('data-entrada');
+                const lpLinha = linha.getAttribute('data-lp');
+                const oddsCasaLinha = parseFloat(linha.getAttribute('data-odds-casa')) || 0;
+                const oddsVisitLinha = parseFloat(linha.getAttribute('data-odds-visit')) || 0;
+                
+                let mostrar = true;
+                
+                if (filtroData.length > 0 && !filtroData.includes(dataLinha)) {
+                    mostrar = false;
+                }
+                
+                if (filtroLiga.length > 0 && !filtroLiga.includes(ligaLinha)) {
+                    mostrar = false;
+                }
+                
+                if (filtroDxG.length > 0 && !filtroDxG.includes(dxgLinha)) {
+                    mostrar = false;
+                }
+                
+                if (filtroEntrada.length > 0 && !filtroEntrada.includes(entradaLinha)) {
+                    mostrar = false;
+                }
+                
+                if (filtroLP.length > 0 && !filtroLP.includes(lpLinha)) {
+                    mostrar = false;
+                }
+                
+                if (oddsCasaLinha > 0 && (oddsCasaLinha < oddCasaMin || oddsCasaLinha > oddCasaMax)) {
+                    mostrar = false;
+                }
+                
+                if (oddsVisitLinha > 0 && (oddsVisitLinha < oddVisitMin || oddsVisitLinha > oddVisitMax)) {
+                    mostrar = false;
+                }
+                
+                if (mostrar) {
+                    linha.style.display = '';
+                    jogosFiltrados++;
+                    
+                    // Calcular estatísticas
+                    const lpCell = linha.cells[13]; // Coluna L/P
+                    if (lpCell) {
+                        const lpValue = parseFloat(lpCell.textContent);
+                        if (!isNaN(lpValue)) {
+                            totalLP += lpValue;
+                            if (lpValue > 0) {
+                                acertos++;
+                            }
+                            
+                            // Acumular lucro por liga
+                            if (!ligasLucro[ligaLinha]) {
+                                ligasLucro[ligaLinha] = 0;
+                            }
+                            ligasLucro[ligaLinha] += lpValue;
+                        }
+                    }
+                } else {
+                    linha.style.display = 'none';
+                }
+            });
+            
+            // Atualizar estatísticas
+            const winRate = jogosFiltrados > 0 ? (acertos / jogosFiltrados * 100).toFixed(1) : '-';
+            const roi = jogosFiltrados > 0 ? (totalLP / jogosFiltrados * 100).toFixed(1) : '-';
+            const totalLucroFormatado = jogosFiltrados > 0 ? (totalLP >= 0 ? '+' : '') + totalLP.toFixed(2) : '-';
+            
+            document.getElementById('winRate').textContent = winRate;
+            document.getElementById('roi').textContent = roi;
+            document.getElementById('totalLucro').textContent = totalLucroFormatado;
+            document.getElementById('totalFiltrados').textContent = jogosFiltrados;
+            
+            // Colorir ROI baseado no valor
+            const roiElement = document.getElementById('roi');
+            if (roi !== '-') {
+                const roiValue = parseFloat(roi);
+                if (roiValue > 0) {
+                    roiElement.style.color = '#28a745';
+                } else if (roiValue < 0) {
+                    roiElement.style.color = '#dc3545';
+                } else {
+                    roiElement.style.color = '#6c757d';
+                }
+            } else {
+                roiElement.style.color = '#6c757d';
+            }
+            
+            // Colorir Total de Lucro baseado no valor
+            const totalLucroElement = document.getElementById('totalLucro');
+            if (totalLucroFormatado !== '-') {
+                if (totalLP > 0) {
+                    totalLucroElement.style.color = '#28a745';
+                } else if (totalLP < 0) {
+                    totalLucroElement.style.color = '#dc3545';
+                } else {
+                    totalLucroElement.style.color = '#6c757d';
+                }
+            } else {
+                totalLucroElement.style.color = '#6c757d';
+            }
+            
+            // Colorir WinRate baseado no valor
+            const winRateElement = document.getElementById('winRate');
+            if (winRate !== '-') {
+                const winRateValue = parseFloat(winRate);
+                if (winRateValue >= 60) {
+                    winRateElement.style.color = '#28a745';
+                } else if (winRateValue >= 50) {
+                    winRateElement.style.color = '#ffc107';
+                } else {
+                    winRateElement.style.color = '#dc3545';
+                }
+            } else {
+                winRateElement.style.color = '#6c757d';
+            }
+            
+            // Renderizar botões de ligas com lucro
+            const ligasLucroRow1 = document.getElementById('ligasLucroRow1');
+            const ligasLucroRow2 = document.getElementById('ligasLucroRow2');
+            ligasLucroRow1.innerHTML = '';
+            ligasLucroRow2.innerHTML = '';
+            
+            // Ordenar ligas alfabeticamente
+            const ligasOrdenadas = Object.keys(ligasLucro).sort();
+            
+            const renderizarBotoes = (lista, container) => {
+                lista.forEach(liga => {
+                    const lucroLiga = ligasLucro[liga];
+                    const lucroFormatado = (lucroLiga >= 0 ? '+' : '') + lucroLiga.toFixed(2);
+                    const classe = lucroLiga > 0 ? 'positivo' : 'negativo';
+                    
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = `liga-lucro-btn ${classe}`;
+                    btn.textContent = `${liga}: ${lucroFormatado}`;
+                    
+                    container.appendChild(btn);
+                });
+            };
+            
+            if (ligasOrdenadas.length > 18) {
+                const metade = Math.ceil(ligasOrdenadas.length / 2);
+                const ligasLinha1 = ligasOrdenadas.slice(0, metade);
+                const ligasLinha2 = ligasOrdenadas.slice(metade);
+                renderizarBotoes(ligasLinha1, ligasLucroRow1);
+                renderizarBotoes(ligasLinha2, ligasLucroRow2);
+                ligasLucroRow2.style.display = 'flex';
+            } else {
+                renderizarBotoes(ligasOrdenadas, ligasLucroRow1);
+                ligasLucroRow2.style.display = 'none';
+            }
+        }
+        
+        function limparFiltros() {
+            document.getElementById('filtroData').selectedIndex = -1;
+            document.getElementById('filtroLiga').selectedIndex = -1;
+            document.getElementById('filtroDxG').selectedIndex = -1;
+            document.getElementById('filtroEntrada').selectedIndex = -1;
+            document.getElementById('filtroLP').selectedIndex = -1;
+            document.getElementById('oddCasaMin').value = '';
+            document.getElementById('oddCasaMax').value = '';
+            document.getElementById('oddVisitMin').value = '';
+            document.getElementById('oddVisitMax').value = '';
+            aplicarFiltros();
+        }
+        
+        // Aplicar filtros ao carregar a página para calcular estatísticas iniciais
+        window.addEventListener('DOMContentLoaded', function() {
+            aplicarFiltros();
+        });
+
+        function toggleAI() {
+            const content = document.getElementById('aiContent');
+            const btn = document.querySelector('.ai-toggle');
+            const isHidden = content.style.display === '' || content.style.display === 'none';
+            content.style.display = isHidden ? 'block' : 'none';
+            btn.textContent = isHidden ? 'Ocultar' : 'Mostrar';
+        }
+
+        async function iniciarAnalise() {
+            const btn = document.getElementById('iniciarBtn');
+            const loading = document.getElementById('aiLoading');
+            const results = document.getElementById('aiResults');
+            
+            btn.style.display = 'none';
+            loading.style.display = 'block';
+            results.style.display = 'none';
+            
+            try {
+                const response = await fetch('http://localhost:8000/api/analisar_ia', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({})
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Erro na requisicao');
+                }
+                
+                const data = await response.json();
+                
+                if (data.success && data.data) {
+                    exibirResultados(data.data);
+                } else {
+                    alert('Erro ao analisar padroes');
+                    btn.style.display = 'block';
+                    loading.style.display = 'none';
+                }
+            } catch (erro) {
+                console.error('Erro:', erro);
+                alert('Erro ao conectar com a API: ' + erro.message);
+                btn.style.display = 'block';
+                loading.style.display = 'none';
+            }
+        }
+
+        function exibirResultados(dados) {
+            const loading = document.getElementById('aiLoading');
+            const results = document.getElementById('aiResults');
+            const resumoDiv = document.getElementById('aiResumo');
+            const insightsDiv = document.getElementById('aiInsights');
+            const recomendacoesDiv = document.getElementById('aiRecomendacoes');
+            
+            // Resumo
+            resumoDiv.innerHTML = '<strong>' + (dados.resumo || 'Sem dados') + '</strong>';
+            
+            // Insights
+            if (dados.insights && dados.insights.length > 0) {
+                let insightsHtml = '<div class="ai-insights-title">Insights Identificados</div>';
+                dados.insights.forEach(function(insight) {
+                    insightsHtml += '<div class="ai-insight-item">' + formatarComTabulacao(insight) + '</div>';
+                });
+                insightsDiv.innerHTML = insightsHtml;
+            } else {
+                insightsDiv.innerHTML = '<div class="ai-insights-title">Insights Identificados</div><div class="ai-insight-item">Nenhum insight disponivel</div>';
+            }
+            
+            // Recomendacoes
+            if (dados.recomendacoes && dados.recomendacoes.length > 0) {
+                let recomendacoesHtml = '<div class="ai-recomendacoes-title">Recomendacoes para Maximizar Lucros</div>';
+                dados.recomendacoes.forEach(function(rec) {
+                    recomendacoesHtml += '<div class="ai-recomendacao-item"><strong>✓</strong> ' + formatarComTabulacao(rec) + '</div>';
+                });
+                recomendacoesDiv.innerHTML = recomendacoesHtml;
+            } else {
+                recomendacoesDiv.innerHTML = '<div class="ai-recomendacoes-title">Recomendacoes para Maximizar Lucros</div><div class="ai-recomendacao-item">Nenhuma recomendacao disponivel</div>';
+            }
+            
+            loading.style.display = 'none';
+            results.style.display = 'block';
+        }
+
+        function formatarComTabulacao(text) {
+            // Escapa HTML primeiro
+            text = escapeHtml(text);
+            
+            // Remove espaços/tabs entre sinais de +/- e números para colá-los
+            text = text.replace(/([+\-])\s+(\d)/g, '$1$2');
+            
+            // Identifica padrões comuns e adiciona tabulação
+            // Padrão: "Label: Valor" ou "Label - Valor"
+            text = text.replace(/([A-Za-zÀ-ÿ\s]+):\s*/g, '$1:\t');
+            text = text.replace(/([A-Za-zÀ-ÿ\s]+)\s*-\s*/g, '$1 -\t');
+            
+            // Adiciona tabulação após números seguidos de texto
+            text = text.replace(/(\d+\.?\d*%?)\s+([A-Za-zÀ-ÿ])/g, '$1\t$2');
+            
+            return text;
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="refresh" content="300">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 15px 0;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .stat-box {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .stat-number {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+        
+        .filters {
+            padding: 20px;
+            background: #fff;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .filter-input {
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            transition: border-color 0.3s;
+        }
+        
+        .filter-input:focus {
+            outline: none;
+            border-color: #2a5298;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            padding: 10px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.75em;
+        }
+        
+        thead {
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        th {
+            padding: 8px 6px;
+            text-align: left;
+            font-weight: 600;
+            color: #1e3c72;
+        }
+        
+        td {
+            padding: 6px 6px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        tbody tr {
+            transition: background-color 0.2s;
+        }
+        
+        tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .liga-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            background: #667eea;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        
+        .team {
+            font-weight: 500;
+            color: white;
+        }
+        
+        .odds {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            padding: 3px 6px;
+            background: #e9ecef;
+            border-radius: 4px;
+            display: inline-block;
+            min-width: 38px;
+            text-align: center;
+            font-size: 0.85em;
+        }
+        
+        .odds.home { background: #d4edda; color: #155724; }
+        .odds.draw { background: #fff3cd; color: #856404; }
+        .odds.away { background: #f8d7da; color: #721c24; }
+        
+        .date-col {
+            color: #6c757d;
+            font-weight: 500;
+        }
+        
+        .center-cell {
+            text-align: center;
+            font-size: 0.85em;
+        }
+        
+        .calc-odd {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            padding: 6px 10px;
+            border-radius: 6px;
+            display: inline-block;
+            min-width: 45px;
+            text-align: center;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .confidence {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        
+        .value-bet {
+            background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+            color: #000;
+            font-weight: 900;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.3);
+            border: 2px solid #00ff88;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .value-bet::before {
+            content: "✓ ";
+            margin-right: 3px;
+        }
+        
+        .bad-bet {
+            background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+            color: white;
+            font-weight: 900;
+            box-shadow: 0 0 15px rgba(255, 68, 68, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.2);
+            border: 2px solid #ff4444;
+        }
+        
+        .bad-bet::before {
+            content: "✗ ";
+            margin-right: 3px;
+        }
+        
+        .neutral-bet {
+            background: linear-gradient(135deg, #ffaa00 0%, #ff8800 100%);
+            color: #000;
+            font-weight: 700;
+            box-shadow: 0 0 12px rgba(255, 170, 0, 0.5);
+            border: 2px solid #ffaa00;
+        }
+        
+        .neutral-bet::before {
+            content: "◆ ";
+            margin-right: 3px;
+        }
+        
+        .save-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .save-btn:hover {
+            background-color: #0056b3;
+        }
+        
+        .save-btn:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+            font-size: 1.2em;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .stats {
+                flex-direction: column;
+            }
+            
+            th, td {
+                padding: 10px 8px;
+                font-size: 0.9em;
+            }
+        }
+
+        /* Tema baseado em backtest_resumo_entradas */
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #ecf0f1;
+        }
+        .container {
+            background: transparent;
+            box-shadow: none;
+        }
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            color: #00d4ff;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            color: #00d4ff;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+        .header p {
+            color: #ecf0f1;
+        }
+        .nav-links {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 12px 0 18px;
+        }
+        .nav-link {
+            color: #00d4ff;
+            background: rgba(0, 212, 255, 0.12);
+            border: 1px solid rgba(0, 212, 255, 0.35);
+        }
+        .nav-link:hover {
+            background: rgba(0, 212, 255, 0.25);
+        }
+        .stats, .filters, .table-container {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.35);
+            color: #ecf0f1;
+        }
+        .stat-box {
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(0, 212, 255, 0.35);
+        }
+        .stat-number {
+            color: #00d4ff;
+        }
+        .stat-label {
+            color: #b0c4de;
+        }
+        .filter-input {
+            background: rgba(0, 0, 0, 0.35);
+            color: #ecf0f1;
+            border: 1px solid rgba(0, 212, 255, 0.35);
+        }
+        table {
+            color: #ecf0f1;
+        }
+        thead {
+            background: #0a5f7e;
+            border-bottom: 2px solid #0a5f7e;
+        }
+        th {
+            color: #00d4ff;
+            border: 1px solid #0a5f7e;
+        }
+        td {
+            border: 1px solid #333;
+        }
+        tbody tr:nth-child(odd) {
+            background: rgba(0, 212, 255, 0.05);
+        }
+        tbody tr:hover {
+            background: rgba(0, 212, 255, 0.15);
+        }
+        .liga-badge {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+            border: 1px solid rgba(0, 212, 255, 0.35);
+        }
+        .odds, .calc-odd, .confidence {
+            background: rgba(0, 0, 0, 0.35);
+            color: #ecf0f1;
+        }
+        .save-btn {
+            background: #00d4ff;
+            color: #1a1a2e;
+            border: 1px solid rgba(0, 212, 255, 0.35);
+        }
+        .save-btn:hover {
+            background: rgba(0, 212, 255, 0.85);
+        }
+        .footer {
+            background: rgba(0, 0, 0, 0.3);
+            color: #b0c4de;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚽ Próxima Rodada</h1>
+            <p>Atualizado em: 03/02/2026 às 15:26:25 | Version: 1770143185</p>
+            <div class="nav-links">
+                <a href="http://localhost:8000/proxima_rodada.html" class="nav-link">Próxima Rodada</a>
+                <a href="http://localhost:8000/jogos_salvos.html" class="nav-link">Jogos Salvos</a>
+                <a href="http://localhost:8000/analise_salvos.html" class="nav-link">Análise Salvos</a>
+                <a href="http://localhost:5001/backtest.html" class="nav-link">Backtest</a>
+                <a href="http://localhost:5001/backtest_salvos.html" class="nav-link">Backtests Salvos</a>
+                <a href="http://localhost:5001/backtest_resumo_entradas.html" class="nav-link">Resumo Entradas</a>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-number">26</div>
+                <div class="stat-label">Total de Jogos</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">7</div>
+                <div class="stat-label">Ligas</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">4</div>
+                <div class="stat-label">Datas</div>
+            </div>
+        </div>
+        
+        <div class="filters">
+            <input type="text" id="searchInput" class="filter-input" placeholder="🔍 Buscar por time, liga ou data..." onkeyup="filterTable()">
+        </div>
+        
+        <div class="table-container">
+            <table id="gamesTable">
+                <thead>
+                    <tr>
+                        <th>DATA</th>
+                        <th>LIGA</th>
+                        <th>HOME</th>
+                        <th>AWAY</th>
+                        <th>CASA</th>
+                        <th>EMPATE</th>
+                        <th>VISITANTE</th>
+                        <th>xGH</th>
+                        <th>xGA</th>
+                        <th>DxG</th>
+                        <th>CFG</th>
+                        <th>ODD H CALC</th>
+                        <th>ODD D CALC</th>
+                        <th>ODD A CALC</th>
+                        <th>VALIDADA</th>
+                        <th>AÇÃO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="date-col">03/02/2026</td>
+                        <td><span class="liga-badge">ARG</span></td>
+                        <td class="team">Banfield</td>
+                        <td class="team">Estudiantes Rio Cuarto</td>
+                        <td><span class="odds home">1.81</span></td>
+                        <td><span class="odds draw">3.10</span></td>
+                        <td><span class="odds away">5.00</span></td>
+                        <td class="center-cell">-</td>
+                        <td class="center-cell">-</td>
+                        <td class="center-cell"><strong>-</strong></td>
+                        <td class="center-cell"><span class="confidence" style="">-</span></td>
+                        <td class="center-cell"><span class="calc-odd ">-</span></td>
+                        <td class="center-cell"><span class="calc-odd ">-</span></td>
+                        <td class="center-cell"><span class="calc-odd ">-</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 0)">Salvar</button></td>
+                    </tr>
+                    <tr>
+                        <td class="date-col">03/02/2026</td>
+                        <td><span class="liga-badge">E1</span></td>
+                        <td class="team">Blackburn</td>
+                        <td class="team">Sheffield Weds</td>
+                        <td><span class="odds home">1.33</span></td>
+                        <td><span class="odds draw">5.00</span></td>
+                        <td><span class="odds away">8.50</span></td>
+                        <td class="center-cell">2.12</td>
+                        <td class="center-cell">0.06</td>
+                        <td class="center-cell"><strong>FH</strong></td>
+                        <td class="center-cell"><span class="confidence" style="">-</span></td>
+                        <td class="center-cell"><span class="calc-odd value-bet">1.19</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">6.69</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">20.00</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 1)">Salvar</button></td>
+                    </tr>
+                    <tr>
+                        <td class="date-col">03/02/2026</td>
+                        <td><span class="liga-badge">E1</span></td>
+                        <td class="team">Hull</td>
+                        <td class="team">Watford</td>
+                        <td><span class="odds home">2.15</span></td>
+                        <td><span class="odds draw">3.50</span></td>
+                        <td><span class="odds away">3.10</span></td>
+                        <td class="center-cell">0.97</td>
+                        <td class="center-cell">1.43</td>
+                        <td class="center-cell"><strong>LA</strong></td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 225, 0); color: #000;">44.2%</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">3.89</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">3.68</span></td>
+                        <td class="center-cell"><span class="calc-odd value-bet">2.12</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 2)">Salvar</button></td>
+                    </tr>
+                    <tr>
+                        <td class="date-col">03/02/2026</td>
+                        <td><span class="liga-badge">E1</span></td>
+                        <td class="team">Sheffield United</td>
+                        <td class="team">Oxford</td>
+                        <td><span class="odds home">1.33</span></td>
+                        <td><span class="odds draw">4.50</span></td>
+                        <td><span class="odds away">8.50</span></td>
+                        <td class="center-cell">1.52</td>
+                        <td class="center-cell">0.06</td>
+                        <td class="center-cell"><strong>FH</strong></td>
+                        <td class="center-cell"><span class="confidence" style="">-</span></td>
+                        <td class="center-cell"><span class="calc-odd neutral-bet">1.32</span></td>
+                        <td class="center-cell"><span class="calc-odd neutral-bet">4.36</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">20.00</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 3)">Salvar</button></td>
+                    </tr>
+                    <tr>
+                        <td class="date-col">03/02/2026</td>
+                        <td><span class="liga-badge">I1</span></td>
+                        <td class="team">Bologna</td>
+                        <td class="team">Milan</td>
+                        <td><span class="odds home">2.90</span></td>
+                        <td><span class="odds draw">3.25</span></td>
+                        <td><span class="odds away">2.50</span></td>
+                        <td class="center-cell">0.91</td>
+                        <td class="center-cell">1.07</td>
+                        <td class="center-cell"><strong>EQ</strong></td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 244, 0); color: #000;">47.9%</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">3.29</span></td>
+                        <td class="center-cell"><span class="calc-odd neutral-bet">3.22</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">2.59</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 4)">Salvar</button></td>
+                    </tr>
+                    <tr>
+                        <td class="date-col">03/02/2026</td>
+                        <td><span class="liga-badge">POL</span></td>
+                        <td class="team">Piast Gliwice</td>
+                        <td class="team">Lech Poznan</td>
+                        <td><span class="odds home">2.75</span></td>
+                        <td><span class="odds draw">3.40</span></td>
+                        <td><span class="odds away">2.30</span></td>
+                        <td class="center-cell">-</td>
+                        <td class="center-cell">-</td>
+                        <td class="center-cell"><strong>-</strong></td>
+                        <td class="center-cell"><span class="confidence" style="">-</span></td>
+                        <td class="center-cell"><span class="calc-odd ">-</span></td>
+                        <td class="center-cell"><span class="calc-odd ">-</span></td>
+                        <td class="center-cell"><span class="calc-odd ">-</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 5)">Salvar</button></td>
+                    </tr>
+                    <tr>
+                        <td class="date-col">03/02/2026</td>
+                        <td><span class="liga-badge">ROU</span></td>
+                        <td class="team">Petrolul</td>
+                        <td class="team">Unirea Slobozia</td>
+                        <td><span class="odds home">1.80</span></td>
+                        <td><span class="odds draw">3.00</span></td>
+                        <td><span class="odds away">4.50</span></td>
+                        <td class="center-cell">2.46</td>
+                        <td class="center-cell">2.03</td>
+                        <td class="center-cell"><strong>LH</strong></td>
+                        <td class="center-cell"><span class="confidence" style="">-</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">2.25</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">4.05</span></td>
+                        <td class="center-cell"><span class="calc-odd value-bet">3.24</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 6)">Salvar</button></td>
+                    </tr>
+                    <tr>
+                        <td class="date-col">03/02/2026</td>
+                        <td><span class="liga-badge">ROU</span></td>
+                        <td class="team">U. Cluj</td>
+                        <td class="team">FC Arges</td>
+                        <td><span class="odds home">2.20</span></td>
+                        <td><span class="odds draw">2.70</span></td>
+                        <td><span class="odds away">3.40</span></td>
+                        <td class="center-cell">0.92</td>
+                        <td class="center-cell">0.65</td>
+                        <td class="center-cell"><strong>EQ</strong></td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 237, 0); color: #000;">46.6%</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">2.49</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">2.84</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">4.08</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 7)">Salvar</button></td>
+                    </tr>
+                    <tr>
+                        <td class="date-col">03/02/2026</td>
+                        <td><span class="liga-badge">ROU</span></td>
+                        <td class="team">FC Hermannstadt</td>
+                        <td class="team">FC Rapid Bucuresti</td>
+                        <td><span class="odds home">3.25</span></td>
+                        <td><span class="odds draw">3.10</span></td>
+                        <td><span class="odds away">2.05</span></td>
+                        <td class="center-cell">3.06</td>
+                        <td class="center-cell">5.11</td>
+                        <td class="center-cell"><strong>FA</strong></td>
+                        <td class="center-cell"><span class="confidence" style="">-</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">8.19</span></td>
+                        <td class="center-cell"><span class="calc-odd value-bet">1.80</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">3.11</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 8)">Salvar</button></td>
+                    </tr>
+                    <tr>
+                        <td class="date-col">04/02/2026</td>
+                        <td><span class="liga-badge">ARG</span></td>
+                        <td class="team">Ind. Rivadavia</td>
+                        <td class="team">Sarmiento Junin</td>
+                        <td><span class="odds home">1.86</span></td>
+                        <td><span class="odds draw">3.20</span></td>
+                        <td><span class="odds away">4.75</span></td>
+                        <td class="center-cell">-</td>
+                        <td class="center-cell">-</td>
+                        <td class="center-cell"><strong>-</strong></td>
+                        <td class="center-cell"><span class="confidence" style="">-</span></td>
+                        <td class="center-cell"><span class="calc-odd ">-</span></td>
+                        <td class="center-cell"><span class="calc-odd ">-</span></td>
+                        <td class="center-cell"><span class="calc-odd ">-</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 9)">Salvar</button></td>
+                    </tr>
+                    <tr>
+                        <td class="date-col">04/02/2026</td>
+                        <td><span class="liga-badge">ARG</span></td>
+                        <td class="team">Instituto</td>
+                        <td class="team">Lanus</td>
+                        <td><span class="odds home">2.75</span></td>
+                        <td><span class="odds draw">3.00</span></td>
+                        <td><span class="odds away">2.75</span></td>
+                        <td class="center-cell">0.18</td>
+                        <td class="center-cell">0.18</td>
+                        <td class="center-cell"><strong>EQ</strong></td>
+                        <td class="center-cell"><span class="confidence" style="">-</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">7.10</span></td>
+                        <td class="center-cell"><span class="calc-odd value-bet">1.39</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">7.10</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 10)">Salvar</button></td>
+                    </tr>
+                    <tr>
+                        <td class="date-col">04/02/2026</td>
+                        <td><span class="liga-badge">BRA</span></td>
+                        <td class="team">Bragantino</td>
+                        <td class="team">Atletico-MG</td>
+                        <td><span class="odds home">2.20</span></td>
+                        <td><span class="odds draw">3.30</span></td>
+                        <td><span class="odds away">3.30</span></td>
+                        <td class="center-cell">1.57</td>
+                        <td class="center-cell">0.79</td>
+                        <td class="center-cell"><strong>LH</strong></td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 247, 0); color: #000;">48.4%</span></td>
+                        <td class="center-cell"><span class="calc-odd value-bet">1.81</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">3.86</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">5.29</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 11)">Salvar</button></td>
+                    </tr>
+                    <tr>
+                        <td class="date-col">04/02/2026</td>
+                        <td><span class="liga-badge">BRA</span></td>
+                        <td class="team">Flamengo RJ</td>
+                        <td class="team">Internacional</td>
+                        <td><span class="odds home">1.41</span></td>
+                        <td><span class="odds draw">4.50</span></td>
+                        <td><span class="odds away">7.00</span></td>
+                        <td class="center-cell">1.18</td>
+                        <td class="center-cell">0.37</td>
+                        <td class="center-cell"><strong>LH</strong></td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 218, 0); color: #000;">42.8%</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">1.76</span></td>
+                        <td class="center-cell"><span class="calc-odd value-bet">3.16</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">8.71</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 12)">Salvar</button></td>
+                    </tr>
+                    <tr>
+                        <td class="date-col">04/02/2026</td>
+                        <td><span class="liga-badge">BRA</span></td>
+                        <td class="team">Remo</td>
+                        <td class="team">Mirassol</td>
+                        <td><span class="odds home">2.70</span></td>
+                        <td><span class="odds draw">3.10</span></td>
+                        <td><span class="odds away">2.65</span></td>
+                        <td class="center-cell">-</td>
+                        <td class="center-cell">-</td>
+                        <td class="center-cell"><strong>-</strong></td>
+                        <td class="center-cell"><span class="confidence" style="">-</span></td>
+                        <td class="center-cell"><span class="calc-odd ">-</span></td>
+                        <td class="center-cell"><span class="calc-odd ">-</span></td>
+                        <td class="center-cell"><span class="calc-odd ">-</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 13)">Salvar</button></td>
+                    </tr>
+                    <tr>
+                        <td class="date-col">04/02/2026</td>
+                        <td><span class="liga-badge">BRA</span></td>
+                        <td class="team">Santos</td>
+                        <td class="team">Sao Paulo</td>
+                        <td><span class="odds home">2.10</span></td>
+                        <td><span class="odds draw">3.25</span></td>
+                        <td><span class="odds away">3.40</span></td>
+                        <td class="center-cell">1.18</td>
+                        <td class="center-cell">0.76</td>
+                        <td class="center-cell"><strong>LH</strong></td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 227, 0); color: #000;">44.5%</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">2.19</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">3.27</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">4.23</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 14)">Salvar</button></td>
+                    </tr>
+                    <tr>
+                        <td class="date-col">04/02/2026</td>
+                        <td><span class="liga-badge">G1</span></td>
+                        <td class="team">Asteras Tripolis</td>
+                        <td class="team">Olympiakos</td>
+                        <td><span class="odds home">11.00</span></td>
+                        <td><span class="odds draw">4.75</span></td>
+                        <td><span class="odds away">1.30</span></td>
+                        <td class="center-cell">-</td>
+                        <td class="center-cell">-</td>
+                        <td class="center-cell"><strong>-</strong></td>
+                        <td class="center-cell"><span class="confidence" style="">-</span></td>
+                        <td class="center-cell"><span class="calc-odd ">-</span></td>
+                        <td class="center-cell"><span class="calc-odd ">-</span></td>
+                        <td class="center-cell"><span class="calc-odd ">-</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 15)">Salvar</button></td>
+                    </tr>
+                    <tr>
+                        <td class="date-col">04/02/2026</td>
+                        <td><span class="liga-badge">ROU</span></td>
+                        <td class="team">Metaloglobus Bucharest</td>
+                        <td class="team">Csikszereda M. Ciuc</td>
+                        <td><span class="odds home">2.70</span></td>
+                        <td><span class="odds draw">3.10</span></td>
+                        <td><span class="odds away">2.30</span></td>
+                        <td class="center-cell">-</td>
+                        <td class="center-cell">-</td>
+                        <td class="center-cell"><strong>-</strong></td>
+                        <td class="center-cell"><span class="confidence" style="">-</span></td>
+                        <td class="center-cell"><span class="calc-odd ">-</span></td>
+                        <td class="center-cell"><span class="calc-odd ">-</span></td>
+                        <td class="center-cell"><span class="calc-odd ">-</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 16)">Salvar</button></td>
+                    </tr>
+                    <tr>
+                        <td class="date-col">04/02/2026</td>
+                        <td><span class="liga-badge">ROU</span></td>
+                        <td class="team">UTA Arad</td>
+                        <td class="team">CFR Cluj</td>
+                        <td><span class="odds home">2.75</span></td>
+                        <td><span class="odds draw">3.10</span></td>
+                        <td><span class="odds away">2.38</span></td>
+                        <td class="center-cell">3.03</td>
+                        <td class="center-cell">0.53</td>
+                        <td class="center-cell"><strong>FH</strong></td>
+                        <td class="center-cell"><span class="confidence" style="">-</span></td>
+                        <td class="center-cell"><span class="calc-odd value-bet">1.29</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">5.45</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">20.00</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 17)">Salvar</button></td>
+                    </tr>
+                    <tr>
+                        <td class="date-col">04/02/2026</td>
+                        <td><span class="liga-badge">ROU</span></td>
+                        <td class="team">Farul Constanta</td>
+                        <td class="team">Din. Bucuresti</td>
+                        <td><span class="odds home">3.40</span></td>
+                        <td><span class="odds draw">3.25</span></td>
+                        <td><span class="odds away">1.91</span></td>
+                        <td class="center-cell">-</td>
+                        <td class="center-cell">-</td>
+                        <td class="center-cell"><strong>-</strong></td>
+                        <td class="center-cell"><span class="confidence" style="">-</span></td>
+                        <td class="center-cell"><span class="calc-odd ">-</span></td>
+                        <td class="center-cell"><span class="calc-odd ">-</span></td>
+                        <td class="center-cell"><span class="calc-odd ">-</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 18)">Salvar</button></td>
+                    </tr>
+                    <tr>
+                        <td class="date-col">05/02/2026</td>
+                        <td><span class="liga-badge">BRA</span></td>
+                        <td class="team">Gremio</td>
+                        <td class="team">Botafogo RJ</td>
+                        <td><span class="odds home">2.30</span></td>
+                        <td><span class="odds draw">3.20</span></td>
+                        <td><span class="odds away">3.25</span></td>
+                        <td class="center-cell">1.65</td>
+                        <td class="center-cell">0.44</td>
+                        <td class="center-cell"><strong>FH</strong></td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 218, 0); color: #000;">42.8%</span></td>
+                        <td class="center-cell"><span class="calc-odd value-bet">1.50</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">4.20</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">10.71</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 19)">Salvar</button></td>
+                    </tr>
+                    <tr>
+                        <td class="date-col">05/02/2026</td>
+                        <td><span class="liga-badge">BRA</span></td>
+                        <td class="team">Palmeiras</td>
+                        <td class="team">Vitoria</td>
+                        <td><span class="odds home">1.35</span></td>
+                        <td><span class="odds draw">5.00</span></td>
+                        <td><span class="odds away">8.00</span></td>
+                        <td class="center-cell">2.35</td>
+                        <td class="center-cell">0.80</td>
+                        <td class="center-cell"><strong>FH</strong></td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 226, 0); color: #000;">44.4%</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">1.46</span></td>
+                        <td class="center-cell"><span class="calc-odd neutral-bet">4.92</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">9.08</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 20)">Salvar</button></td>
+                    </tr>
+                    <tr>
+                        <td class="date-col">05/02/2026</td>
+                        <td><span class="liga-badge">BRA</span></td>
+                        <td class="team">Bahia</td>
+                        <td class="team">Fluminense</td>
+                        <td><span class="odds home">2.15</span></td>
+                        <td><span class="odds draw">3.30</span></td>
+                        <td><span class="odds away">3.40</span></td>
+                        <td class="center-cell">1.15</td>
+                        <td class="center-cell">0.70</td>
+                        <td class="center-cell"><strong>LH</strong></td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 251, 0); color: #000;">49.4%</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">2.16</span></td>
+                        <td class="center-cell"><span class="calc-odd neutral-bet">3.20</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">4.44</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 21)">Salvar</button></td>
+                    </tr>
+                    <tr>
+                        <td class="date-col">05/02/2026</td>
+                        <td><span class="liga-badge">BRA</span></td>
+                        <td class="team">Vasco</td>
+                        <td class="team">Chapecoense-SC</td>
+                        <td><span class="odds home">1.62</span></td>
+                        <td><span class="odds draw">3.60</span></td>
+                        <td><span class="odds away">5.50</span></td>
+                        <td class="center-cell">1.55</td>
+                        <td class="center-cell">0.66</td>
+                        <td class="center-cell"><strong>LH</strong></td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 220, 0); color: #000;">43.3%</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">1.71</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">3.86</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">6.35</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 22)">Salvar</button></td>
+                    </tr>
+                    <tr>
+                        <td class="date-col">05/02/2026</td>
+                        <td><span class="liga-badge">ROU</span></td>
+                        <td class="team">Univ. Craiova</td>
+                        <td class="team">Otelul</td>
+                        <td><span class="odds home">1.70</span></td>
+                        <td><span class="odds draw">3.20</span></td>
+                        <td><span class="odds away">4.50</span></td>
+                        <td class="center-cell">1.47</td>
+                        <td class="center-cell">1.01</td>
+                        <td class="center-cell"><strong>LH</strong></td>
+                        <td class="center-cell"><span class="confidence" style="">-</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">2.11</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">3.74</span></td>
+                        <td class="center-cell"><span class="calc-odd value-bet">3.87</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 23)">Salvar</button></td>
+                    </tr>
+                    <tr>
+                        <td class="date-col">05/02/2026</td>
+                        <td><span class="liga-badge">ROU</span></td>
+                        <td class="team">FCSB</td>
+                        <td class="team">FC Botosani</td>
+                        <td><span class="odds home">1.73</span></td>
+                        <td><span class="odds draw">3.20</span></td>
+                        <td><span class="odds away">4.33</span></td>
+                        <td class="center-cell">0.96</td>
+                        <td class="center-cell">0.73</td>
+                        <td class="center-cell"><strong>EQ</strong></td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 230, 0); color: #000;">45.1%</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">2.55</span></td>
+                        <td class="center-cell"><span class="calc-odd neutral-bet">2.95</span></td>
+                        <td class="center-cell"><span class="calc-odd value-bet">3.73</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 24)">Salvar</button></td>
+                    </tr>
+                    <tr>
+                        <td class="date-col">06/02/2026</td>
+                        <td><span class="liga-badge">BRA</span></td>
+                        <td class="team">Cruzeiro</td>
+                        <td class="team">Coritiba</td>
+                        <td><span class="odds home">1.46</span></td>
+                        <td><span class="odds draw">4.20</span></td>
+                        <td><span class="odds away">6.50</span></td>
+                        <td class="center-cell">1.35</td>
+                        <td class="center-cell">0.32</td>
+                        <td class="center-cell"><strong>FH</strong></td>
+                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 227, 0); color: #000;">44.6%</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">1.59</span></td>
+                        <td class="center-cell"><span class="calc-odd value-bet">3.55</span></td>
+                        <td class="center-cell"><span class="calc-odd bad-bet">11.38</span></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 25)">Salvar</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div id="noResults" class="no-results" style="display: none;">
+                Nenhum jogo encontrado com os critérios de busca.
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Dados: <a href="https://www.football-data.co.uk" target="_blank">Football-Data.co.uk</a></p>
+            <p>Odds: Bet365 (B365)</p>
+        </div>
+    </div>
+    
+    <script>
+        function filterTable() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toUpperCase();
+            const table = document.getElementById('gamesTable');
+            const tbody = table.getElementsByTagName('tbody')[0];
+            const tr = tbody.getElementsByTagName('tr');
+            const noResults = document.getElementById('noResults');
+            let visibleCount = 0;
+            
+            for (let i = 0; i < tr.length; i++) {
+                const td = tr[i].getElementsByTagName('td');
+                let found = false;
+                
+                for (let j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        const txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if (found) {
+                    tr[i].style.display = '';
+                    visibleCount++;
+                } else {
+                    tr[i].style.display = 'none';
+                }
+            }
+            
+            if (visibleCount === 0) {
+                table.style.display = 'none';
+                noResults.style.display = 'block';
+            } else {
+                table.style.display = 'table';
+                noResults.style.display = 'none';
+            }
+        }
+        
+        function salvarJogo(btn, index) {
+            btn.disabled = true;
+            btn.textContent = 'Salvando...';
+            
+            // Chamar o script Python para salvar o jogo
+            fetch('http://localhost:8000/api/salvar_jogo', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ index: index })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Forcar geracao da pagina de jogos salvos
+                    fetch('http://localhost:8000/api/gerar_pagina_salvos', { method: 'POST' });
+                    btn.textContent = 'Salvo!';
+                    btn.style.backgroundColor = '#28a745';
+                    setTimeout(() => {
+                        btn.disabled = false;
+                        btn.textContent = 'Salvar';
+                        btn.style.backgroundColor = '#007bff';
+                    }, 2000);
+                } else {
+                    alert('Erro ao salvar: ' + data.message);
+                    btn.disabled = false;
+                    btn.textContent = 'Salvar';
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro ao salvar o jogo. Verifique se o servidor está rodando.');
+                btn.disabled = false;
+                btn.textContent = 'Salvar';
+            });
+        }
+    </script>
+</body>
+</html>
