@@ -151,11 +151,27 @@ def executar_backtest_temporada(liga, temporada):
         
         stats = engine.obter_status()
         
+        # Coletar entradas individuais do engine
+        entradas_individuais = []
+        for entrada in engine.resultados.get('entradas', []):
+            entradas_individuais.append({
+                'liga': liga,
+                'temporada': temporada,
+                'entrada': entrada.get('entrada', 'HOME'),
+                'dxg': entrada.get('dxg', 'EQ'),
+                'lp': entrada.get('lp', -1),
+                'home': entrada.get('home', ''),
+                'away': entrada.get('away', ''),
+                'b365h': entrada.get('b365h', 0),
+                'b365a': entrada.get('b365a', 0)
+            })
+        
         return {
             'liga': liga,
             'temporada': temporada,
             'jogos_processados': stats['jogos_processados'],
-            'stats': stats
+            'stats': stats,
+            'entradas': entradas_individuais
         }
     
     except Exception as e:
@@ -315,6 +331,22 @@ def main():
         json.dump(consolidado, f, indent=2, ensure_ascii=False)
     
     print(f"✅ Resultados salvos: {arquivo_saida.name}")
+    
+    # Coletar e salvar TODAS as entradas individuais
+    print("\n🔄 Coletando entradas individuais de todas as ligas...")
+    todas_entradas = []
+    for liga_resultado in resultados_todas_ligas:
+        for temporada_resultado in liga_resultado.get('detalhes', []):
+            for entrada in temporada_resultado.get('entradas', []):
+                todas_entradas.append(entrada)
+    
+    if todas_entradas:
+        arquivo_entradas = Path(__file__).parent / 'fixtures' / 'backtest_entradas_reais.json'
+        with open(arquivo_entradas, 'w', encoding='utf-8') as f:
+            json.dump(todas_entradas, f, indent=2, ensure_ascii=False)
+        print(f"✅ Entradas individuais salvas: {arquivo_entradas.name}")
+        print(f"   📊 Total de entradas: {len(todas_entradas):,}")
+    
     
     # Exibir resumo final
     print("\n" + "="*80)
