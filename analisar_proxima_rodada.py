@@ -62,6 +62,52 @@ mapeamento_ligas = {
 # Cache para históricos das ligas
 cache_historicos = {}
 
+def calcular_range_percent(temporada):
+    """
+    Calcula o range_percent dinamicamente baseado na temporada.
+    
+    Primeira temporada (2013/2014) → range = 0.12 (±12%)
+    Segunda temporada (2014/2015) → range = 0.10 (±10%)
+    Terceira em diante (2015/2016+) → range = 0.07 (±7%)
+    
+    Args:
+        temporada: String com temporada (ex: '2013/2014', '2024/2025')
+                   ou data em formato YYYY-MM-DD ou DD/MM/YYYY
+    
+    Returns:
+        float: range_percent ajustado
+    """
+    try:
+        # Se receber data, extrair ano
+        if isinstance(temporada, str):
+            if '/' in temporada and len(temporada) == 10:  # DD/MM/YYYY ou YYYY/YYYY
+                partes = temporada.split('/')
+                if len(partes[0]) == 4:  # YYYY/YYYY format
+                    ano = int(partes[0])
+                else:  # DD/MM/YYYY format
+                    ano = int(partes[2])
+            elif '-' in temporada:  # YYYY-MM-DD
+                ano = int(temporada.split('-')[0])
+            else:
+                # Tentar extrair ano direto
+                ano_str = ''.join(c for c in temporada if c.isdigit())
+                ano = int(ano_str[:4])
+        else:
+            ano = int(temporada)
+        
+        # Primeira temporada do backtest: 2013
+        # Segunda temporada: 2014
+        # Terceira em diante: 2015+
+        
+        if ano == 2013:
+            return 0.12  # Primeira temporada: ±12%
+        elif ano == 2014:
+            return 0.10  # Segunda temporada: ±10%
+        else:
+            return 0.07  # Terceira em diante: ±7%
+    except:
+        return 0.07  # Fallback para padrão
+
 def carregar_historico_liga(codigo_liga):
     """Carrega o histórico de uma liga do cache ou do arquivo"""
     if codigo_liga in cache_historicos:
@@ -242,6 +288,7 @@ for idx, row in df_fixtures.iterrows():
     liga = row['LIGA']
     home = row['HOME']
     away = row['AWAY']
+    data = row.get('DATA', '')  # Extrair data para calcular temporada
     
     print(f"[{idx+1}/{len(df_fixtures)}] {liga}: {home} vs {away}", end=" ")
     
@@ -252,8 +299,13 @@ for idx, row in df_fixtures.iterrows():
         sem_historico += 1
         continue
     
-    # Range fixo de ±7% para todas as ligas
-    range_percent = 0.07
+    # Range dinâmico baseado na data do jogo (ano)
+    # Primeira temporada (2013): ±12%, Segunda (2014): ±10%, Terceira+ (2015+): ±7%
+    range_percent = calcular_range_percent(data)
+    
+    # Debug: mostrar qual range está sendo usado
+    debug_ano = int(data.split('/')[1]) if '/' in data else 'desconhecido'
+    debug_range = f"±{int(range_percent*100)}%"
     
     # Identificar quais odds usar baseado no histórico e fixtures
     odds_h_col, odds_a_col = None, None
