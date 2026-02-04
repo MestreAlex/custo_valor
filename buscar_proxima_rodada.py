@@ -480,6 +480,49 @@ if todos_jogos:
             cursor: not-allowed;
         }}
         
+        .refresh-section {{
+            padding: 20px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 2px dashed rgba(0, 212, 255, 0.35);
+            border-radius: 8px;
+            margin: 20px;
+            text-align: center;
+        }}
+        
+        .refresh-btn {{
+            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1em;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+        }}
+        
+        .refresh-btn:hover {{
+            background: linear-gradient(135deg, #00ffff 0%, #00ccff 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.6);
+        }}
+        
+        .refresh-btn:active {{
+            transform: translateY(0);
+        }}
+        
+        .loading {{
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #00d4ff;
+        }}
+        
+        .loading.show {{
+            display: block;
+        }}
+        
         .footer {{
             text-align: center;
             padding: 20px;
@@ -620,6 +663,15 @@ if todos_jogos:
                 <a href="http://localhost:5001/backtest.html" class="nav-link">Backtest</a>
                 <a href="http://localhost:5001/backtest_salvos.html" class="nav-link">Backtests Salvos</a>
                 <a href="http://localhost:5001/backtest_resumo_entradas.html" class="nav-link">Resumo Entradas</a>
+            </div>
+        </div>
+        
+        <div class="refresh-section">
+            <h3 style="margin-bottom: 15px; color: #00d4ff;">🔄 Buscar Próxima Rodada</h3>
+            <p style="margin-bottom: 15px; color: #ecf0f1; font-size: 0.95em;">Clique para buscar jogos da próxima rodada e atualizar a análise histórica</p>
+            <button class="refresh-btn" onclick="buscarProximaRodada()" id="refreshBtn">🌐 Buscar Jogos da Próxima Rodada</button>
+            <div id="loadingIndicator" class="loading">
+                <p>⏳ Buscando jogos e atualizando análise... Por favor aguarde (pode levar 1-2 minutos)</p>
             </div>
         </div>
         
@@ -906,6 +958,45 @@ if todos_jogos:
                 btn.textContent = 'Salvar';
             });
         }
+        
+        async function buscarProximaRodada() {{
+            const btn = document.getElementById('refreshBtn');
+            const loading = document.getElementById('loadingIndicator');
+            
+            btn.disabled = true;
+            btn.textContent = '⏳ Buscando...';
+            loading.classList.add('show');
+            
+            try {{
+                const response = await fetch('http://localhost:8000/api/buscar_proxima_rodada', {{
+                    method: 'POST',
+                    headers: {{
+                        'Content-Type': 'application/json',
+                    }}
+                }});
+                
+                const data = await response.json();
+                
+                if (data.success) {{
+                    alert('✅ Próxima rodada buscada com sucesso!\\n\\n' + data.message);
+                    // Recarregar a página após 1 segundo
+                    setTimeout(() => {{
+                        window.location.reload();
+                    }}, 1000);
+                }} else {{
+                    alert('❌ Erro ao buscar próxima rodada:\\n\\n' + data.message);
+                    btn.disabled = false;
+                    btn.textContent = '🌐 Buscar Jogos da Próxima Rodada';
+                    loading.classList.remove('show');
+                }}
+            }} catch (error) {{
+                console.error('Erro:', error);
+                alert('❌ Erro ao buscar próxima rodada. Verifique se o servidor está rodando.');
+                btn.disabled = false;
+                btn.textContent = '🌐 Buscar Jogos da Próxima Rodada';
+                loading.classList.remove('show');
+            }}
+        }}
     </script>
 </body>
 </html>
