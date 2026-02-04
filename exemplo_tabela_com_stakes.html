@@ -1,0 +1,65 @@
+
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Exemplo: Tabela com Stakes</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                h1 { color: #007bff; }
+            </style>
+        </head>
+        <body>
+            <h1>Exemplo: Como Integrar Stakes</h1>
+            <p>Veja a coluna "💰 Stake Sugerido" na tabela abaixo:</p>
+            
+    <table style="border-collapse: collapse; width: 100%; margin-top: 20px;">
+        <thead>
+            <tr style="background-color: #007bff; color: white;">
+                <th style="padding: 12px; border: 1px solid #007bff; text-align: left;">Data</th>
+                <th style="padding: 12px; border: 1px solid #007bff; text-align: left;">Jogo</th>
+                <th style="padding: 12px; border: 1px solid #007bff; text-align: center;">Odd</th>
+                <th style="padding: 12px; border: 1px solid #007bff; text-align: center;">CF xGH</th>
+                <th style="padding: 12px; border: 1px solid #007bff; text-align: center;">CF xGA</th>
+                <!-- <<<ADICIONAR>>> Esta coluna: -->
+                <th style="padding: 12px; border: 1px solid #007bff; text-align: center;">💰 Stake Sugerido</th>
+                <!-- Fim da adição -->
+                <th style="padding: 12px; border: 1px solid #007bff; text-align: center;">Validado</th>
+            </tr>
+        </thead>
+        <tbody>
+    
+        <tr style="background-color: #f0f8ff;">
+            <td style="padding: 10px; border: 1px solid #ddd;">2026-02-15</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">Exemplo 1</td>
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">1.95</td>
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">85.0%</td>
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">80.0%</td>
+            <!-- <<<ADICIONAR>>> Esta célula: -->
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: center; font-weight: bold;">
+                <b style='color: #007bff;'>R$ 110.20</b>
+            </td>
+            <!-- Fim da adição -->
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">✓</td>
+        </tr>
+        
+        <tr style="background-color: #f0f8ff;">
+            <td style="padding: 10px; border: 1px solid #ddd;">2026-02-15</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">Exemplo 2</td>
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">3.50</td>
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">65.0%</td>
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">70.0%</td>
+            <!-- <<<ADICIONAR>>> Esta célula: -->
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: center; font-weight: bold;">
+                <b style='color: #007bff;'>R$ 100.00</b>
+            </td>
+            <!-- Fim da adição -->
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">✓</td>
+        </tr>
+        
+        </tbody>
+    </table>
+    
+        </body>
+        </html>
+        

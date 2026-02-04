@@ -24,6 +24,9 @@ print(f"{'='*80}\n")
 combinacoes_validadas = carregar_combinacoes_validadas()
 print(f"[OK] Carregadas {len(combinacoes_validadas)} combinações validadas para análise\n")
 
+# Inicializar lista para armazenar todos os jogos
+todos_jogos = []
+
 # Baixar e processar cada arquivo
 for idx, url in enumerate(urls, 1):
     try:
@@ -837,11 +840,12 @@ if todos_jogos:
                     odd_a_class = "neutral-bet"
             
             # Validar se a entrada está qualificada (HOME ou AWAY)
-            chave_home = f'{liga}|HOME|{dxg}'
-            chave_away = f'{liga}|AWAY|{dxg}'
+            chave_home = f'{liga}_{dxg}'
+            chave_away = f'{liga}_{dxg}'
             
-            validacao_home = "SIM" if chave_home in entradas_validas else "NÃO"
-            validacao_away = "SIM" if chave_away in entradas_validas else "NÃO"
+            # Validar combinações usando o novo sistema
+            validacao_home = "SIM" if f"{liga}_HOME_{dxg}" in combinacoes_validadas else "NÃO"
+            validacao_away = "SIM" if f"{liga}_AWAY_{dxg}" in combinacoes_validadas else "NÃO"
             
             # Determinar cor da validação
             cor_home = "background-color: #00ff88; color: #000;" if validacao_home == "SIM" else "background-color: #ff4444; color: white;"

@@ -1,0 +1,128 @@
+====================================================================================================
+📊 RELATÓRIO - COMBINAÇÕES VALIDADAS
+====================================================================================================
+Critérios Aplicados:
+  - Quantidade de entradas >= 75
+  - ROI >= 5.0%
+  - Lucro mínimo >= 20.0
+
+Total de Combinações Qualificadas: 73
+====================================================================================================
+
+Nº   Liga         Tipo   DxG   Entradas   Lucro      ROI %      Winrate % 
+----------------------------------------------------------------------------------------------------
+1    IRL           AWAY   LA    207        162.89     78.69      54.59
+2    BRA           AWAY   FA    84         47.13      56.11      66.67
+3    CHN           AWAY   FA    75         37.95      50.60      64.00
+4    IRL           HOME   LH    143        70.60      49.37      51.75
+5    SWZ           AWAY   LH    78         35.74      45.82      23.08
+6    FIN           AWAY   LA    92         41.42      45.02      48.91
+7    CHN           HOME   FH    137        60.69      44.30      67.15
+8    E0            AWAY   FA    234        100.67     43.02      59.40
+9    JPN           AWAY   LH    78         31.43      40.29      25.64
+10   N1            AWAY   FA    170        64.70      38.06      55.88
+11   SWE           AWAY   FA    106        40.04      37.77      59.43
+12   RUS           AWAY   LH    79         29.26      37.04      21.52
+13   P1            AWAY   FA    138        48.79      35.36      55.80
+14   F1            AWAY   FA    161        56.45      35.06      54.66
+15   CHN           HOME   LH    77         25.56      33.19      42.86
+16   JPN           AWAY   LA    418        137.71     32.94      44.74
+17   SWE           AWAY   LA    216        67.71      31.35      47.22
+18   BRA           HOME   FH    410        124.99     30.49      70.98
+19   IRL           AWAY   FA    152        46.22      30.41      64.47
+20   JPN           AWAY   FA    200        60.41      30.21      56.00
+21   BRA           HOME   LH    485        139.89     28.84      54.02
+22   FIN           HOME   LH    126        35.36      28.06      52.38
+23   I2            AWAY   FA    185        50.06      27.06      45.41
+24   CHN           AWAY   EQ    119        31.84      26.76      31.93
+25   SP1           AWAY   FA    187        49.83      26.65      52.41
+26   IRL           HOME   FH    192        50.23      26.16      67.19
+27   NOR           HOME   FH    248        64.73      26.10      64.11
+28   ROU           AWAY   FA    152        39.51      25.99      50.66
+29   SWZ           AWAY   FA    136        35.20      25.88      62.50
+30   USA           AWAY   LA    278        71.40      25.68      41.01
+31   NOR           AWAY   LH    121        30.78      25.44      21.49
+32   SWE           HOME   FH    220        55.93      25.42      65.45
+33   CHN           AWAY   LA    91         22.90      25.16      39.56
+34   T1            HOME   LH    247        61.92      25.07      48.58
+35   E0            AWAY   LH    107        26.66      24.92      16.82
+36   BRA           AWAY   LH    303        75.05      24.77      18.81
+37   P1            HOME   FH    250        60.94      24.38      58.80
+38   SP2           AWAY   LA    358        86.33      24.11      36.87
+39   POL           AWAY   FA    150        33.76      22.51      46.00
+40   ROU           HOME   LH    253        55.64      21.99      44.27
+41   F1            AWAY   LA    289        63.31      21.91      38.41
+42   USA           AWAY   FA    142        30.63      21.57      48.59
+43   SWE           HOME   LH    185        39.09      21.13      47.57
+44   NOR           AWAY   LA    171        35.78      20.92      45.61
+45   BRA           AWAY   LA    262        48.83      18.64      40.08
+46   T1            AWAY   FA    181        32.58      18.00      45.86
+47   E1            HOME   FH    549        97.21      17.71      57.38
+48   FIN           HOME   EQ    114        20.01      17.55      43.86
+49   BRA           AWAY   EQ    553        96.57      17.46      33.63
+50   E1            AWAY   FA    276        44.41      16.09      47.46
+51   E1            AWAY   EQ    588        84.16      14.31      34.18
+52   SWE           AWAY   EQ    257        36.66      14.26      32.30
+53   E0            HOME   LH    244        33.82      13.86      42.62
+54   E1            AWAY   LA    513        69.74      13.59      38.40
+55   N1            HOME   FH    250        32.35      12.94      58.40
+56   N1            AWAY   LA    187        24.18      12.93      37.97
+57   E0            AWAY   LA    203        25.80      12.71      38.42
+58   F1            HOME   FH    387        49.14      12.70      56.85
+59   SP1           HOME   FH    426        53.56      12.57      57.51
+60   JPN           AWAY   EQ    583        68.31      11.72      34.48
+61   USA           HOME   FH    597        67.28      11.27      60.30
+62   SWE           HOME   EQ    214        22.63      10.57      36.45
+63   E0            HOME   FH    306        29.08      9.50       58.17
+64   JPN           HOME   FH    343        30.83      8.99       56.56
+65   POL           HOME   LH    466        41.02      8.80       43.35
+66   F2            HOME   FH    412        35.89      8.71       53.64
+67   JPN           HOME   LH    453        35.69      7.88       43.05
+68   MEX           AWAY   EQ    575        41.65      7.24       32.35
+69   T1            HOME   FH    407        26.32      6.47       53.32
+70   MEX           HOME   LH    397        25.35      6.39       44.84
+71   USA           AWAY   EQ    510        32.14      6.30       29.80
+72   I2            HOME   FH    484        28.51      5.89       52.69
+73   SP2           HOME   FH    578        33.71      5.83       53.11
+
+====================================================================================================
+📈 ESTATÍSTICAS GERAIS:
+Total de combinações qualificadas: 73
+
+Distribuição por Tipo:
+  AWAY: 43 entradas
+  HOME: 30 entradas
+
+Distribuição por DxG:
+  EQ: 9 entradas
+  FA: 17 entradas
+  FH: 17 entradas
+  LA: 13 entradas
+  LH: 17 entradas
+
+Distribuição por Liga:
+  BRA: 6 entradas
+  CHN: 5 entradas
+  E0: 5 entradas
+  E1: 4 entradas
+  F1: 3 entradas
+  F2: 1 entradas
+  FIN: 3 entradas
+  I2: 2 entradas
+  IRL: 4 entradas
+  JPN: 6 entradas
+  MEX: 2 entradas
+  N1: 3 entradas
+  NOR: 3 entradas
+  P1: 2 entradas
+  POL: 2 entradas
+  ROU: 2 entradas
+  RUS: 1 entradas
+  SP1: 2 entradas
+  SP2: 2 entradas
+  SWE: 6 entradas
+  SWZ: 2 entradas
+  T1: 3 entradas
+  USA: 4 entradas
+
+====================================================================================================

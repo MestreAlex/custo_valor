@@ -1,0 +1,1244 @@
+{
+  "timestamp_geracao": "2026-02-03T16:41:15.717904",
+  "periodo": "2013-2026 (Treino: 2012/2013)",
+  "total_ligas": 5,
+  "ligas": {
+    "E0": {
+      "nome": "E0",
+      "temporadas": [
+        {
+          "liga": "E0",
+          "temporada": "2013/2014",
+          "jogos_processados": 380,
+          "stats": {
+            "rodada_atual": 41,
+            "jogos_processados": 380,
+            "total_jogos": 380,
+            "total_entradas": 165,
+            "acertos": 70,
+            "erros": 95,
+            "lucro_total": 23.11,
+            "winrate": 42.4,
+            "roi": 14.0,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:35:24.583982"
+        },
+        {
+          "liga": "E0",
+          "temporada": "2014/2015",
+          "jogos_processados": 380,
+          "stats": {
+            "rodada_atual": 42,
+            "jogos_processados": 380,
+            "total_jogos": 380,
+            "total_entradas": 216,
+            "acertos": 85,
+            "erros": 131,
+            "lucro_total": 27.3,
+            "winrate": 39.4,
+            "roi": 12.6,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:35:33.437647"
+        },
+        {
+          "liga": "E0",
+          "temporada": "2015/2016",
+          "jogos_processados": 150,
+          "stats": {
+            "rodada_atual": 18,
+            "jogos_processados": 150,
+            "total_jogos": 150,
+            "total_entradas": 82,
+            "acertos": 39,
+            "erros": 43,
+            "lucro_total": 15.76,
+            "winrate": 47.6,
+            "roi": 19.2,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:35:36.954240"
+        },
+        {
+          "liga": "E0",
+          "temporada": "2016/2017",
+          "jogos_processados": 380,
+          "stats": {
+            "rodada_atual": 42,
+            "jogos_processados": 380,
+            "total_jogos": 380,
+            "total_entradas": 215,
+            "acertos": 77,
+            "erros": 138,
+            "lucro_total": 7.93,
+            "winrate": 35.8,
+            "roi": 3.7,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:35:46.936248"
+        },
+        {
+          "liga": "E0",
+          "temporada": "2017/2018",
+          "jogos_processados": 134,
+          "stats": {
+            "rodada_atual": 17,
+            "jogos_processados": 134,
+            "total_jogos": 134,
+            "total_entradas": 72,
+            "acertos": 33,
+            "erros": 39,
+            "lucro_total": 8.97,
+            "winrate": 45.8,
+            "roi": 12.5,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:35:51.052232"
+        },
+        {
+          "liga": "E0",
+          "temporada": "2018/2019",
+          "jogos_processados": 171,
+          "stats": {
+            "rodada_atual": 20,
+            "jogos_processados": 171,
+            "total_jogos": 171,
+            "total_entradas": 87,
+            "acertos": 34,
+            "erros": 53,
+            "lucro_total": 15.39,
+            "winrate": 39.1,
+            "roi": 17.7,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:35:56.089309"
+        },
+        {
+          "liga": "E0",
+          "temporada": "2019/2020",
+          "jogos_processados": 146,
+          "stats": {
+            "rodada_atual": 18,
+            "jogos_processados": 146,
+            "total_jogos": 146,
+            "total_entradas": 68,
+            "acertos": 28,
+            "erros": 40,
+            "lucro_total": 27.93,
+            "winrate": 41.2,
+            "roi": 41.1,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:35:59.471239"
+        },
+        {
+          "liga": "E0",
+          "temporada": "2020/2021",
+          "jogos_processados": 137,
+          "stats": {
+            "rodada_atual": 18,
+            "jogos_processados": 137,
+            "total_jogos": 137,
+            "total_entradas": 75,
+            "acertos": 34,
+            "erros": 41,
+            "lucro_total": 20.95,
+            "winrate": 45.3,
+            "roi": 27.9,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:35:59.617357"
+        },
+        {
+          "liga": "E0",
+          "temporada": "2021/2022",
+          "jogos_processados": 380,
+          "stats": {
+            "rodada_atual": 41,
+            "jogos_processados": 380,
+            "total_jogos": 380,
+            "total_entradas": 213,
+            "acertos": 83,
+            "erros": 130,
+            "lucro_total": 25.28,
+            "winrate": 39.0,
+            "roi": 11.9,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:35:59.767400"
+        },
+        {
+          "liga": "E0",
+          "temporada": "2022/2023",
+          "jogos_processados": 155,
+          "stats": {
+            "rodada_atual": 19,
+            "jogos_processados": 155,
+            "total_jogos": 155,
+            "total_entradas": 80,
+            "acertos": 44,
+            "erros": 36,
+            "lucro_total": 45.25,
+            "winrate": 55.0,
+            "roi": 56.6,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:35:59.913511"
+        },
+        {
+          "liga": "E0",
+          "temporada": "2023/2024",
+          "jogos_processados": 165,
+          "stats": {
+            "rodada_atual": 20,
+            "jogos_processados": 165,
+            "total_jogos": 165,
+            "total_entradas": 87,
+            "acertos": 38,
+            "erros": 49,
+            "lucro_total": 1.01,
+            "winrate": 43.7,
+            "roi": 1.2,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:36:00.084661"
+        },
+        {
+          "liga": "E0",
+          "temporada": "2024/2025",
+          "jogos_processados": 380,
+          "stats": {
+            "rodada_atual": 40,
+            "jogos_processados": 380,
+            "total_jogos": 380,
+            "total_entradas": 209,
+            "acertos": 75,
+            "erros": 134,
+            "lucro_total": -18.64,
+            "winrate": 35.9,
+            "roi": -8.9,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:36:00.246664"
+        },
+        {
+          "liga": "E0",
+          "temporada": "2025/2026",
+          "jogos_processados": 230,
+          "stats": {
+            "rodada_atual": 24,
+            "jogos_processados": 230,
+            "total_jogos": 230,
+            "total_entradas": 142,
+            "acertos": 48,
+            "erros": 94,
+            "lucro_total": -19.26,
+            "winrate": 33.8,
+            "roi": -13.6,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:36:00.404471"
+        }
+      ],
+      "resumo": {
+        "total_temporadas": 13,
+        "total_jogos": 3188,
+        "total_entradas": 1711,
+        "lucro_total": 180.98,
+        "roi_medio": 15.07
+      }
+    },
+    "E1": {
+      "nome": "E1",
+      "temporadas": [
+        {
+          "liga": "E1",
+          "temporada": "2013/2014",
+          "jogos_processados": 552,
+          "stats": {
+            "rodada_atual": 49,
+            "jogos_processados": 552,
+            "total_jogos": 552,
+            "total_entradas": 345,
+            "acertos": 142,
+            "erros": 203,
+            "lucro_total": 31.07,
+            "winrate": 41.2,
+            "roi": 9.0,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:36:11.277303"
+        },
+        {
+          "liga": "E1",
+          "temporada": "2014/2015",
+          "jogos_processados": 552,
+          "stats": {
+            "rodada_atual": 49,
+            "jogos_processados": 552,
+            "total_jogos": 552,
+            "total_entradas": 347,
+            "acertos": 139,
+            "erros": 208,
+            "lucro_total": 26.72,
+            "winrate": 40.1,
+            "roi": 7.7,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:36:24.397320"
+        },
+        {
+          "liga": "E1",
+          "temporada": "2015/2016",
+          "jogos_processados": 552,
+          "stats": {
+            "rodada_atual": 50,
+            "jogos_processados": 552,
+            "total_jogos": 552,
+            "total_entradas": 382,
+            "acertos": 123,
+            "erros": 259,
+            "lucro_total": -52.39,
+            "winrate": 32.2,
+            "roi": -13.7,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:36:39.338250"
+        },
+        {
+          "liga": "E1",
+          "temporada": "2016/2017",
+          "jogos_processados": 552,
+          "stats": {
+            "rodada_atual": 50,
+            "jogos_processados": 552,
+            "total_jogos": 552,
+            "total_entradas": 376,
+            "acertos": 145,
+            "erros": 231,
+            "lucro_total": 13.03,
+            "winrate": 38.6,
+            "roi": 3.5,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:36:57.612047"
+        },
+        {
+          "liga": "E1",
+          "temporada": "2017/2018",
+          "jogos_processados": 552,
+          "stats": {
+            "rodada_atual": 50,
+            "jogos_processados": 552,
+            "total_jogos": 552,
+            "total_entradas": 360,
+            "acertos": 165,
+            "erros": 195,
+            "lucro_total": 76.3,
+            "winrate": 45.8,
+            "roi": 21.2,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:37:21.600670"
+        },
+        {
+          "liga": "E1",
+          "temporada": "2018/2019",
+          "jogos_processados": 230,
+          "stats": {
+            "rodada_atual": 23,
+            "jogos_processados": 230,
+            "total_jogos": 230,
+            "total_entradas": 142,
+            "acertos": 63,
+            "erros": 79,
+            "lucro_total": 26.72,
+            "winrate": 44.4,
+            "roi": 18.8,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:37:31.221268"
+        },
+        {
+          "liga": "E1",
+          "temporada": "2019/2020",
+          "jogos_processados": 209,
+          "stats": {
+            "rodada_atual": 21,
+            "jogos_processados": 209,
+            "total_jogos": 209,
+            "total_entradas": 133,
+            "acertos": 61,
+            "erros": 72,
+            "lucro_total": 23.5,
+            "winrate": 45.9,
+            "roi": 17.7,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:37:40.052424"
+        },
+        {
+          "liga": "E1",
+          "temporada": "2020/2021",
+          "jogos_processados": 217,
+          "stats": {
+            "rodada_atual": 23,
+            "jogos_processados": 217,
+            "total_jogos": 217,
+            "total_entradas": 121,
+            "acertos": 66,
+            "erros": 55,
+            "lucro_total": 45.98,
+            "winrate": 54.5,
+            "roi": 38.0,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:37:40.272231"
+        },
+        {
+          "liga": "E1",
+          "temporada": "2021/2022",
+          "jogos_processados": 197,
+          "stats": {
+            "rodada_atual": 20,
+            "jogos_processados": 197,
+            "total_jogos": 197,
+            "total_entradas": 112,
+            "acertos": 44,
+            "erros": 68,
+            "lucro_total": -2.29,
+            "winrate": 39.3,
+            "roi": -2.0,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:37:40.484250"
+        },
+        {
+          "liga": "E1",
+          "temporada": "2022/2023",
+          "jogos_processados": 552,
+          "stats": {
+            "rodada_atual": 49,
+            "jogos_processados": 552,
+            "total_jogos": 552,
+            "total_entradas": 377,
+            "acertos": 140,
+            "erros": 237,
+            "lucro_total": -22.03,
+            "winrate": 37.1,
+            "roi": -5.8,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:37:40.699335"
+        },
+        {
+          "liga": "E1",
+          "temporada": "2023/2024",
+          "jogos_processados": 238,
+          "stats": {
+            "rodada_atual": 24,
+            "jogos_processados": 238,
+            "total_jogos": 238,
+            "total_entradas": 128,
+            "acertos": 58,
+            "erros": 70,
+            "lucro_total": 33.71,
+            "winrate": 45.3,
+            "roi": 26.3,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:37:40.935320"
+        },
+        {
+          "liga": "E1",
+          "temporada": "2024/2025",
+          "jogos_processados": 234,
+          "stats": {
+            "rodada_atual": 23,
+            "jogos_processados": 234,
+            "total_jogos": 234,
+            "total_entradas": 143,
+            "acertos": 55,
+            "erros": 88,
+            "lucro_total": -3.17,
+            "winrate": 38.5,
+            "roi": -2.2,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:37:41.200834"
+        },
+        {
+          "liga": "E1",
+          "temporada": "2025/2026",
+          "jogos_processados": 101,
+          "stats": {
+            "rodada_atual": 11,
+            "jogos_processados": 101,
+            "total_jogos": 101,
+            "total_entradas": 58,
+            "acertos": 27,
+            "erros": 31,
+            "lucro_total": 7.06,
+            "winrate": 46.6,
+            "roi": 12.2,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:37:41.495834"
+        }
+      ],
+      "resumo": {
+        "total_temporadas": 13,
+        "total_jogos": 4738,
+        "total_entradas": 3024,
+        "lucro_total": 204.21,
+        "roi_medio": 10.05
+      }
+    },
+    "SP1": {
+      "nome": "SP1",
+      "temporadas": [
+        {
+          "liga": "SP1",
+          "temporada": "2013/2014",
+          "jogos_processados": 380,
+          "stats": {
+            "rodada_atual": 42,
+            "jogos_processados": 380,
+            "total_jogos": 380,
+            "total_entradas": 177,
+            "acertos": 70,
+            "erros": 107,
+            "lucro_total": 64.68,
+            "winrate": 39.5,
+            "roi": 36.5,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:37:46.941494"
+        },
+        {
+          "liga": "SP1",
+          "temporada": "2014/2015",
+          "jogos_processados": 380,
+          "stats": {
+            "rodada_atual": 42,
+            "jogos_processados": 380,
+            "total_jogos": 380,
+            "total_entradas": 178,
+            "acertos": 71,
+            "erros": 107,
+            "lucro_total": 14.52,
+            "winrate": 39.9,
+            "roi": 8.2,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:37:52.966303"
+        },
+        {
+          "liga": "SP1",
+          "temporada": "2015/2016",
+          "jogos_processados": 380,
+          "stats": {
+            "rodada_atual": 42,
+            "jogos_processados": 380,
+            "total_jogos": 380,
+            "total_entradas": 206,
+            "acertos": 91,
+            "erros": 115,
+            "lucro_total": 77.28,
+            "winrate": 44.2,
+            "roi": 37.5,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:38:00.266838"
+        },
+        {
+          "liga": "SP1",
+          "temporada": "2016/2017",
+          "jogos_processados": 380,
+          "stats": {
+            "rodada_atual": 42,
+            "jogos_processados": 380,
+            "total_jogos": 380,
+            "total_entradas": 206,
+            "acertos": 80,
+            "erros": 126,
+            "lucro_total": -7.35,
+            "winrate": 38.8,
+            "roi": -3.6,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:38:08.747368"
+        },
+        {
+          "liga": "SP1",
+          "temporada": "2017/2018",
+          "jogos_processados": 380,
+          "stats": {
+            "rodada_atual": 41,
+            "jogos_processados": 380,
+            "total_jogos": 380,
+            "total_entradas": 236,
+            "acertos": 89,
+            "erros": 147,
+            "lucro_total": 8.68,
+            "winrate": 37.7,
+            "roi": 3.7,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:38:18.581192"
+        },
+        {
+          "liga": "SP1",
+          "temporada": "2018/2019",
+          "jogos_processados": 380,
+          "stats": {
+            "rodada_atual": 39,
+            "jogos_processados": 380,
+            "total_jogos": 380,
+            "total_entradas": 215,
+            "acertos": 70,
+            "erros": 145,
+            "lucro_total": -21.24,
+            "winrate": 32.6,
+            "roi": -9.9,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:38:29.237398"
+        },
+        {
+          "liga": "SP1",
+          "temporada": "2019/2020",
+          "jogos_processados": 380,
+          "stats": {
+            "rodada_atual": 40,
+            "jogos_processados": 380,
+            "total_jogos": 380,
+            "total_entradas": 257,
+            "acertos": 91,
+            "erros": 166,
+            "lucro_total": -27.63,
+            "winrate": 35.4,
+            "roi": -10.8,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:38:41.230486"
+        },
+        {
+          "liga": "SP1",
+          "temporada": "2020/2021",
+          "jogos_processados": 140,
+          "stats": {
+            "rodada_atual": 18,
+            "jogos_processados": 140,
+            "total_jogos": 140,
+            "total_entradas": 80,
+            "acertos": 37,
+            "erros": 43,
+            "lucro_total": 21.22,
+            "winrate": 46.2,
+            "roi": 26.5,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:38:41.361275"
+        },
+        {
+          "liga": "SP1",
+          "temporada": "2021/2022",
+          "jogos_processados": 380,
+          "stats": {
+            "rodada_atual": 40,
+            "jogos_processados": 380,
+            "total_jogos": 380,
+            "total_entradas": 246,
+            "acertos": 90,
+            "erros": 156,
+            "lucro_total": -21.71,
+            "winrate": 36.6,
+            "roi": -8.8,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:38:41.491819"
+        },
+        {
+          "liga": "SP1",
+          "temporada": "2022/2023",
+          "jogos_processados": 151,
+          "stats": {
+            "rodada_atual": 20,
+            "jogos_processados": 151,
+            "total_jogos": 151,
+            "total_entradas": 91,
+            "acertos": 30,
+            "erros": 61,
+            "lucro_total": -16.19,
+            "winrate": 33.0,
+            "roi": -17.8,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:38:41.639309"
+        },
+        {
+          "liga": "SP1",
+          "temporada": "2023/2024",
+          "jogos_processados": 142,
+          "stats": {
+            "rodada_atual": 18,
+            "jogos_processados": 142,
+            "total_jogos": 142,
+            "total_entradas": 89,
+            "acertos": 32,
+            "erros": 57,
+            "lucro_total": -7.95,
+            "winrate": 36.0,
+            "roi": -8.9,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:38:41.783594"
+        },
+        {
+          "liga": "SP1",
+          "temporada": "2024/2025",
+          "jogos_processados": 380,
+          "stats": {
+            "rodada_atual": 40,
+            "jogos_processados": 380,
+            "total_jogos": 380,
+            "total_entradas": 224,
+            "acertos": 80,
+            "erros": 144,
+            "lucro_total": -18.34,
+            "winrate": 35.7,
+            "roi": -8.2,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:38:41.925587"
+        },
+        {
+          "liga": "SP1",
+          "temporada": "2025/2026",
+          "jogos_processados": 209,
+          "stats": {
+            "rodada_atual": 23,
+            "jogos_processados": 209,
+            "total_jogos": 209,
+            "total_entradas": 128,
+            "acertos": 46,
+            "erros": 82,
+            "lucro_total": -15.96,
+            "winrate": 35.9,
+            "roi": -12.5,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:38:42.064940"
+        }
+      ],
+      "resumo": {
+        "total_temporadas": 13,
+        "total_jogos": 4062,
+        "total_entradas": 2333,
+        "lucro_total": 50.01,
+        "roi_medio": 2.45
+      }
+    },
+    "SP2": {
+      "nome": "SP2",
+      "temporadas": [
+        {
+          "liga": "SP2",
+          "temporada": "2013/2014",
+          "jogos_processados": 462,
+          "stats": {
+            "rodada_atual": 46,
+            "jogos_processados": 462,
+            "total_jogos": 462,
+            "total_entradas": 304,
+            "acertos": 122,
+            "erros": 182,
+            "lucro_total": 21.23,
+            "winrate": 40.1,
+            "roi": 7.0,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:38:49.281103"
+        },
+        {
+          "liga": "SP2",
+          "temporada": "2014/2015",
+          "jogos_processados": 462,
+          "stats": {
+            "rodada_atual": 45,
+            "jogos_processados": 462,
+            "total_jogos": 462,
+            "total_entradas": 252,
+            "acertos": 108,
+            "erros": 144,
+            "lucro_total": 22.45,
+            "winrate": 42.9,
+            "roi": 8.9,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:38:57.250468"
+        },
+        {
+          "liga": "SP2",
+          "temporada": "2015/2016",
+          "jogos_processados": 462,
+          "stats": {
+            "rodada_atual": 45,
+            "jogos_processados": 462,
+            "total_jogos": 462,
+            "total_entradas": 294,
+            "acertos": 112,
+            "erros": 182,
+            "lucro_total": -4.48,
+            "winrate": 38.1,
+            "roi": -1.5,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:39:08.078634"
+        },
+        {
+          "liga": "SP2",
+          "temporada": "2016/2017",
+          "jogos_processados": 462,
+          "stats": {
+            "rodada_atual": 47,
+            "jogos_processados": 462,
+            "total_jogos": 462,
+            "total_entradas": 268,
+            "acertos": 110,
+            "erros": 158,
+            "lucro_total": 35.63,
+            "winrate": 41.0,
+            "roi": 13.3,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:39:22.229901"
+        },
+        {
+          "liga": "SP2",
+          "temporada": "2017/2018",
+          "jogos_processados": 461,
+          "stats": {
+            "rodada_atual": 46,
+            "jogos_processados": 461,
+            "total_jogos": 461,
+            "total_entradas": 277,
+            "acertos": 115,
+            "erros": 162,
+            "lucro_total": 15.22,
+            "winrate": 41.5,
+            "roi": 5.5,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:39:36.315582"
+        },
+        {
+          "liga": "SP2",
+          "temporada": "2018/2019",
+          "jogos_processados": 441,
+          "stats": {
+            "rodada_atual": 43,
+            "jogos_processados": 441,
+            "total_jogos": 441,
+            "total_entradas": 233,
+            "acertos": 73,
+            "erros": 160,
+            "lucro_total": -55.9,
+            "winrate": 31.3,
+            "roi": -24.0,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:39:51.040565"
+        },
+        {
+          "liga": "SP2",
+          "temporada": "2019/2020",
+          "jogos_processados": 460,
+          "stats": {
+            "rodada_atual": 44,
+            "jogos_processados": 460,
+            "total_jogos": 460,
+            "total_entradas": 299,
+            "acertos": 99,
+            "erros": 200,
+            "lucro_total": -27.43,
+            "winrate": 33.1,
+            "roi": -9.2,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:40:07.716025"
+        },
+        {
+          "liga": "SP2",
+          "temporada": "2020/2021",
+          "jogos_processados": 167,
+          "stats": {
+            "rodada_atual": 19,
+            "jogos_processados": 167,
+            "total_jogos": 167,
+            "total_entradas": 93,
+            "acertos": 47,
+            "erros": 46,
+            "lucro_total": 25.53,
+            "winrate": 50.5,
+            "roi": 27.4,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:40:07.873277"
+        },
+        {
+          "liga": "SP2",
+          "temporada": "2021/2022",
+          "jogos_processados": 460,
+          "stats": {
+            "rodada_atual": 43,
+            "jogos_processados": 460,
+            "total_jogos": 460,
+            "total_entradas": 230,
+            "acertos": 82,
+            "erros": 148,
+            "lucro_total": -25.01,
+            "winrate": 35.7,
+            "roi": -10.9,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:40:08.103716"
+        },
+        {
+          "liga": "SP2",
+          "temporada": "2022/2023",
+          "jogos_processados": 192,
+          "stats": {
+            "rodada_atual": 22,
+            "jogos_processados": 192,
+            "total_jogos": 192,
+            "total_entradas": 123,
+            "acertos": 40,
+            "erros": 83,
+            "lucro_total": -14.26,
+            "winrate": 32.5,
+            "roi": -11.6,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:40:08.284714"
+        },
+        {
+          "liga": "SP2",
+          "temporada": "2023/2024",
+          "jogos_processados": 188,
+          "stats": {
+            "rodada_atual": 21,
+            "jogos_processados": 188,
+            "total_jogos": 188,
+            "total_entradas": 119,
+            "acertos": 51,
+            "erros": 68,
+            "lucro_total": 24.69,
+            "winrate": 42.9,
+            "roi": 20.7,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:40:08.445940"
+        },
+        {
+          "liga": "SP2",
+          "temporada": "2024/2025",
+          "jogos_processados": 462,
+          "stats": {
+            "rodada_atual": 44,
+            "jogos_processados": 462,
+            "total_jogos": 462,
+            "total_entradas": 271,
+            "acertos": 84,
+            "erros": 187,
+            "lucro_total": -64.66,
+            "winrate": 31.0,
+            "roi": -23.9,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:40:08.609146"
+        },
+        {
+          "liga": "SP2",
+          "temporada": "2025/2026",
+          "jogos_processados": 253,
+          "stats": {
+            "rodada_atual": 25,
+            "jogos_processados": 253,
+            "total_jogos": 253,
+            "total_entradas": 151,
+            "acertos": 55,
+            "erros": 96,
+            "lucro_total": -15.23,
+            "winrate": 36.4,
+            "roi": -10.1,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:40:08.765966"
+        }
+      ],
+      "resumo": {
+        "total_temporadas": 13,
+        "total_jogos": 4932,
+        "total_entradas": 2914,
+        "lucro_total": -62.22,
+        "roi_medio": -0.65
+      }
+    },
+    "I1": {
+      "nome": "I1",
+      "temporadas": [
+        {
+          "liga": "I1",
+          "temporada": "2013/2014",
+          "jogos_processados": 380,
+          "stats": {
+            "rodada_atual": 43,
+            "jogos_processados": 380,
+            "total_jogos": 380,
+            "total_entradas": 201,
+            "acertos": 84,
+            "erros": 117,
+            "lucro_total": 23.69,
+            "winrate": 41.8,
+            "roi": 11.8,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:40:14.232216"
+        },
+        {
+          "liga": "I1",
+          "temporada": "2014/2015",
+          "jogos_processados": 380,
+          "stats": {
+            "rodada_atual": 42,
+            "jogos_processados": 380,
+            "total_jogos": 380,
+            "total_entradas": 221,
+            "acertos": 69,
+            "erros": 152,
+            "lucro_total": -33.92,
+            "winrate": 31.2,
+            "roi": -15.3,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:40:20.668150"
+        },
+        {
+          "liga": "I1",
+          "temporada": "2015/2016",
+          "jogos_processados": 380,
+          "stats": {
+            "rodada_atual": 43,
+            "jogos_processados": 380,
+            "total_jogos": 380,
+            "total_entradas": 222,
+            "acertos": 89,
+            "erros": 133,
+            "lucro_total": 7.59,
+            "winrate": 40.1,
+            "roi": 3.4,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:40:28.479624"
+        },
+        {
+          "liga": "I1",
+          "temporada": "2016/2017",
+          "jogos_processados": 380,
+          "stats": {
+            "rodada_atual": 41,
+            "jogos_processados": 380,
+            "total_jogos": 380,
+            "total_entradas": 222,
+            "acertos": 90,
+            "erros": 132,
+            "lucro_total": 12.8,
+            "winrate": 40.5,
+            "roi": 5.8,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:40:37.352556"
+        },
+        {
+          "liga": "I1",
+          "temporada": "2017/2018",
+          "jogos_processados": 380,
+          "stats": {
+            "rodada_atual": 42,
+            "jogos_processados": 380,
+            "total_jogos": 380,
+            "total_entradas": 198,
+            "acertos": 84,
+            "erros": 114,
+            "lucro_total": 29.48,
+            "winrate": 42.4,
+            "roi": 14.9,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:40:48.604101"
+        },
+        {
+          "liga": "I1",
+          "temporada": "2018/2019",
+          "jogos_processados": 380,
+          "stats": {
+            "rodada_atual": 40,
+            "jogos_processados": 380,
+            "total_jogos": 380,
+            "total_entradas": 241,
+            "acertos": 85,
+            "erros": 156,
+            "lucro_total": -7.14,
+            "winrate": 35.3,
+            "roi": -3.0,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:40:59.413283"
+        },
+        {
+          "liga": "I1",
+          "temporada": "2019/2020",
+          "jogos_processados": 380,
+          "stats": {
+            "rodada_atual": 40,
+            "jogos_processados": 380,
+            "total_jogos": 380,
+            "total_entradas": 211,
+            "acertos": 74,
+            "erros": 137,
+            "lucro_total": -6.31,
+            "winrate": 35.1,
+            "roi": -3.0,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:41:14.721660"
+        },
+        {
+          "liga": "I1",
+          "temporada": "2020/2021",
+          "jogos_processados": 378,
+          "stats": {
+            "rodada_atual": 41,
+            "jogos_processados": 378,
+            "total_jogos": 378,
+            "total_entradas": 189,
+            "acertos": 61,
+            "erros": 128,
+            "lucro_total": -40.33,
+            "winrate": 32.3,
+            "roi": -21.3,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:41:14.883356"
+        },
+        {
+          "liga": "I1",
+          "temporada": "2021/2022",
+          "jogos_processados": 379,
+          "stats": {
+            "rodada_atual": 40,
+            "jogos_processados": 379,
+            "total_jogos": 379,
+            "total_entradas": 207,
+            "acertos": 68,
+            "erros": 139,
+            "lucro_total": -20.83,
+            "winrate": 32.9,
+            "roi": -10.1,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:41:15.051357"
+        },
+        {
+          "liga": "I1",
+          "temporada": "2022/2023",
+          "jogos_processados": 380,
+          "stats": {
+            "rodada_atual": 39,
+            "jogos_processados": 380,
+            "total_jogos": 380,
+            "total_entradas": 230,
+            "acertos": 74,
+            "erros": 156,
+            "lucro_total": -46.3,
+            "winrate": 32.2,
+            "roi": -20.1,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:41:15.217894"
+        },
+        {
+          "liga": "I1",
+          "temporada": "2023/2024",
+          "jogos_processados": 380,
+          "stats": {
+            "rodada_atual": 41,
+            "jogos_processados": 380,
+            "total_jogos": 380,
+            "total_entradas": 242,
+            "acertos": 83,
+            "erros": 159,
+            "lucro_total": -46.21,
+            "winrate": 34.3,
+            "roi": -19.1,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:41:15.385892"
+        },
+        {
+          "liga": "I1",
+          "temporada": "2024/2025",
+          "jogos_processados": 380,
+          "stats": {
+            "rodada_atual": 40,
+            "jogos_processados": 380,
+            "total_jogos": 380,
+            "total_entradas": 228,
+            "acertos": 73,
+            "erros": 155,
+            "lucro_total": -55.33,
+            "winrate": 32.0,
+            "roi": -24.3,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:41:15.552893"
+        },
+        {
+          "liga": "I1",
+          "temporada": "2025/2026",
+          "jogos_processados": 220,
+          "stats": {
+            "rodada_atual": 24,
+            "jogos_processados": 220,
+            "total_jogos": 220,
+            "total_entradas": 133,
+            "acertos": 47,
+            "erros": 86,
+            "lucro_total": -7.18,
+            "winrate": 35.3,
+            "roi": -5.4,
+            "completo": true
+          },
+          "timestamp": "2026-02-03T16:41:15.714903"
+        }
+      ],
+      "resumo": {
+        "total_temporadas": 13,
+        "total_jogos": 4777,
+        "total_entradas": 2745,
+        "lucro_total": -189.99,
+        "roi_medio": -6.59
+      }
+    }
+  },
+  "resumo_geral": {
+    "total_temporadas_processadas": 65,
+    "total_jogos": 21697,
+    "total_entradas": 12727,
+    "lucro_total": 182.99,
+    "roi_medio": 4.07
+  }
+}

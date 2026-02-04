@@ -1,0 +1,535 @@
+<!-- Arquivo HTML para navegação dos documentos de Stake Sizing -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stake Sizing - Índice de Documentação</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section h2 {
+            color: #667eea;
+            font-size: 1.6em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .card {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+        
+        .card-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .card-description {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .card-meta {
+            font-size: 0.9em;
+            color: #999;
+        }
+        
+        .file-list {
+            list-style: none;
+            margin-left: 20px;
+        }
+        
+        .file-list li {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-left: 3px solid #764ba2;
+            border-radius: 3px;
+        }
+        
+        .file-name {
+            font-weight: bold;
+            color: #764ba2;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin: 5px 0;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .button-secondary {
+            background: #f0f0f0;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .table-list {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .table-list th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .table-list td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .table-list tr:hover {
+            background: #f0f0f0;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        .badge-python {
+            background: #3776ab;
+            color: white;
+        }
+        
+        .badge-html {
+            background: #e34c26;
+            color: white;
+        }
+        
+        .badge-markdown {
+            background: #083fa1;
+            color: white;
+        }
+        
+        .badge-text {
+            background: #666;
+            color: white;
+        }
+        
+        .quick-start {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .quick-start h3 {
+            color: #155724;
+            margin-bottom: 15px;
+        }
+        
+        .quick-start ol {
+            margin-left: 20px;
+        }
+        
+        .quick-start li {
+            margin: 8px 0;
+            color: #155724;
+        }
+        
+        footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Stake Sizing para Value Betting</h1>
+            <p>Índice Completo de Documentação e Recursos</p>
+        </header>
+        
+        <div class="content">
+            <!-- QUICK START -->
+            <div class="section">
+                <h2>🚀 Quick Start (5 Minutos)</h2>
+                
+                <div class="quick-start">
+                    <h3>Começar Agora:</h3>
+                    <ol>
+                        <li><strong>Abra:</strong> <code>STAKE_SIZING_VISUAL.html</code> no navegador</li>
+                        <li><strong>Leia:</strong> Seção "Tabela Rápida" (Bankroll R$ 10.000)</li>
+                        <li><strong>Encontre:</strong> Sua odd e confiança (CF) na tabela</li>
+                        <li><strong>Use:</strong> O valor sugerido como stake</li>
+                        <li><strong>Pronto!</strong> Aposte com confiança 🎯</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <!-- ARQUIVOS PRINCIPAIS -->
+            <div class="section">
+                <h2>📁 Arquivos Criados</h2>
+                
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 15px;">🔧 Código Python (Engine e Integração)</h3>
+                <table class="table-list">
+                    <thead>
+                        <tr>
+                            <th>Arquivo</th>
+                            <th>Descrição</th>
+                            <th>Tipo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>stake_sizing.py</code></td>
+                            <td>Engine principal com classe StakeSizer. Implementa Kelly Criterion, ajustes de confiança e cálculos de stake.</td>
+                            <td><span class="badge badge-python">Python</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>integracao_stake_sizing.py</code></td>
+                            <td>Funções para integrar stakes com seu sistema. Adiciona stakes a jogos e renderiza HTML.</td>
+                            <td><span class="badge badge-python">Python</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>EXEMPLO_INTEGRACAO_STAKES.py</code></td>
+                            <td>Exemplos práticos de como integrar stake sizing em analisar_proxima_rodada.py</td>
+                            <td><span class="badge badge-python">Python</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>cheat_sheet_stakes.py</code></td>
+                            <td>Gerador de cheat sheet. Execute para gerar STAKE_SIZING_CHEAT_SHEET.txt</td>
+                            <td><span class="badge badge-python">Python</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3 style="color: #667eea; margin-top: 30px; margin-bottom: 15px;">📚 Documentação Técnica</h3>
+                <table class="table-list">
+                    <thead>
+                        <tr>
+                            <th>Arquivo</th>
+                            <th>Descrição</th>
+                            <th>Tipo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>STAKE_SIZING_DOCUMENTACAO.md</code></td>
+                            <td>Documentação técnica completa. Explica todas as fórmulas, derivações matemáticas e exemplos detalhados.</td>
+                            <td><span class="badge badge-markdown">Markdown</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>GUIA_PRATICO_STAKES.md</code></td>
+                            <td>Guia passo-a-passo prático. 3 métodos diferentes, exemplos reais, regras de ouro e checklist.</td>
+                            <td><span class="badge badge-markdown">Markdown</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>README_STAKE_SIZING.md</code></td>
+                            <td>Resumo geral do projeto. O que foi criado, próximos passos e status final.</td>
+                            <td><span class="badge badge-markdown">Markdown</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3 style="color: #667eea; margin-top: 30px; margin-bottom: 15px;">🌐 Interface Web</h3>
+                <table class="table-list">
+                    <thead>
+                        <tr>
+                            <th>Arquivo</th>
+                            <th>Descrição</th>
+                            <th>Tipo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>STAKE_SIZING_VISUAL.html</code></td>
+                            <td><strong>⭐ COMECE AQUI!</strong> Dashboard visual profissional com toda a documentação, tabelas, fórmulas e checklist interativo.</td>
+                            <td><span class="badge badge-html">HTML</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>exemplo_stakes.html</code></td>
+                            <td>Exemplo de saída HTML com tabela de stakes calculados. Mostra como o sistema renderiza.</td>
+                            <td><span class="badge badge-html">HTML</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>exemplo_tabela_com_stakes.html</code></td>
+                            <td>Exemplo de integração da tabela de stakes no seu HTML. Pronto para copiar e colar.</td>
+                            <td><span class="badge badge-html">HTML</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3 style="color: #667eea; margin-top: 30px; margin-bottom: 15px;">📋 Referência Rápida</h3>
+                <table class="table-list">
+                    <thead>
+                        <tr>
+                            <th>Arquivo</th>
+                            <th>Descrição</th>
+                            <th>Tipo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>STAKE_SIZING_CHEAT_SHEET.txt</code></td>
+                            <td>Cheat sheet para imprimir e manter à mão. Tabelas, fórmulas rápidas, checklist pré-aposta.</td>
+                            <td><span class="badge badge-text">Texto</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>RESUMO_STAKE_SIZING.md</code></td>
+                            <td>Resumo executivo em 1-2 páginas. O essencial do sistema em formato rápido.</td>
+                            <td><span class="badge badge-markdown">Markdown</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- GUIA DE USO POR PERFIL -->
+            <div class="section">
+                <h2>👤 Guia de Uso Por Perfil</h2>
+                
+                <div class="card">
+                    <div class="card-title">🚀 "Quero começar AGORA (5 minutos)"</div>
+                    <div class="card-description">Abra <code>STAKE_SIZING_VISUAL.html</code> → Procure sua odd na tabela → Use o valor sugerido</div>
+                    <div class="card-meta">Tempo: 5 minutos | Complexidade: Nenhuma</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">📚 "Quero entender a teoria (30 minutos)"</div>
+                    <div class="card-description">Leia <code>STAKE_SIZING_DOCUMENTACAO.md</code> → Estude as fórmulas → Execute <code>python stake_sizing.py</code></div>
+                    <div class="card-meta">Tempo: 30 minutos | Complexidade: Média</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">⚙️ "Quero integrar com meu código (1 hora)"</div>
+                    <div class="card-description">Leia <code>EXEMPLO_INTEGRACAO_STAKES.py</code> → Copie para <code>analisar_proxima_rodada.py</code> → Teste</div>
+                    <div class="card-meta">Tempo: 1 hora | Complexidade: Alta</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">📊 "Quero uma referência para operação (impressão)"</div>
+                    <div class="card-description">Execute <code>python cheat_sheet_stakes.py</code> → Imprima <code>STAKE_SIZING_CHEAT_SHEET.txt</code> → Use durante apostas</div>
+                    <div class="card-meta">Tempo: 5 minutos | Complexidade: Nenhuma</div>
+                </div>
+            </div>
+            
+            <!-- ORDEM RECOMENDADA DE LEITURA -->
+            <div class="section">
+                <h2>📖 Ordem Recomendada de Leitura</h2>
+                
+                <div style="background: #e7f3ff; padding: 20px; border-radius: 5px; margin: 20px 0;">
+                    <h3 style="color: #0066cc; margin-bottom: 15px;">Para Iniciantes:</h3>
+                    <ol style="margin-left: 20px;">
+                        <li><strong style="color: #0066cc;">STAKE_SIZING_VISUAL.html</strong> (15 min)
+                            <p style="margin-left: 20px; color: #666; font-size: 0.9em;">Leia seção "Visão Geral" e "Tabela Rápida"</p>
+                        </li>
+                        <li><strong style="color: #0066cc;">RESUMO_STAKE_SIZING.md</strong> (10 min)
+                            <p style="margin-left: 20px; color: #666; font-size: 0.9em;">Entenda o objetivo e próximos passos</p>
+                        </li>
+                        <li><strong style="color: #0066cc;">Imprima STAKE_SIZING_CHEAT_SHEET.txt</strong> (5 min)
+                            <p style="margin-left: 20px; color: #666; font-size: 0.9em;">Mantenha ao alcance durante operação</p>
+                        </li>
+                    </ol>
+                </div>
+                
+                <div style="background: #e8f5e9; padding: 20px; border-radius: 5px; margin: 20px 0;">
+                    <h3 style="color: #2e7d32; margin-bottom: 15px;">Para Desenvolvedores:</h3>
+                    <ol style="margin-left: 20px;">
+                        <li><strong style="color: #2e7d32;">STAKE_SIZING_DOCUMENTACAO.md</strong> (30 min)
+                            <p style="margin-left: 20px; color: #666; font-size: 0.9em;">Entenda as fórmulas matemáticas em detalhe</p>
+                        </li>
+                        <li><strong style="color: #2e7d32;">EXEMPLO_INTEGRACAO_STAKES.py</strong> (20 min)
+                            <p style="margin-left: 20px; color: #666; font-size: 0.9em;">Veja código pronto para copiar</p>
+                        </li>
+                        <li><strong style="color: #2e7d32;">stake_sizing.py</strong> (30 min)
+                            <p style="margin-left: 20px; color: #666; font-size: 0.9em;">Estude a implementação em Python</p>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            
+            <!-- QUICK REFERENCE -->
+            <div class="section">
+                <h2>⚡ Quick Reference</h2>
+                
+                <div class="card" style="border-left-color: #28a745; background: #f1f8f5;">
+                    <div class="card-title" style="color: #28a745;">✓ Antes de Cada Aposta</div>
+                    <div style="margin-left: 20px; color: #155724;">
+                        <p>☐ CF >= 60%?</p>
+                        <p>☐ Odd <= 4.00?</p>
+                        <p>☐ Calculei stake correto?</p>
+                        <p>☐ Stake <= 5% bankroll?</p>
+                        <p>☐ Bankroll > 70% (fora drawdown)?</p>
+                        <p>☐ Vou anotar no log?</p>
+                    </div>
+                </div>
+                
+                <div class="card" style="border-left-color: #dc3545; background: #fff5f5;">
+                    <div class="card-title" style="color: #dc3545;">✗ NUNCA Fazer</div>
+                    <div style="margin-left: 20px; color: #721c24;">
+                        <p>✗ Apostar > 5% do bankroll</p>
+                        <p>✗ Ignorar CF < 0.6</p>
+                        <p>✗ Aumentar stakes em losing streak</p>
+                        <p>✗ Perder > 30% sem pausar</p>
+                        <p>✗ Apostar sem anotar no log</p>
+                    </div>
+                </div>
+                
+                <div class="card" style="border-left-color: #007bff; background: #f0f7ff;">
+                    <div class="card-title" style="color: #007bff;">💡 Fórmulas Principais</div>
+                    <div style="margin-left: 20px; color: #004085; font-family: 'Courier New', monospace; font-size: 0.9em;">
+                        <p>Prob = 1 / Odd</p>
+                        <p>Edge = 18% × (1 / Odd)</p>
+                        <p>CF Média = √(CF_xGH × CF_xGA)</p>
+                        <p>Stake = % da tabela × Bankroll</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- TESTES E VALIDAÇÃO -->
+            <div class="section">
+                <h2>✅ Testes Realizados</h2>
+                
+                <div class="card" style="border-left-color: #28a745;">
+                    <div class="card-title" style="color: #28a745;">✓ stake_sizing.py</div>
+                    <div class="card-description">
+                        • Exemplo 1 (Odd 1.95, CF 85%) → R$ 110 ✓<br>
+                        • Exemplo 2 (Odd 3.50, CF 67%) → R$ 100 ✓<br>
+                        • Tabela simplificada → 8 faixas de odds ✓<br>
+                        • Gestão de risco → Cenários múltiplos ✓
+                    </div>
+                </div>
+                
+                <div class="card" style="border-left-color: #28a745;">
+                    <div class="card-title" style="color: #28a745;">✓ integracao_stake_sizing.py</div>
+                    <div class="card-description">
+                        • 3 jogos com stakes calculados ✓<br>
+                        • Resumo: R$ 310 total, ROI R$ 55.84 ✓<br>
+                        • HTML renderizado com tabela ✓
+                    </div>
+                </div>
+                
+                <div class="card" style="border-left-color: #28a745;">
+                    <div class="card-title" style="color: #28a745;">✓ Documentação</div>
+                    <div class="card-description">
+                        • 4 arquivos Markdown (2.100+ linhas) ✓<br>
+                        • 3 arquivos HTML (40+ KB) ✓<br>
+                        • Exemplos de código funcionando ✓<br>
+                        • Tabelas de referência completas ✓
+                    </div>
+                </div>
+            </div>
+            
+            <!-- PRÓXIMOS PASSOS -->
+            <div class="section">
+                <h2>🎯 Próximos Passos</h2>
+                
+                <div style="background: #fff9e6; padding: 20px; border-radius: 5px;">
+                    <h3 style="color: #ff9800; margin-bottom: 15px;">Esta Semana:</h3>
+                    <ul style="margin-left: 20px;">
+                        <li>✓ Abra <code>STAKE_SIZING_VISUAL.html</code></li>
+                        <li>✓ Imprima <code>STAKE_SIZING_CHEAT_SHEET.txt</code></li>
+                        <li>✓ Teste tabela manualmente em 5 apostas</li>
+                    </ul>
+                </div>
+                
+                <div style="background: #f0f8ff; padding: 20px; border-radius: 5px; margin-top: 15px;">
+                    <h3 style="color: #0066cc; margin-bottom: 15px;">Próximas Semanas:</h3>
+                    <ul style="margin-left: 20px;">
+                        <li>✓ Integrar <code>integracao_stake_sizing.py</code> em <code>analisar_proxima_rodada.py</code></li>
+                        <li>✓ Adicionar coluna "Stake Sugerido" no HTML</li>
+                        <li>✓ Criar log automático de apostas</li>
+                        <li>✓ Monitorar ROI real vs esperado</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p><strong>Stake Sizing para Value Betting</strong> | Sistema Completo de Gestão de Stakes</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">Baseado em Kelly Criterion ajustado | ROI Esperado: 18% | Fevereiro 2026</p>
+            <p style="margin-top: 15px;">
+                <a href="STAKE_SIZING_VISUAL.html" style="color: #667eea; text-decoration: none; margin: 0 10px;">📊 Dashboard Visual</a> |
+                <a href="RESUMO_STAKE_SIZING.md" style="color: #667eea; text-decoration: none; margin: 0 10px;">📋 Resumo</a> |
+                <a href="STAKE_SIZING_CHEAT_SHEET.txt" style="color: #667eea; text-decoration: none; margin: 0 10px;">📄 Cheat Sheet</a>
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

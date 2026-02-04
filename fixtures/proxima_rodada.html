@@ -276,6 +276,49 @@
             cursor: not-allowed;
         }
         
+        .refresh-section {
+            padding: 20px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 2px dashed rgba(0, 212, 255, 0.35);
+            border-radius: 8px;
+            margin: 20px;
+            text-align: center;
+        }
+        
+        .refresh-btn {
+            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1em;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+        }
+        
+        .refresh-btn:hover {
+            background: linear-gradient(135deg, #00ffff 0%, #00ccff 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.6);
+        }
+        
+        .refresh-btn:active {
+            transform: translateY(0);
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #00d4ff;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
         .footer {
             text-align: center;
             padding: 20px;
@@ -408,7 +451,7 @@
     <div class="container">
         <div class="header">
             <h1>⚽ Próxima Rodada</h1>
-            <p>Atualizado em: 03/02/2026 às 15:26:25 | Version: 1770143185</p>
+            <p>Atualizado em: 03/02/2026 às 21:23:17 | Version: 1770164597</p>
             <div class="nav-links">
                 <a href="http://localhost:8000/proxima_rodada.html" class="nav-link">Próxima Rodada</a>
                 <a href="http://localhost:8000/jogos_salvos.html" class="nav-link">Jogos Salvos</a>
@@ -419,13 +462,22 @@
             </div>
         </div>
         
+        <div class="refresh-section">
+            <h3 style="margin-bottom: 15px; color: #00d4ff;">🔄 Buscar Próxima Rodada</h3>
+            <p style="margin-bottom: 15px; color: #ecf0f1; font-size: 0.95em;">Clique para buscar jogos da próxima rodada e atualizar a análise histórica</p>
+            <button class="refresh-btn" onclick="buscarProximaRodada()" id="refreshBtn">🌐 Buscar Jogos da Próxima Rodada</button>
+            <div id="loadingIndicator" class="loading">
+                <p>⏳ Buscando jogos e atualizando análise... Por favor aguarde (pode levar 1-2 minutos)</p>
+            </div>
+        </div>
+        
         <div class="stats">
             <div class="stat-box">
-                <div class="stat-number">26</div>
+                <div class="stat-number">21</div>
                 <div class="stat-label">Total de Jogos</div>
             </div>
             <div class="stat-box">
-                <div class="stat-number">7</div>
+                <div class="stat-number">4</div>
                 <div class="stat-label">Ligas</div>
             </div>
             <div class="stat-box">
@@ -463,24 +515,6 @@
                 <tbody>
                     <tr>
                         <td class="date-col">03/02/2026</td>
-                        <td><span class="liga-badge">ARG</span></td>
-                        <td class="team">Banfield</td>
-                        <td class="team">Estudiantes Rio Cuarto</td>
-                        <td><span class="odds home">1.81</span></td>
-                        <td><span class="odds draw">3.10</span></td>
-                        <td><span class="odds away">5.00</span></td>
-                        <td class="center-cell">-</td>
-                        <td class="center-cell">-</td>
-                        <td class="center-cell"><strong>-</strong></td>
-                        <td class="center-cell"><span class="confidence" style="">-</span></td>
-                        <td class="center-cell"><span class="calc-odd ">-</span></td>
-                        <td class="center-cell"><span class="calc-odd ">-</span></td>
-                        <td class="center-cell"><span class="calc-odd ">-</span></td>
-                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 0)">Salvar</button></td>
-                    </tr>
-                    <tr>
-                        <td class="date-col">03/02/2026</td>
                         <td><span class="liga-badge">E1</span></td>
                         <td class="team">Blackburn</td>
                         <td class="team">Sheffield Weds</td>
@@ -495,7 +529,7 @@
                         <td class="center-cell"><span class="calc-odd bad-bet">6.69</span></td>
                         <td class="center-cell"><span class="calc-odd bad-bet">20.00</span></td>
                         <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 1)">Salvar</button></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 0)">Salvar</button></td>
                     </tr>
                     <tr>
                         <td class="date-col">03/02/2026</td>
@@ -512,8 +546,8 @@
                         <td class="center-cell"><span class="calc-odd bad-bet">3.89</span></td>
                         <td class="center-cell"><span class="calc-odd bad-bet">3.68</span></td>
                         <td class="center-cell"><span class="calc-odd value-bet">2.12</span></td>
-                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 2)">Salvar</button></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 1)">Salvar</button></td>
                     </tr>
                     <tr>
                         <td class="date-col">03/02/2026</td>
@@ -531,25 +565,7 @@
                         <td class="center-cell"><span class="calc-odd neutral-bet">4.36</span></td>
                         <td class="center-cell"><span class="calc-odd bad-bet">20.00</span></td>
                         <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 3)">Salvar</button></td>
-                    </tr>
-                    <tr>
-                        <td class="date-col">03/02/2026</td>
-                        <td><span class="liga-badge">I1</span></td>
-                        <td class="team">Bologna</td>
-                        <td class="team">Milan</td>
-                        <td><span class="odds home">2.90</span></td>
-                        <td><span class="odds draw">3.25</span></td>
-                        <td><span class="odds away">2.50</span></td>
-                        <td class="center-cell">0.91</td>
-                        <td class="center-cell">1.07</td>
-                        <td class="center-cell"><strong>EQ</strong></td>
-                        <td class="center-cell"><span class="confidence" style="background-color: rgb(255, 244, 0); color: #000;">47.9%</span></td>
-                        <td class="center-cell"><span class="calc-odd bad-bet">3.29</span></td>
-                        <td class="center-cell"><span class="calc-odd neutral-bet">3.22</span></td>
-                        <td class="center-cell"><span class="calc-odd bad-bet">2.59</span></td>
-                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 4)">Salvar</button></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 2)">Salvar</button></td>
                     </tr>
                     <tr>
                         <td class="date-col">03/02/2026</td>
@@ -567,7 +583,7 @@
                         <td class="center-cell"><span class="calc-odd ">-</span></td>
                         <td class="center-cell"><span class="calc-odd ">-</span></td>
                         <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 5)">Salvar</button></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 3)">Salvar</button></td>
                     </tr>
                     <tr>
                         <td class="date-col">03/02/2026</td>
@@ -585,7 +601,7 @@
                         <td class="center-cell"><span class="calc-odd bad-bet">4.05</span></td>
                         <td class="center-cell"><span class="calc-odd value-bet">3.24</span></td>
                         <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 6)">Salvar</button></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 4)">Salvar</button></td>
                     </tr>
                     <tr>
                         <td class="date-col">03/02/2026</td>
@@ -603,7 +619,7 @@
                         <td class="center-cell"><span class="calc-odd bad-bet">2.84</span></td>
                         <td class="center-cell"><span class="calc-odd bad-bet">4.08</span></td>
                         <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 7)">Salvar</button></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 5)">Salvar</button></td>
                     </tr>
                     <tr>
                         <td class="date-col">03/02/2026</td>
@@ -621,43 +637,7 @@
                         <td class="center-cell"><span class="calc-odd value-bet">1.80</span></td>
                         <td class="center-cell"><span class="calc-odd bad-bet">3.11</span></td>
                         <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 8)">Salvar</button></td>
-                    </tr>
-                    <tr>
-                        <td class="date-col">04/02/2026</td>
-                        <td><span class="liga-badge">ARG</span></td>
-                        <td class="team">Ind. Rivadavia</td>
-                        <td class="team">Sarmiento Junin</td>
-                        <td><span class="odds home">1.86</span></td>
-                        <td><span class="odds draw">3.20</span></td>
-                        <td><span class="odds away">4.75</span></td>
-                        <td class="center-cell">-</td>
-                        <td class="center-cell">-</td>
-                        <td class="center-cell"><strong>-</strong></td>
-                        <td class="center-cell"><span class="confidence" style="">-</span></td>
-                        <td class="center-cell"><span class="calc-odd ">-</span></td>
-                        <td class="center-cell"><span class="calc-odd ">-</span></td>
-                        <td class="center-cell"><span class="calc-odd ">-</span></td>
-                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 9)">Salvar</button></td>
-                    </tr>
-                    <tr>
-                        <td class="date-col">04/02/2026</td>
-                        <td><span class="liga-badge">ARG</span></td>
-                        <td class="team">Instituto</td>
-                        <td class="team">Lanus</td>
-                        <td><span class="odds home">2.75</span></td>
-                        <td><span class="odds draw">3.00</span></td>
-                        <td><span class="odds away">2.75</span></td>
-                        <td class="center-cell">0.18</td>
-                        <td class="center-cell">0.18</td>
-                        <td class="center-cell"><strong>EQ</strong></td>
-                        <td class="center-cell"><span class="confidence" style="">-</span></td>
-                        <td class="center-cell"><span class="calc-odd bad-bet">7.10</span></td>
-                        <td class="center-cell"><span class="calc-odd value-bet">1.39</span></td>
-                        <td class="center-cell"><span class="calc-odd bad-bet">7.10</span></td>
-                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 10)">Salvar</button></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 6)">Salvar</button></td>
                     </tr>
                     <tr>
                         <td class="date-col">04/02/2026</td>
@@ -674,8 +654,8 @@
                         <td class="center-cell"><span class="calc-odd value-bet">1.81</span></td>
                         <td class="center-cell"><span class="calc-odd bad-bet">3.86</span></td>
                         <td class="center-cell"><span class="calc-odd bad-bet">5.29</span></td>
-                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 11)">Salvar</button></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 7)">Salvar</button></td>
                     </tr>
                     <tr>
                         <td class="date-col">04/02/2026</td>
@@ -692,8 +672,8 @@
                         <td class="center-cell"><span class="calc-odd bad-bet">1.76</span></td>
                         <td class="center-cell"><span class="calc-odd value-bet">3.16</span></td>
                         <td class="center-cell"><span class="calc-odd bad-bet">8.71</span></td>
-                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 12)">Salvar</button></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 8)">Salvar</button></td>
                     </tr>
                     <tr>
                         <td class="date-col">04/02/2026</td>
@@ -711,7 +691,7 @@
                         <td class="center-cell"><span class="calc-odd ">-</span></td>
                         <td class="center-cell"><span class="calc-odd ">-</span></td>
                         <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 13)">Salvar</button></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 9)">Salvar</button></td>
                     </tr>
                     <tr>
                         <td class="date-col">04/02/2026</td>
@@ -728,26 +708,8 @@
                         <td class="center-cell"><span class="calc-odd bad-bet">2.19</span></td>
                         <td class="center-cell"><span class="calc-odd bad-bet">3.27</span></td>
                         <td class="center-cell"><span class="calc-odd bad-bet">4.23</span></td>
-                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 14)">Salvar</button></td>
-                    </tr>
-                    <tr>
-                        <td class="date-col">04/02/2026</td>
-                        <td><span class="liga-badge">G1</span></td>
-                        <td class="team">Asteras Tripolis</td>
-                        <td class="team">Olympiakos</td>
-                        <td><span class="odds home">11.00</span></td>
-                        <td><span class="odds draw">4.75</span></td>
-                        <td><span class="odds away">1.30</span></td>
-                        <td class="center-cell">-</td>
-                        <td class="center-cell">-</td>
-                        <td class="center-cell"><strong>-</strong></td>
-                        <td class="center-cell"><span class="confidence" style="">-</span></td>
-                        <td class="center-cell"><span class="calc-odd ">-</span></td>
-                        <td class="center-cell"><span class="calc-odd ">-</span></td>
-                        <td class="center-cell"><span class="calc-odd ">-</span></td>
-                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 15)">Salvar</button></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 10)">Salvar</button></td>
                     </tr>
                     <tr>
                         <td class="date-col">04/02/2026</td>
@@ -765,7 +727,7 @@
                         <td class="center-cell"><span class="calc-odd ">-</span></td>
                         <td class="center-cell"><span class="calc-odd ">-</span></td>
                         <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 16)">Salvar</button></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 11)">Salvar</button></td>
                     </tr>
                     <tr>
                         <td class="date-col">04/02/2026</td>
@@ -783,7 +745,7 @@
                         <td class="center-cell"><span class="calc-odd bad-bet">5.45</span></td>
                         <td class="center-cell"><span class="calc-odd bad-bet">20.00</span></td>
                         <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 17)">Salvar</button></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 12)">Salvar</button></td>
                     </tr>
                     <tr>
                         <td class="date-col">04/02/2026</td>
@@ -801,7 +763,7 @@
                         <td class="center-cell"><span class="calc-odd ">-</span></td>
                         <td class="center-cell"><span class="calc-odd ">-</span></td>
                         <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 18)">Salvar</button></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 13)">Salvar</button></td>
                     </tr>
                     <tr>
                         <td class="date-col">05/02/2026</td>
@@ -818,8 +780,8 @@
                         <td class="center-cell"><span class="calc-odd value-bet">1.50</span></td>
                         <td class="center-cell"><span class="calc-odd bad-bet">4.20</span></td>
                         <td class="center-cell"><span class="calc-odd bad-bet">10.71</span></td>
-                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 19)">Salvar</button></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 14)">Salvar</button></td>
                     </tr>
                     <tr>
                         <td class="date-col">05/02/2026</td>
@@ -836,8 +798,8 @@
                         <td class="center-cell"><span class="calc-odd bad-bet">1.46</span></td>
                         <td class="center-cell"><span class="calc-odd neutral-bet">4.92</span></td>
                         <td class="center-cell"><span class="calc-odd bad-bet">9.08</span></td>
-                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 20)">Salvar</button></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 15)">Salvar</button></td>
                     </tr>
                     <tr>
                         <td class="date-col">05/02/2026</td>
@@ -854,8 +816,8 @@
                         <td class="center-cell"><span class="calc-odd bad-bet">2.16</span></td>
                         <td class="center-cell"><span class="calc-odd neutral-bet">3.20</span></td>
                         <td class="center-cell"><span class="calc-odd bad-bet">4.44</span></td>
-                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 21)">Salvar</button></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 16)">Salvar</button></td>
                     </tr>
                     <tr>
                         <td class="date-col">05/02/2026</td>
@@ -872,8 +834,8 @@
                         <td class="center-cell"><span class="calc-odd bad-bet">1.71</span></td>
                         <td class="center-cell"><span class="calc-odd bad-bet">3.86</span></td>
                         <td class="center-cell"><span class="calc-odd bad-bet">6.35</span></td>
-                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 22)">Salvar</button></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 17)">Salvar</button></td>
                     </tr>
                     <tr>
                         <td class="date-col">05/02/2026</td>
@@ -891,7 +853,7 @@
                         <td class="center-cell"><span class="calc-odd bad-bet">3.74</span></td>
                         <td class="center-cell"><span class="calc-odd value-bet">3.87</span></td>
                         <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 23)">Salvar</button></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 18)">Salvar</button></td>
                     </tr>
                     <tr>
                         <td class="date-col">05/02/2026</td>
@@ -909,7 +871,7 @@
                         <td class="center-cell"><span class="calc-odd neutral-bet">2.95</span></td>
                         <td class="center-cell"><span class="calc-odd value-bet">3.73</span></td>
                         <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 24)">Salvar</button></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 19)">Salvar</button></td>
                     </tr>
                     <tr>
                         <td class="date-col">06/02/2026</td>
@@ -926,8 +888,8 @@
                         <td class="center-cell"><span class="calc-odd bad-bet">1.59</span></td>
                         <td class="center-cell"><span class="calc-odd value-bet">3.55</span></td>
                         <td class="center-cell"><span class="calc-odd bad-bet">11.38</span></td>
-                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
-                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 25)">Salvar</button></td>
+                        <td class="center-cell"><div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;"><span style="background-color: #00ff88; color: #000;; padding: 4px 8px; border-radius: 4px;">SIM</span><span style="background-color: #ff4444; color: white;; padding: 4px 8px; border-radius: 4px;">NÃO</span></div></td>
+                        <td class="center-cell"><button class="save-btn" onclick="salvarJogo(this, 20)">Salvar</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -943,63 +905,6 @@
     </div>
     
     <script>
-        let validaCombinacoes = {};
-
-        // Carregar as combinações validadas ao iniciar a página
-        fetch('/fixtures/entradas_validadas.json')
-            .then(response => response.json())
-            .then(data => {
-                // Criar lookup de combinações validadas
-                data.combinacoes_validadas.forEach(combo => {
-                    const chave = `${combo.liga}|${combo.tipo}|${combo.entrada}`;
-                    validaCombinacoes[chave] = true;
-                });
-                
-                // Aplicar validação a todas as linhas
-                aplicarValidacao();
-                
-                console.log(`✓ Carregadas ${data.combinacoes_validadas.length} combinações validadas`);
-                console.log(`Total de entradas: ${data.estatisticas.total_entradas}`);
-                console.log(`ROI médio: ${data.estatisticas.roi_medio.toFixed(2)}%`);
-            })
-            .catch(error => console.error('Erro ao carregar entradas validadas:', error));
-
-        function aplicarValidacao() {
-            const tbody = document.querySelector('table tbody');
-            const linhas = tbody.getElementsByTagName('tr');
-            
-            for (let i = 0; i < linhas.length; i++) {
-                const td = linhas[i].getElementsByTagName('td');
-                
-                // Extrair informações da linha
-                const ligaBadge = td[1].querySelector('.liga-badge');
-                const liga = ligaBadge ? ligaBadge.textContent.trim() : '-';
-                const dxgCell = td[9];
-                const dxg = dxgCell ? dxgCell.textContent.trim() : '-';
-                
-                // Determinar entrada (HOME = primeiro time, AWAY = segundo time)
-                // A entrada é baseada na posição: 1ª vez procura LH/FH/EQ/LA/FA (HOME), 2ª vez AWAY
-                const tipoEntry = dxg !== '-' ? dxg : '-';
-                
-                // Validar AMBAS entradas (HOME e AWAY)
-                const homeChave = `${liga}|${tipoEntry}|HOME`;
-                const awayChave = `${liga}|${tipoEntry}|AWAY`;
-                
-                const homeValido = validaCombinacoes[homeChave] || false;
-                const awayValido = validaCombinacoes[awayChave] || false;
-                
-                // Atualizar célula VALIDADA (coluna 14)
-                const validadaCell = td[14];
-                if (validadaCell) {
-                    validadaCell.innerHTML = 
-                        `<div style="display: flex; gap: 8px; font-weight: bold; font-size: 0.85em;">` +
-                        `<span style="background-color: ${homeValido ? '#00ff88' : '#ff4444'}; color: ${homeValido ? '#000' : 'white'}; padding: 4px 8px; border-radius: 4px;">${homeValido ? 'SIM' : 'NÃO'}</span>` +
-                        `<span style="background-color: ${awayValido ? '#00ff88' : '#ff4444'}; color: ${awayValido ? '#000' : 'white'}; padding: 4px 8px; border-radius: 4px;">${awayValido ? 'SIM' : 'NÃO'}</span>` +
-                        `</div>`;
-                }
-            }
-        }
-
         function filterTable() {
             const input = document.getElementById('searchInput');
             const filter = input.value.toUpperCase();
@@ -1077,6 +982,45 @@
                 btn.textContent = 'Salvar';
             });
         }
+        
+        async function buscarProximaRodada() {{
+            const btn = document.getElementById('refreshBtn');
+            const loading = document.getElementById('loadingIndicator');
+            
+            btn.disabled = true;
+            btn.textContent = '⏳ Buscando...';
+            loading.classList.add('show');
+            
+            try {{
+                const response = await fetch('http://localhost:8000/api/buscar_proxima_rodada', {{
+                    method: 'POST',
+                    headers: {{
+                        'Content-Type': 'application/json',
+                    }}
+                }});
+                
+                const data = await response.json();
+                
+                if (data.success) {{
+                    alert('✅ Próxima rodada buscada com sucesso!\n\n' + data.message);
+                    // Recarregar a página após 1 segundo
+                    setTimeout(() => {{
+                        window.location.reload();
+                    }}, 1000);
+                }} else {{
+                    alert('❌ Erro ao buscar próxima rodada:\n\n' + data.message);
+                    btn.disabled = false;
+                    btn.textContent = '🌐 Buscar Jogos da Próxima Rodada';
+                    loading.classList.remove('show');
+                }}
+            }} catch (error) {{
+                console.error('Erro:', error);
+                alert('❌ Erro ao buscar próxima rodada. Verifique se o servidor está rodando.');
+                btn.disabled = false;
+                btn.textContent = '🌐 Buscar Jogos da Próxima Rodada';
+                loading.classList.remove('show');
+            }}
+        }}
     </script>
 </body>
 </html>

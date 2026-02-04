@@ -496,11 +496,11 @@
         </div>
         <div class="stats">
             <div class="stat-box">
-                <div class="stat-number" id="totalJogos">52</div>
+                <div class="stat-number" id="totalJogos">54</div>
                 <div class="stat-label">Jogos Salvos</div>
             </div>
             <div class="stat-box">
-                <div class="stat-number" id="totalResultados">50</div>
+                <div class="stat-number" id="totalResultados">52</div>
                 <div class="stat-label">Resultados</div>
             </div>
         </div>
@@ -513,6 +513,7 @@
                     <select id="filtroData" class="filter-select" multiple onchange="aplicarFiltros()">
                         <option value="31/01/2026">31/01/2026</option>
                         <option value="30/01/2026">30/01/2026</option>
+                        <option value="05/02/2026">05/02/2026</option>
                         <option value="04/02/2026">04/02/2026</option>
                         <option value="03/02/2026">03/02/2026</option>
                         <option value="02/02/2026">02/02/2026</option>
@@ -2106,13 +2107,13 @@
                         <td class="center-cell compact-col"><span class="calc-odd bad-bet">6.69</span></td>
                         <td class="center-cell compact-col"><span class="calc-odd bad-bet">20.00</span></td>
                         <td class="center-cell">
-                            <input type="number" class="gol-input" id="gh_50" value="" min="0" max="20" step="1" inputmode="numeric" data-jogo-id="50" data-b365h="1.33" data-b365a="8.5" data-odd-h-calc="1.1858642468106164" data-odd-a-calc="20.0" onchange="calcularLP(this)">
+                            <input type="number" class="gol-input" id="gh_50" value="2" min="0" max="20" step="1" inputmode="numeric" data-jogo-id="50" data-b365h="1.33" data-b365a="8.5" data-odd-h-calc="1.1858642468106164" data-odd-a-calc="20.0" onchange="calcularLP(this)">
                         </td>
                         <td class="center-cell">
-                            <input type="number" class="gol-input" id="ga_50" value="" min="0" max="20" step="1" inputmode="numeric" data-jogo-id="50" data-b365h="1.33" data-b365a="8.5" data-odd-h-calc="1.1858642468106164" data-odd-a-calc="20.0" onchange="calcularLP(this)">
+                            <input type="number" class="gol-input" id="ga_50" value="1" min="0" max="20" step="1" inputmode="numeric" data-jogo-id="50" data-b365h="1.33" data-b365a="8.5" data-odd-h-calc="1.1858642468106164" data-odd-a-calc="20.0" onchange="calcularLP(this)">
                         </td>
                         <td class="center-cell">
-                            <input type="number" class="lp-input" id="lp_50" value="" step="0.01" inputmode="decimal">
+                            <input type="number" class="lp-input" id="lp_50" value="0.32" step="0.01" inputmode="decimal">
                         </td>
                         <td class="center-cell">
                             <button class="btn-salvar-resultado" onclick="salvarResultado(50)">Salvar</button>
@@ -2147,6 +2148,66 @@
                         <td class="center-cell">
                             <button class="btn-salvar-resultado" onclick="salvarResultado(51)">Salvar</button>
                             <button class="btn-excluir" onclick="excluirJogo(51)">Excluir</button>
+                        </td>
+                    </tr>
+
+                    <tr data-data="03/02/2026" data-liga="E1" data-dxg="LA">
+                        <td>03/02/2026</td>
+                        <td><span class="liga-badge">E1</span></td>
+                        <td class="team">Hull</td>
+                        <td class="team">Watford</td>
+                        <td class="center-cell compact-col"><span class="odds">2.15</span></td>
+                        <td class="center-cell compact-col"><span class="odds">3.50</span></td>
+                        <td class="center-cell compact-col"><span class="odds">3.10</span></td>
+                        <td class="center-cell compact-col">0.97</td>
+                        <td class="center-cell compact-col">1.43</td>
+                        <td class="center-cell compact-col"><strong>LA</strong></td>
+                        <td class="center-cell compact-col"><span class="confidence" style="background-color: rgb(255, 225, 0); color: #000;">44.2%</span></td>
+                        <td class="center-cell compact-col"><span class="calc-odd bad-bet">3.89</span></td>
+                        <td class="center-cell compact-col"><span class="calc-odd bad-bet">3.68</span></td>
+                        <td class="center-cell compact-col"><span class="calc-odd value-bet">2.12</span></td>
+                        <td class="center-cell">
+                            <input type="number" class="gol-input" id="gh_52" value="1" min="0" max="20" step="1" inputmode="numeric" data-jogo-id="52" data-b365h="2.15" data-b365a="3.1" data-odd-h-calc="3.88786848624994" data-odd-a-calc="2.1237608437595323" onchange="calcularLP(this)">
+                        </td>
+                        <td class="center-cell">
+                            <input type="number" class="gol-input" id="ga_52" value="1" min="0" max="20" step="1" inputmode="numeric" data-jogo-id="52" data-b365h="2.15" data-b365a="3.1" data-odd-h-calc="3.88786848624994" data-odd-a-calc="2.1237608437595323" onchange="calcularLP(this)">
+                        </td>
+                        <td class="center-cell">
+                            <input type="number" class="lp-input" id="lp_52" value="-1.00" step="0.01" inputmode="decimal">
+                        </td>
+                        <td class="center-cell">
+                            <button class="btn-salvar-resultado" onclick="salvarResultado(52)">Salvar</button>
+                            <button class="btn-excluir" onclick="excluirJogo(52)">Excluir</button>
+                        </td>
+                    </tr>
+
+                    <tr data-data="05/02/2026" data-liga="BRA" data-dxg="FH">
+                        <td>05/02/2026</td>
+                        <td><span class="liga-badge">BRA</span></td>
+                        <td class="team">Gremio</td>
+                        <td class="team">Botafogo RJ</td>
+                        <td class="center-cell compact-col"><span class="odds">2.30</span></td>
+                        <td class="center-cell compact-col"><span class="odds">3.20</span></td>
+                        <td class="center-cell compact-col"><span class="odds">3.25</span></td>
+                        <td class="center-cell compact-col">1.65</td>
+                        <td class="center-cell compact-col">0.44</td>
+                        <td class="center-cell compact-col"><strong>FH</strong></td>
+                        <td class="center-cell compact-col"><span class="confidence" style="background-color: rgb(255, 218, 0); color: #000;">42.8%</span></td>
+                        <td class="center-cell compact-col"><span class="calc-odd value-bet">1.50</span></td>
+                        <td class="center-cell compact-col"><span class="calc-odd bad-bet">4.20</span></td>
+                        <td class="center-cell compact-col"><span class="calc-odd bad-bet">10.71</span></td>
+                        <td class="center-cell">
+                            <input type="number" class="gol-input" id="gh_53" value="" min="0" max="20" step="1" inputmode="numeric" data-jogo-id="53" data-b365h="2.3" data-b365a="3.25" data-odd-h-calc="1.4964739715592477" data-odd-a-calc="10.707346242558824" onchange="calcularLP(this)">
+                        </td>
+                        <td class="center-cell">
+                            <input type="number" class="gol-input" id="ga_53" value="" min="0" max="20" step="1" inputmode="numeric" data-jogo-id="53" data-b365h="2.3" data-b365a="3.25" data-odd-h-calc="1.4964739715592477" data-odd-a-calc="10.707346242558824" onchange="calcularLP(this)">
+                        </td>
+                        <td class="center-cell">
+                            <input type="number" class="lp-input" id="lp_53" value="" step="0.01" inputmode="decimal">
+                        </td>
+                        <td class="center-cell">
+                            <button class="btn-salvar-resultado" onclick="salvarResultado(53)">Salvar</button>
+                            <button class="btn-excluir" onclick="excluirJogo(53)">Excluir</button>
                         </td>
                     </tr>
 

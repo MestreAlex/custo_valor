@@ -1,0 +1,67 @@
+
+STAKE SIZING - CHEAT SHEET
+Imprimir esta página e manter à mão durante operação
+
+═════════════════════════════════════════════════════════════════════════════
+
+TABELA RÁPIDA (Bankroll R$ 10.000):
+
+ODD    CF 85%  CF 75%  CF 60%  CF 50%  | Descrição
+─────────────────────────────────────────────────────
+1.50   R$460   R$400   R$300   R$250   | Favorita
+1.75   R$402   R$350   R$263   R$220   | Favorita
+2.00   R$345   R$300   R$225   R$188   | Moderada
+2.50   R$288   R$250   R$188   R$156   | Ideal
+3.00   R$230   R$200   R$150   R$125   | Desafiante
+3.50   R$172   R$150   R$112   R$94    | Alta
+4.00   R$115   R$100   R$75    R$62    | Muito Alta
+5.00   R$115   R$100   R$75    R$62    | Mínimo
+
+═════════════════════════════════════════════════════════════════════════════
+
+CRITÉRIO DE DECISÃO:
+
+CF < 0.50      → ✗ NÃO APOSTA
+CF 0.50-0.60   → ⚠ Mínimo (1-1.5%)
+CF 0.60-0.75   → ✓ Tabela normal (2-3%)
+CF 0.75-0.85   → ✓✓ Tabela normal (3-4%)
+CF > 0.85      → ✓✓✓ Máximo (4-5%)
+
+═════════════════════════════════════════════════════════════════════════════
+
+CHECKLIST PRÉ-APOSTA:
+
+☐ CF >= 60%?
+☐ Odd <= 4.00?
+☐ Stake <= 5% bankroll?
+☐ Calculei correto (2x)?
+☐ Vou anotar no log?
+
+═════════════════════════════════════════════════════════════════════════════
+
+LIMITES DE PERDA:
+
+Bankroll R$ 10.000 → Parar se perder R$ 3.000
+
+═════════════════════════════════════════════════════════════════════════════
+
+REFERÊNCIA RÁPIDA:
+
+Edge = 18% / Odd
+Ex: 18% / 2.50 = 7.2%
+
+CF Média = √(CF_xGH × CF_xGA)
+Ex: √(0.85 × 0.80) = 0.825
+
+═════════════════════════════════════════════════════════════════════════════
+
+DICAS OURO:
+
+1. Preferir odds 2.00-3.00 (melhor risco/retorno)
+2. CF alta + Odd baixa = Stake máximo
+3. CF baixa + Odd alta = NÃO APOSTE
+4. Após 10 ganhos → aumentar 5%
+5. Após 10 perdas → revisar sistema
+6. Logar CADA aposta
+
+═════════════════════════════════════════════════════════════════════════════
